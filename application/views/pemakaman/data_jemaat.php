@@ -346,12 +346,12 @@ $this->load->view('layout/header');
                         </li>
                         <li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Rincian data KPKP</a>
                         </li>
-                        <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Form</a>
+                        <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">iuran KPKP</a>
                         </li>
-                        <li role="presentation" class=""><a href="#tab_content4" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">Form Lain</a>
+                        <!--<li role="presentation" class=""><a href="#tab_content4" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">Form Lain</a>
                         </li>
                         <li role="presentation" class=""><a href="#tab_content5" role="tab" id="profile-tab4" data-toggle="tab" aria-expanded="false">Form Lain-Lain</a>
-                        </li>
+                        </li>-->
                       </ul>
                       <div id="myTabContent" class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
@@ -630,97 +630,136 @@ $this->load->view('layout/header');
 					</table>
 
 					
-
+ 
 				</div>
 
 			</div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
-                          <p>Saldo Akhir : -10.000</p>
-                          <p>Saldo Akhir (Sukarela): 5.000</p>
-                          <p>Estimasi Bulan Tercover: -1 Bulan</p>
-                          <p>Beban Iuaran per Bulan : 15.000</p>
-                          <p>Bulan Terkahir Bayar : 17 Agustus 1945 </p>
+
+                          <form class="form-horizontal form-label-left" id="form_add_kk"  name="form_add_kk" method="POST" action="">
+
+				
+
+					<div class="x_content">
+
+						<div class="form-group">
+
+							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_nama">Saldo Akhir<span class="required">*</span>
+
+							</label>
+
+							<div class="col-md-6 col-sm-6 col-xs-12">
+
+							  <input class="form-control col-md-7 col-xs-12" type="text" id="kwg_no" name="kwg_no" required="required" value="-10.000" disabled>
+
+							</div>
+
+						</div>
+
+						<div class="form-group">
+
+							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_nama">Saldo Akhir (Sukarela)<span class="required">*</span>
+
+							</label>
+
+							<div class="col-md-6 col-sm-6 col-xs-12">
+
+
+							  <input type="text" id="kwg_nama" name="kwg_nama" required="required" class="form-control col-md-7 col-xs-12" value="5.000" disabled>
+
+							</div>
+
+						</div>
+
+						<div class="form-group">
+
+							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_alamat">Estimasi Bulan Tercover
+
+							</label>
+
+							<div class="col-md-6 col-sm-6 col-xs-12">
+
+							  <input type="text" id="kwg_nama" name="kwg_nama" required="required" class="form-control col-md-7 col-xs-12" value="-1 Bulan" disabled>
+
+							</div>
+
+						</div>
+
+						<div class="form-group">
+
+							<label for="kwg_telepon" class="control-label col-md-3 col-sm-3 col-xs-12">Beban Iuaran per Bulan</label>
+
+							<div class="col-md-6 col-sm-6 col-xs-12">
+
+							  <input id="kwg_telepon" name="kwg_telepon" class="form-control col-md-7 col-xs-12" type="text" value="15.000" disabled>
+
+							</div>
+
+						</div>
+
+						<div class="form-group">
+
+							<label for="kwg_telepon" class="control-label col-md-3 col-sm-3 col-xs-12">Bulan Terkahir Bayar</label>
+
+							<div class="col-md-6 col-sm-6 col-xs-12">
+
+							  <input id="kwg_telepon" name="kwg_telepon" class="form-control col-md-7 col-xs-12" type="text" value="17 Agustus 1945" disabled>
+
+							</div>
+
+							
+
+						</div>
+
+					</div>	
+                          
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
                           <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Form Design <small>different form elements</small></h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
+                	<ul class="nav navbar-right panel_toolbox">
+                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">ADD Iuran </button>
+                   	</ul>
+          
                   <div class="x_content">
-                    <br />
-                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
 
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">First Name <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Last Name <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Middle Name / Initial</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Gender</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div id="gender" class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                              <input type="radio" name="gender" value="male"> &nbsp; Male &nbsp;
-                            </label>
-                            <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                              <input type="radio" name="gender" value="female"> Female
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Date Of Birth <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="birthday" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text">
-                        </div>
-                      </div>
-                      <div class="ln_solid"></div>
-                      <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                          <button class="btn btn-primary" type="button">Cancel</button>
-						  <button class="btn btn-primary" type="reset">Reset</button>
-                          <button type="submit" class="btn btn-success">Submit</button>
-                        </div>
-                      </div>
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Bulan</th>
+                          <th>Jumlah Iuran</th>
+                          <th>Tanggal </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">1</th>
+                          <td>January</td>
+                          <td>5.000</td>
+                          <td>17-10-2023</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">2</th>
+                          <td>February</td>
+                          <td>5.000</td>
+                          <td>17-11-2023</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">3</th>
+                          <td>Maret</td>
+                          <td>5.000</td>
+                          <td>17-12-2023</td>
+                        </tr>
+                      </tbody>
+                    </table>
 
-                    </form>
                   </div>
                 </div>
+              </div>
               </div>
             </div>
                         </div>
@@ -740,8 +779,69 @@ $this->load->view('layout/header');
               </div>
 
 
+<!--modal nekat -->
 
+				
+				
 
+              	        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                          </button>
+                          <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                        </div>
+                        <div class="modal-body">
+                          <div class="x_content">
+
+                    <form class="form-horizontal form-label-right" >
+
+                      
+
+                      
+                      <div class="item form-group">
+                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="email">Bulan <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                          <input type="email" id="email" name="email" required="required" class="form-control col-md-6 col-xs-6">
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="email">Jumlah <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                          <input type="email" id="email2" name="confirm_email" data-validate-linked="email" required="required" class="form-control col-md-6 col-xs-6">
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="number">Input 1 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                          <input type="number" id="number" name="number" required="required" data-validate-minmax="10,100" class="form-control col-md-6 col-xs-6">
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="website">Input 2 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                          <input type="url" id="website" name="website" required="required" placeholder="" class="form-control col-md-6 col-xs-6">
+                        </div>
+                      </div>
+                     
+                    
+                      
+                    </form>
+                  </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
 
 
 			<!-- modal daftar jemaat yang bisa dimutasi -->
