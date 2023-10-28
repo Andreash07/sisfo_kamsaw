@@ -651,7 +651,7 @@ $this->load->view('layout/header');
 
 							<div class="col-md-6 col-sm-6 col-xs-12">
 
-							  <input class="form-control col-md-7 col-xs-12" type="text" id="kwg_no" name="kwg_no" required="required" value="-10.000" disabled>
+							  <input class="form-control col-md-7 col-xs-12" type="text" id="kwg_no" name="kwg_no" required="required" value="-319.000" disabled>
 
 							</div>
 
@@ -680,7 +680,7 @@ $this->load->view('layout/header');
 
 							<div class="col-md-6 col-sm-6 col-xs-12">
 
-							  <input type="text" id="kwg_nama" name="kwg_nama" required="required" class="form-control col-md-7 col-xs-12" value="-1 Bulan" disabled>
+							  <input type="text" id="kwg_nama" name="kwg_nama" required="required" class="form-control col-md-7 col-xs-12" value="20 Bulan (November 2024)" disabled>
 
 							</div>
 
@@ -700,11 +700,11 @@ $this->load->view('layout/header');
 
 						<div class="form-group">
 
-							<label for="kwg_telepon" class="control-label col-md-3 col-sm-3 col-xs-12">Bulan Terkahir Bayar</label>
+							<label for="kwg_telepon" class="control-label col-md-3 col-sm-3 col-xs-12">Tanggal Terakkhir Pembayaran</label>
 
 							<div class="col-md-6 col-sm-6 col-xs-12">
 
-							  <input id="kwg_telepon" name="kwg_telepon" class="form-control col-md-7 col-xs-12" type="text" value="17 Agustus 1945" disabled>
+							  <input id="kwg_telepon" name="kwg_telepon" class="form-control col-md-7 col-xs-12" type="text" value="15 Maret 2023" disabled>
 
 							</div>
 
@@ -721,7 +721,8 @@ $this->load->view('layout/header');
                 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                 	<ul class="nav navbar-right panel_toolbox">
-                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">ADD Iuran </button>
+
+                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Tambah Pembayaran </button>
                    	</ul>
           
                   <div class="x_content">
@@ -736,22 +737,34 @@ $this->load->view('layout/header');
                         </tr>
                       </thead>
                       <tbody>
+                      	<tr>
+                          <th scope="row">0</th>
+                          <td>Saldo Awal</td>
+                          <td>-1.104.000</td>
+                          <td>17-10-2023</td>
+                        </tr>
                         <tr>
                           <th scope="row">1</th>
-                          <td>January</td>
-                          <td>5.000</td>
+                          <td>Iuran January 2023</td>
+                          <td>-5.000</td>
                           <td>17-10-2023</td>
                         </tr>
                         <tr>
                           <th scope="row">2</th>
-                          <td>February</td>
-                          <td>5.000</td>
+                          <td>Iuran February 2023</td>
+                          <td>-5.000</td>
                           <td>17-11-2023</td>
                         </tr>
                         <tr>
                           <th scope="row">3</th>
-                          <td>Maret</td>
-                          <td>5.000</td>
+                          <td>Iuran Maret 2023</td>
+                          <td>-5.000</td>
+                          <td>17-12-2023</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">4</th>
+                          <td>Pembayaran Iuran KPKP</td>
+                          <td>+800.000</td>
                           <td>17-12-2023</td>
                         </tr>
                       </tbody>
@@ -802,41 +815,28 @@ $this->load->view('layout/header');
 
                       
                       <div class="item form-group">
-                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="email">Bulan <span class="required">*</span>
+                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="email">Tanggal Pembayaran <span class="required"></span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-6">
                           <input type="email" id="email" name="email" required="required" class="form-control col-md-6 col-xs-6">
                         </div>
                       </div>
                       <div class="item form-group">
-                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="email">Jumlah <span class="required">*</span>
+                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="email">Nominal <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-6">
                           <input type="email" id="email2" name="confirm_email" data-validate-linked="email" required="required" class="form-control col-md-6 col-xs-6">
                         </div>
                       </div>
-                      <div class="item form-group">
-                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="number">Input 1 <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                          <input type="number" id="number" name="number" required="required" data-validate-minmax="10,100" class="form-control col-md-6 col-xs-6">
-                        </div>
-                      </div>
-                      <div class="item form-group">
-                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="website">Input 2 <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                          <input type="url" id="website" name="website" required="required" placeholder="" class="form-control col-md-6 col-xs-6">
-                        </div>
-                      </div>
+                     
                      
                     
                       
                     </form>
                   </div>
                         <div class="modal-footer">
-                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-primary">Save changes</button>
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                          <button type="button" class="btn btn-primary">Simpan</button>
                         </div>
 
                       </div>
