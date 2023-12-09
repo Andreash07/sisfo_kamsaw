@@ -867,8 +867,8 @@ function create_folder_store($combine2=null, $combine1=null){
 function clearText($value){
     if($value!=null){
         $value = trim($value);
-        $value = filter_var($value, FILTER_SANITIZE_MAGIC_QUOTES);
-        //$value = filter_var($value, FILTER_SANITIZE_ADD_SLASHES);
+        //$value = filter_var($value, FILTER_SANITIZE_MAGIC_QUOTES);
+        $value = filter_var($value, FILTER_SANITIZE_ADD_SLASHES);
     }
     return $value;
 }
@@ -1190,3 +1190,15 @@ function singkat_nama($string=null, $limit=21, $add=''){
 
 }
 //ANTON MANUNGKU. 
+
+function countBulanTercover($total_biayaKPKP, $saldo_akhir, $current_Month){
+    $data=array();
+    //hitung jumlah bulan yg dapat tercover karena tagihannya ini perbulan 
+    //berdasarkan total_biayaKPKP (bulanan) dengan saldo akhir yg dipunya
+
+    $est=$saldo_akhir/$total_biayaKPKP;//die($est);
+    $est_tercover=date('F Y', strtotime(floor($est).' months') );
+    $data['month']=$est_tercover;
+    $data['num_month']=floor($est);
+    return $data;
+}

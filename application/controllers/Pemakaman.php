@@ -247,13 +247,14 @@ class pemakaman extends CI_Controller {
 
 
 
-		$sql="select A.*, B.kwg_nama, B.kwg_alamat, C.hub_keluarga, B.id as kwg_id, B.kwg_telepon
+		$sql="select A.*, B.kwg_nama, B.kwg_alamat, C.hub_keluarga, B.id as kwg_id, B.kwg_telepon, D.id as kpkp_keluarga_jemaat_id
 
 				from anggota_jemaat A
 
 				join keluarga_jemaat B on B.id = A.kwg_no
 
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
+				left join kpkp_keluarga_jemaat D on D.keluarga_jemaat_id = B.id
 
 				where A.id >0 && A.status=1 && A.sts_anggota=1 ".$where.""; //A.status=1 bearti tidak pernah di delete
 
@@ -307,6 +308,7 @@ class pemakaman extends CI_Controller {
 
         
 
+        //die($sql." ".$group_by." ".$field_order." ".$order_by);
         $data_jemaat=$this->m_model->selectcustom($sql." ".$group_by." ".$field_order." ".$order_by);
 
 
@@ -386,7 +388,6 @@ class pemakaman extends CI_Controller {
 					default:
 
 						// code...
-
 						$view='pemakaman/anggota_jemaat';
 
 						break;
@@ -855,106 +856,24 @@ class pemakaman extends CI_Controller {
 			return;
 
 		}
-
 		else{
-
-			$where='';
-
-        	$order_by='ASC';
-
-        	$field_order='order by A.kwg_nama';
-
-      		$param_active='?';
-
-			$numLimit=30;
-
-	        $numStart=0;
-
-	        $query_data="select * from keluarga_jemaat A";
-	        
-	        $where.="where (A.delete_user is NULL || A.delete_user = '') ";
-
-	        //dicomment supaya keluarga yang sudah tidak aktif tapi belum di delete tetap muncul sehingga pemakaman bisa mengetahui jejak record keluarga tersebut
-            if($this->input->get('status')){
-        		$kwg_status=$this->input->get('status');
-            	if($this->input->get('status') == -1){
-            		$kwg_status=0;
-            	}
-        		$where.=" && A.status=".clearText($kwg_status);
-            }
-
-
-	        //inisiasi untuk key
-
-            if($this->input->get('kwg_nama')){
-
-
-
-                $where.=" AND LOWER(A.kwg_nama) REGEXP '".strtolower($this->input->get('kwg_nama'))."'";
-
-                $param_active.="kwg_nama=".$this->input->get('kwg_nama')."&";
-
-            }
-
-            if($this->input->get('wilayah')){
-            	
-                $where.=" AND A.kwg_wil='".strtolower($this->input->get('wilayah'))."'";
-
-                $param_active.="wilayah=".$this->input->get('wilayah')."&";
-
-            }
-
-
-
-	        if(!$this->input->get('page')){
-
-	            $page=1;
-
-	            $numStart=($numLimit*$page)-$numLimit;
-	        	$data['numStart']=$numStart;
-
-	        }
-
-	        else{
-
-	            $page=$this->input->get('page');
-
-	            $numStart=($numLimit*$page)-$numLimit;
-	        	$data['numStart']=$numStart;
-
-	        }
-
-	        if(!$this->input->get('page')){
-
-	            $page_active=1;
-
-	        }else{
-
-	            $page_active=$this->input->get('page');
-
-	        }
-
-
-
-	        $data['page']=$page;
-
-	        $limit='LIMIT '.$numStart.', '.$numLimit;
-
-
-	        $whereKPKP='and sts_kpkp = 1';
-			$data['TotalOfProduct']=TotalOfProduct($query_data." ".$where." ".$field_order." ".$order_by);
-
-			$data['pagingnation']=pagingnation($data['TotalOfProduct'], $numLimit, $page_active, $param_active, $links=2);
-
-			$data['dataKK']=$this->m_model->selectcustom($query_data." ".$where."  ".$field_order." ".$order_by." ".$limit);
-
-			//$data['dataKK']=$this->m_model->selectas('status', 1, 'keluarga_jemaat', 'kwg_nama', 'ASC');
-
+			$data['iuranKpkpp']='5000';
+			$data['total_biayaKPKP']='0';
 		}
-
 
 		$this->load->view('pemakaman/data_jemaat', $data);
 
+	}
+
+	public function simpan_pembayaran()
+	{
+		// code...
+		$data=array();
+		$param=array();
+		$param['keluarga_jemaat_idd']=$this->input->post('keluarga_jemaat_id');
+		$param['nominal']=$this->input->post('nominal');
+		$param['tgl_bayar']=$this->input->post('tgl_bayar');
+		print_r($param); die();
 	}
 
 }

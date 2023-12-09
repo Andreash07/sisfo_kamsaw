@@ -1262,5 +1262,44 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
 
     }
 
+    public function insert_kpkp_keluarga(){
+        $data=array();
+        $s="select A.*, B.kwg_nama, B.kwg_alamat, C.hub_keluarga, B.id as kwg_id, B.kwg_telepon, D.id as kpkp_keluarga_jemaat_id 
+            from anggota_jemaat A 
+            join keluarga_jemaat B on B.id = A.kwg_no
+            join ags_hub_kwg C on C.idhubkel = A.hub_kwg 
+            left join kpkp_keluarga_jemaat D on D.keluarga_jemaat_id = B.id 
+            where A.id >0 && A.status=1 && A.sts_anggota=1 and A.sts_kpkp = 1 
+            order by A.nama_lengkap ASC ";
+        $q=$this->m_model->selectcustom($s);
+        $ls_keluarga_id=array();
+        foreach ($q as $key => $value) {
+            // code...
+            if($value->kpkp_keluarga_jemaat_id != null){
+                $ls_keluarga_id[]=$value->kwg_id;
+                continue; //ini bearti sudah punya dompet KPKP
+            }
+
+            if(in_array($value->kwg_id, $ls_keluarga_id)){
+                continue; //ini dilewati karena pada iterasi sebelumnya sudah di proses atau di cek jadi tidak perlu di insert lagi data keluarganya ke dompet KPKP
+            }
+
+            $param=array();
+            //ini bearti belum ada tapi status KPKP nya aktif, maka harus diinsert ke data kpkp_keluarga
+
+            $param['keluarga_jemaat_id']=$value->kwg_id;
+            $param['saldo_akhir']=0;
+            $param['saldo_akhir_sukarela']=0;
+            $param['last_pembayaran']='0000-00-00';
+            $param['created_at']=date('Y-m-d H:i:s');
+            $param['created_by']=6;
+            $this->m_model->insertgetid($param, 'kpkp_keluarga_jemaat');
+
+            $ls_keluarga_id[]=$value->kwg_id;
+
+        }
+
+    }
+
 }
 

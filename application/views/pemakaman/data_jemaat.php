@@ -321,7 +321,8 @@ $this->load->view('layout/header');
 			//kwg_no pada anggota_jemaat adalah value dari anggota_jemaat_id
 
 			$anggota_KK=$this->m_model->selectas3('kwg_no', $dataKK[0]->id,'delete_user IS NULL', NULL, 'status', 1, 'anggota_jemaat', 'no_urut', 'ASC');
-			$KategoriPelayanan=getKategoriPelayanan();
+			//get_dompet kpkp
+			$dompet_kpkp=$this->m_model->selectas('keluarga_jemaat_id', $dataKK[0]->id, 'kpkp_keluarga_jemaat');
 	?>
 
 
@@ -366,10 +367,6 @@ $this->load->view('layout/header');
 
 						<i class="fa fa-plus "></i> Anggota
 
-					</a>
-
-					<a class="btn btn-warning" onclick="event.preventDefault()" href="#!" data-toggle="modal" data-target="#myModal_mutasi">
-						<i class="fa fa-plus "></i> Mutasi Anggota
 					</a> -->
 
 			    </div>
@@ -382,17 +379,15 @@ $this->load->view('layout/header');
 
 							<tr>
 
-								<th class="text-center">#</th>
+								<th class="text-center" style="max-width:20px;">#</th>
 
 								<th class="text-center" colspan="2" style="width:20%">Nomor Anggota</th>
 
-								<th class="text-center" style="width:30%">Data Diri</th>
+								<th class="text-center" style="width:40%">Data Diri</th>
 
-								<th class="text-center" style="width:20%">Talenta/Hoby/Profesi</th>
+								<th class="text-center" style="width:20%">Data KPKP</th>
 
-								<th class="text-center" style="width:20%">Pelayanan</th>
-
-								<th class="text-center" style="width:10%">Action</th>
+								<th class="text-center" style="width:15%">Action</th>
 
 							</tr>
 
@@ -401,24 +396,11 @@ $this->load->view('layout/header');
 						<tbody>
 
 							<?php
-							$kawin=lsKawin();
 							$lsKawin=array();
-							foreach($kawin as $key => $value){
-								$lsKawin[$value->id]=$value->status_kawin;
-							}
 
 							if(isset($anggota_KK) && count($anggota_KK)>0){
 
 								foreach ($anggota_KK as $keyAnggota_KK => $valueAnggota_KK) {
-
-									//get hoby Jemaat
-
-									$hoby=$this->m_model->selectas('anggota_jemaat_id', $valueAnggota_KK->id, 'hoby_jemaat');
-
-									//get profesi Jemaat
-
-									$profesi=$this->m_model->selectas('anggota_jemaat_id', $valueAnggota_KK->id, 'profesi_jemaat');
-
 									# code...
 
 									if($valueAnggota_KK->telepon == ''){
@@ -427,38 +409,6 @@ $this->load->view('layout/header');
 
 									}
 
-
-
-									$baptis="Belum";
-
-									$sidi="Belum";
-
-									$nikah="Belum";
-
-									if($valueAnggota_KK->status_baptis!= '' || $valueAnggota_KK->status_baptis!= null){
-
-										$baptis=$valueAnggota_KK->tmpt_baptis.', '.convert_tgl_dMY($valueAnggota_KK->tgl_baptis);
-
-									}
-
-
-
-									if($valueAnggota_KK->status_sidi!= '' || $valueAnggota_KK->status_sidi!= null){
-
-										$sidi=$valueAnggota_KK->tmpt_sidi.', '.convert_tgl_dMY($valueAnggota_KK->tgl_sidi);
-
-									}
-
-
-
-									if($valueAnggota_KK->sts_kawin!= '' || $valueAnggota_KK->sts_kawin!= null){
-
-										$nikah=$valueAnggota_KK->tmpt_nikah.', '.convert_tgl_dMY($valueAnggota_KK->tgl_nikah);
-										if($valueAnggota_KK->sts_kawin!=2){
-											$nikah=$lsKawin[$valueAnggota_KK->sts_kawin];
-										}
-
-									}
 									if($valueAnggota_KK->sts_anggota==1){
 
 		            		$sts='<i class="fa fa-check-square text-success" title="Aktif"></i> Aktif';
@@ -467,11 +417,15 @@ $this->load->view('layout/header');
 			            else{
 		            		$sts='<i class="fa fa-times text-danger" title="Tidak Aktif"></i> Tidak Aktif';
 			            }
+
+			            if($valueAnggota_KK->sts_kpkp==1){
+			            	$total_biayaKPKP=$total_biayaKPKP+$iuranKpkpp;
+			            }
 							?>
 
 								<tr>
 
-									<td class="text-center">
+									<td class="text-center" style="max-width:20px;">
 										<?=$keyAnggota_KK+1;?>
 									</td>
 
@@ -482,7 +436,7 @@ $this->load->view('layout/header');
 										<?=$sts;?>
 									</td>
 
-									<td class="text-left" style="width:30%; line-height: 2">
+									<td class="text-left" style="width:40%; line-height: 2">
 
 										<b>Nama:</b> <?= $valueAnggota_KK->nama_lengkap;?>
 
@@ -508,76 +462,8 @@ $this->load->view('layout/header');
 
 									</td>
 
-									<td style="width:20%">
-
-										<!--<label>Talenta</label>
-
-										<a id="editHobyProfesi" href="<?= base_url().'admin/'.$this->uri->segment(2).'?editHobyProfesi=true&';?>id=<?php echo $valueAnggota_KK->id; ?>" onclick="event.preventDefault();" data-toggle="modal" data-target="#myModal">
-
-											<span class="fa fa-pencil pull-right" style="width:20%"></span>
-
-										</a> -->
-
-										<div class="clearfix"></div>
-
-										<!--<?php
-
-											foreach ($hoby as $keyhoby => $valuehoby) {
-
-												# code...
-
-												echo '<span class="label label-success" style="margin-right:5px;">'.get_name('hoby', 'id', $valuehoby->hoby_id, 'name').'</span><div class="clearfix"></div>';
-
-											}
-
-										?> -->
-
-
-
-										
-
-										<!--<label>Profesi</label>
-
-										<a id="editHobyProfesi" href="<?= base_url().'admin/'.$this->uri->segment(2).'?editHobyProfesi=true&';?>id=<?php echo $valueAnggota_KK->id; ?>" onclick="event.preventDefault();" data-toggle="modal" data-target="#myModal">
-
-											<span class="fa fa-pencil pull-right" style="width:20%"></span>
-
-										</a> -->
-
-										<div class="clearfix"></div>
-
-										<!--<?php
-
-											foreach ($profesi as $keyprofesi => $valueprofesi) {
-
-												# code...
-
-												echo '<span class="label label-warning" style="margin-right:5px;">'.get_name('profesi', 'id', $valueprofesi->profesi_id, 'name').'</span><div class="clearfix"></div>';
-
-											}
-
-										?> -->
-
-									</td>
-
 									<td class="text-center" style="width:20%">
-									<!--	<select id="KategoriPelayanan_angjem" recid="<?=$valueAnggota_KK->id;?>" class="form-control">
-										<?php 
-										foreach ($KategoriPelayanan as $keyKategoriPelayanan => $valueKategoriPelayanan) {
-											# code...
-											$selectKdGroup="";
-											if($valueKategoriPelayanan->id==$valueAnggota_KK->kd_group_id){
-												$selectKdGroup='selected';
-											}
-										?>
-											<option value="<?=$valueKategoriPelayanan->id.'#'.$valueKategoriPelayanan->kd_group;?>" <?=$selectKdGroup;?>><?=$valueKategoriPelayanan->kd_group;?></option>
-										<?php
-										}
-										?>
-										</select>
-
 										<div class="form-group">
-											<div class="divider"></div>
 											<label for="select_stst_kpkp<?=$valueAnggota_KK->id;?>">KPKP</label>
 											<select class="form-control" id="select_stst_kpkp<?=$valueAnggota_KK->id;?>" name="select_stst_kpkp<?=$valueAnggota_KK->id;?>" recid="<?=$valueAnggota_KK->id;?>">
 												<option value="0" <?php if($valueAnggota_KK->sts_kpkp==0){echo 'selected="selected"';}; ?>>Tidak Aktif</option>
@@ -589,13 +475,13 @@ $this->load->view('layout/header');
 												<option value="0" <?php if($valueAnggota_KK->aturan_kpkp==0){echo 'selected="selected"';}; ?>> < 2020 kebawah</option>
 												<option value="1" <?php if($valueAnggota_KK->aturan_kpkp==1){echo 'selected="selected"';}; ?> > >= 2020 keatas</option>
 											</select>
-										</div> -->
+										</div>
 
 									</td>
 
-									<td class="text-center" style="width:10%">
+									<td class="text-center" style="width:15%">
 
-										<a id="editAnggota" href="<?= base_url().'admin/'.$this->uri->segment(2).'?editAnggota=true&';?>id=<?php echo $valueAnggota_KK->id; ?>" onclick="event.preventDefault();" data-toggle="modal" data-target="#myModal" class="btn btn-warning" style="padding: 2px 12px 2px 2px">
+										<!--<a id="editAnggota" href="<?= base_url().'admin/'.$this->uri->segment(2).'?editAnggota=true&';?>id=<?php echo $valueAnggota_KK->id; ?>" onclick="event.preventDefault();" data-toggle="modal" data-target="#myModal" class="btn btn-warning" style="padding: 2px 12px 2px 2px">
 
 											<span class="fa fa-pencil" style="width:20%"></span>
 
@@ -606,7 +492,7 @@ $this->load->view('layout/header');
 											<span class="fa fa-trash" style="width:20%"></span>
 
 										</a>
-										<input type="text" name="no_urut" value="<?=$valueAnggota_KK->no_urut;?>" class="form-control text-center" recid="<?php echo $valueAnggota_KK->id; ?>">
+										<input type="text" name="no_urut" value="<?=$valueAnggota_KK->no_urut;?>" class="form-control text-center" recid="<?php echo $valueAnggota_KK->id; ?>">-->
 									</td>
 
 								</tr>
@@ -642,76 +528,18 @@ $this->load->view('layout/header');
 				
 
 					<div class="x_content">
-
-						<div class="form-group">
-
-							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_nama">Saldo Akhir<span class="required">*</span>
-
-							</label>
-
-							<div class="col-md-6 col-sm-6 col-xs-12">
-
-							  <input class="form-control col-md-7 col-xs-12" type="text" id="kwg_no" name="kwg_no" required="required" value="-319.000" disabled>
-
-							</div>
-
-						</div>
-
-						<div class="form-group">
-
-							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_nama">Saldo Akhir (Sukarela)<span class="required">*</span>
-
-							</label>
-
-							<div class="col-md-6 col-sm-6 col-xs-12">
-
-
-							  <input type="text" id="kwg_nama" name="kwg_nama" required="required" class="form-control col-md-7 col-xs-12" value="5.000" disabled>
-
-							</div>
-
-						</div>
-
-						<div class="form-group">
-
-							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_alamat">Estimasi Bulan Tercover
-
-							</label>
-
-							<div class="col-md-6 col-sm-6 col-xs-12">
-
-							  <input type="text" id="kwg_nama" name="kwg_nama" required="required" class="form-control col-md-7 col-xs-12" value="20 Bulan (November 2024)" disabled>
-
-							</div>
-
-						</div>
-
-						<div class="form-group">
-
-							<label for="kwg_telepon" class="control-label col-md-3 col-sm-3 col-xs-12">Beban Iuaran per Bulan</label>
-
-							<div class="col-md-6 col-sm-6 col-xs-12">
-
-							  <input id="kwg_telepon" name="kwg_telepon" class="form-control col-md-7 col-xs-12" type="text" value="15.000" disabled>
-
-							</div>
-
-						</div>
-
-						<div class="form-group">
-
-							<label for="kwg_telepon" class="control-label col-md-3 col-sm-3 col-xs-12">Tanggal Terakkhir Pembayaran</label>
-
-							<div class="col-md-6 col-sm-6 col-xs-12">
-
-							  <input id="kwg_telepon" name="kwg_telepon" class="form-control col-md-7 col-xs-12" type="text" value="15 Maret 2023" disabled>
-
-							</div>
-
-							
-
-						</div>
-
+						<?php 
+							if(count($dompet_kpkp)==0){
+						?>
+								<span class="text-danger">Belum memiliki Data Pembayaran KPKP, Silahkan Hubungi Administrator/Pnt/Pengurus KPKP Terkait</span>
+						<?php
+							}
+							else{
+								$dataKpkp['data']=$dompet_kpkp[0];
+								$dataKpkp['total_biayaKPKP']=$total_biayaKPKP;
+								$this->load->view('pemakaman/rincian_kpkp', $dataKpkp);
+							}
+						?>
 					</div>	
                           
                         </div>
@@ -793,89 +621,41 @@ $this->load->view('layout/header');
 
 
 <!--modal nekat -->
-
-				
-				
-
-              	        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                      <div class="modal-content">
-
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
-                          </button>
-                          <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-                        </div>
-                        <div class="modal-body">
-                          <div class="x_content">
-
-                    <form class="form-horizontal form-label-right" >
-
-                      
-
-                      
+	        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                  </button>
+                  <h4 class="modal-title" id="myModalLabel">Pembayaran Iuran KPKP (Bulanan)</h4>
+                </div>
+                <div class="modal-body">
+                	<form>
+	                  <div id="form_id">
                       <div class="item form-group">
-                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="email">Tanggal Pembayaran <span class="required"></span>
+                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="tgl_bayar">Tanggal Pembayaran <span class="required"></span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-6">
-                          <input type="email" id="email" name="email" required="required" class="form-control col-md-6 col-xs-6">
+                          <input type="date" id="tgl_bayar" name="tgl_bayar" required="required" class="form-control col-md-6 col-xs-6">
                         </div>
                       </div>
                       <div class="item form-group">
-                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="email">Nominal <span class="required">*</span>
+                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="nominal">Nominal <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-6">
-                          <input type="email" id="email2" name="confirm_email" data-validate-linked="email" required="required" class="form-control col-md-6 col-xs-6">
+                          <input type="text" id="nominal" name="nominal" required="required" class="form-control col-md-6 col-xs-6">
                         </div>
                       </div>
-                     
-                     
-                    
-                      
-                    </form>
-                  </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-                          <button type="button" class="btn btn-primary">Simpan</button>
-                        </div>
-
-                      </div>
-                    </div>
-                  </div>
-
-
-			<!-- modal daftar jemaat yang bisa dimutasi -->
-			<div class="modal fade" tabindex="-1" role="dialog" id="myModal_mutasi">
-			    <div class="modal-dialog  modal-lg" role="document">
-			        <div class="modal-content" id="modal-content_mutasi">
-						<div class="row">
-							<div class="col-sm-12 col-xs-12">
-								<div class="x_panel tile" style="max-height: 550px; height: 550px;">
-					                <div class="x_title">
-					                  	<h2>Daftar Keluarga</h2>
-					                  	<div class="clearfix"></div>
-					                  	<form action="<?=base_url();?>ajax/get_keluarga" method="POST" id="form_search_kwg">
-											<div class="form-group">
-												<div class="col-sm-10 col-xs-8">
-												  <input type="hidden" id="view" name="view" class="form-control" value="ajax/ls_keluarga">
-												  <input type="text" id="keyword_keluarga" name="keyword_keluarga" class="form-control" placeholder="Ketik Nama Keluarga/Anggota Jemaat ...">
-												</div>
-												<div class="col-sm-2 col-xs-4">
-												  	<button id="btn_search" class="btn btn-warning " onclick="event.preventDefault();"><i class="fa fa-search"></i> Cari</button>
-											  	</div>
-											</div>
-					                	</form>
-					              		<div class="clearfix"></div>
-					                </div>
-					                <div class="x_content" id="div_datakeluarga">
-					                	
-					                </div>
-					          	</div>
-							</div>
-						</div>
-					</div>
-			    </div>
-			</div>
+                  	</div>
+                	</form>
+	                <div class="modal-footer">
+	                  <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+	                  <button type="button" class="btn btn-primary" id="btn_simpan_bayar">Simpan</button>
+	                </div>
+              	</div>
+              </div>
+            </div>
+          </div>
 	<?php
 
 		}
@@ -905,6 +685,17 @@ $this->load->view('layout/header');
 
 	?>
 		<script type="text/javascript">
+			$(document).on('click', '[id=btn_simpan_bayar]', function(e){
+				dataMap={}
+				dataMap=$('#form_bayar').serialize()
+				url=$('#form_bayar').attr('action') 
+				console.log(url)
+				$.post(url, dataMap, function(data){
+
+				})
+			})
+
+
 			$(document).on('click', '[id=btn_search]', function(e){
 				$('#div_datakeluarga').html('<i class="fa fa-circle-o-notch fa-spin fa-2x"></i> Memuat Data ...');
 				e.preventDefault();
