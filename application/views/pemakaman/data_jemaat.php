@@ -630,29 +630,41 @@ $this->load->view('layout/header');
                   <h4 class="modal-title" id="myModalLabel">Pembayaran Iuran KPKP (Bulanan)</h4>
                 </div>
                 <div class="modal-body">
-                	<form>
-	                  <div id="form_id">
-                      <div class="item form-group">
-                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="tgl_bayar">Tanggal Pembayaran <span class="required"></span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                          <input type="date" id="tgl_bayar" name="tgl_bayar" required="required" class="form-control col-md-6 col-xs-6">
-                        </div>
-                      </div>
-                      <div class="item form-group">
-                        <label class="control-label col-md-6 col-sm-6 col-xs-6" for="nominal">Nominal <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                          <input type="text" id="nominal" name="nominal" required="required" class="form-control col-md-6 col-xs-6">
-                        </div>
-                      </div>
-                  	</div>
-                	</form>
-	                <div class="modal-footer">
-	                  <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-	                  <button type="button" class="btn btn-primary" id="btn_simpan_bayar">Simpan</button>
+                	<div class="row">
+	                	<form>
+	                    <div class="item form-group col-xs-12">
+	                      <label class="text-right control-label col-md-3 col-sm-6 col-xs-6" for="tgl_bayar">Tanggal Pembayaran <span class="required text-right"></span>
+	                      </label>
+	                      <div class="col-md-6 col-sm-6 col-xs-6">
+	                        <input type="date" id="tgl_bayar" name="tgl_bayar" required="required" class="form-control col-md-6 col-xs-6">
+	                      </div>
+	                    </div>
+	                    <div class="item form-group col-xs-12">
+	                      <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="nominal">Nominal <span class="required text-right">*</span>
+	                      </label>
+	                      <div class="col-md-6 col-sm-6 col-xs-6">
+	                        <input type="text" id="nominal" name="nominal" required="required" class="form-control">
+	                      </div>
+		                	</div>
+		                	<div class="item form-group col-xs-12">
+	                      <label class="control-label col-md-3 col-sm-6 col-xs-6 text-right" for="nominal">Iuran Sukarela <span class="required"></span><br>
+	                      	<span style="font-weight: 400;">Jika "<b class="text-danger text-sm">Ya</b>" akan memotong dari nilai <b class="text-danger text-sm">Nominal</b></span>
+	                      </label>
+	                      <div class="col-md-4 col-sm-6 col-xs-6">
+	                        <select class="form-control" id="option_sukarela">
+	                        	<option value="0">Tidak, Terimakasih!</option>
+	                        	<option value="1">Ya, dengan nominal tertentu!</option>
+	                        	<option value="2">Ya, dipotong otomatis dari sistem!</option>
+	                        </select>
+	                      </div>
+		                	</div>
+	                	</form>
 	                </div>
               	</div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                  <button type="button" class="btn btn-primary" id="btn_simpan_bayar">Simpan</button>
+                </div>
               </div>
             </div>
           </div>
@@ -1289,5 +1301,22 @@ $this->load->view('layout/footer');
 		$.post('<?=base_url();?>admin/update_aturan_kpkp', dataMap, function(data){
 
 		})
+	})
+
+	$(document).on('change', '[id=option_sukarela]', function(e){
+		dataMap={}
+		dataMap['option']=$(this).val() //1:tidak dipotong; 2:dipotong nominal tertentu; 3:dipotong oleh sisfo dari sisa yg dibayarkan.
+		dataMap['recid']=$(this).attr('recid')
+
+		if(dataMap['option']==1){
+			$().hide();
+		}
+		else if(dataMap['option']==2){
+			$().show();
+		}
+		else if(dataMap['option']==3){
+			$().show();
+		}
+		
 	})
 </script>

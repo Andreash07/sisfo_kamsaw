@@ -1301,5 +1301,251 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
 
     }
 
+    public function import_bulanan_kpkp(){
+        $data=array();
+        //get keluarga jemaat dulu
+        $s="select B.kwg_nama, B.kwg_alamat, B.kwg_telepon, D.*, B.kwg_wil, C.num_jiwa
+            from keluarga_jemaat B
+            join kpkp_keluarga_jemaat D on D.keluarga_jemaat_id = B.id
+            join (select z.kwg_no, COUNT(z.id) as num_jiwa 
+                    from anggota_jemaat z where z.status=1 && z.sts_kpkp=1 && z.sts_anggota=1 && tgl_meninggal='0000-00-00' && (z.tmpt_meninggal='' || z.tmpt_meninggal is NULL) 
+                    group by z.kwg_no
+                ) C on C.kwg_no = B.id 
+            ";
+        $q=$this->m_model->selectcustom($s);
+        $ls_keluarga=array();
+        foreach ($q as $key => $value) {
+            // code...
+            $ls_keluarga[$value->kwg_nama.'-'.$value->kwg_wil]=$value;
+
+        }
+      
+        $path_file="import/kpkp/data-kpkp per Januari 2024.xlsx";
+        //die(FCPATH.$path_file);
+
+        $this->load->helper('XLSXReader');
+        $this->load->helper('XLSXWorksheet');
+        $xlsx = new XLSXReader(FCPATH.$path_file);
+        $sheetNames = $xlsx->getSheetNames();
+
+        foreach ($sheetNames as $key => $sheetName) {
+            if($key>1){
+              continue;
+            }
+            //ini berjalan hanya di sheet 1
+            $sheet = $xlsx->getSheet($sheetName);
+            $xlsx_data = $sheet->getData();
+            $header_row_xlsx = array_shift($xlsx_data);
+
+            //echo json_encode(array('total'=>$old_total));
+            //echo print_r($header_row_xlsx); die();
+            $nameField=array();
+            foreach ($header_row_xlsx as $key => $value) {
+              // code...
+              /*if($value==null){
+                continue;
+              }*/
+              
+              $nameField[]=$value;
+            }
+            //echo count($nameField); print_r($nameField); die();
+
+            $success=0;
+            $success_temp=0;
+            $read_process=0;
+            $ls_data_kwg_exl=array();
+            foreach ($xlsx_data as $key => $row_xlsx) {
+              //if($key+1 <= $read_data){
+                //ini bearti sudah dibaca sebelumnya
+                //continue;
+              //}
+
+                if($read_process>=4000 ){
+                //ini bearti sudah dibaca sebelumnya
+                break;
+                }
+
+                unset($arrData);
+                //unset($arrData_new);
+                for ($i = 0; $i < count($row_xlsx); $i++) {
+                    if($i>count($nameField)){
+                        continue;
+                    }
+                    // non-date value
+                    $xlsx_field_value = $row_xlsx[$i];
+
+                    $arrData[$nameField[$i]]=htmlentities(clearText($xlsx_field_value));
+                    if($nameField[$i]=='Tgl Terakhir Bayar'){
+                        $UNIX_DATE = ($xlsx_field_value - 25569) * 86400;
+                        //$arrData[$nameField[$i]]=gmdate("m-d-Y", $UNIX_DATE);
+                        $arrData[$nameField[$i]]=gmdate("Y-m-d", $UNIX_DATE);
+                    }
+                }
+                $ls_data_kwg_exl[$arrData['Nama KK']][]=$arrData;
+            }
+        }
+
+        //get pokok iuran
+        $s1="select * from kpkp_pokok_iuran ";
+        $q1=$this->m_model->selectcustom($s1);
+
+        echo '<table>';
+        echo '<tr><th>#</th><th>Nama</th><th>Wilayah Sisfo</th><th>Data System</th><th>Data Excel</th></tr>';
+        $i=1;
+
+
+
+
+
+        $num_month=array();
+        foreach ($ls_keluarga as $key => $value) {
+            // code...
+
+            if(isset($ls_data_kwg_exl[$value->kwg_nama])){
+                if(count($ls_data_kwg_exl[$value->kwg_nama] ) == 1){
+                    if($value->num_jiwa!=$ls_data_kwg_exl[$value->kwg_nama][0]['Jumlah Jiwa KPKP']){
+                        continue;
+                    }
+                    echo '<tr>';
+                    echo '<td>'.$i.'</td>';
+                    echo '<td>'.$value->kwg_nama.'</td>';
+                    echo '<td>'.$value->kwg_wil.'</td>';
+                    echo '<td><ul>';
+                    foreach ($ls_data_kwg_exl[$value->kwg_nama] as $key1 => $value1) {
+                        // code...
+                        //hitung bulan berdasarkan pokok_iuran
+                        $summary="";
+                        $total=0;
+                        $last_periode=null;
+                        $last_num_month=0;
+                        $total_saldo_new=0;
+
+                        //check jiwa terdaftar kpkp
+                        $num_jiwa=$value->num_jiwa;
+                        $sts_num_jiwa='';
+                        if($value->num_jiwa!=$value1['Jumlah Jiwa KPKP']){
+                            $sts_num_jiwa=' | Beda';
+                        }
+
+                        foreach ($q1 as $key2 => $value2) {
+                            // code...
+                            $num_month[$value->kwg_nama][$value2->periode]=$this->count_month($value2->periode, $value2->nominal, $value1['Tgl Terakhir Bayar'], $value2->status, $last_periode, $last_num_month);
+
+                            $summary.=$value2->periode.": ".$num_month[$value->kwg_nama][$value2->periode]['num']." | ";
+                            $total=$total+$num_month[$value->kwg_nama][$value2->periode]['num'];
+                            $last_periode=$num_month[$value->kwg_nama][$value2->periode]['last_periode'];
+                            $last_num_month=$num_month[$value->kwg_nama][$value2->periode]['num'];
+
+                            $num_bulan_periode=$num_month[$value->kwg_nama][$value2->periode]['num'];
+                            $saldo_new=$this->hitung_saldo($num_jiwa, $num_bulan_periode, $value2->nominal);
+                            $total_saldo_new=$total_saldo_new+$saldo_new;
+                        }
+                        //if($value->num_jiwa!=$value1['Jumlah Jiwa KPKP']){
+                          //  echo '<li>(Jiwa: '.$num_jiwa.''.$sts_num_jiwa.')</li>';
+                        //}else{
+                            echo '<li>Wil: <b>'.$value1['Wilayah'].'</b> (saldo: '.$total_saldo_new.'; Jiwa: '.$num_jiwa.''.$sts_num_jiwa.'; Tgl Terakhir Bayar: '.$value1['Tgl Terakhir Bayar'].'; Total Bulan: '.$total.' ['.$summary.'])</li>';
+                        //}
+
+                        //update ke keluarga KPKP
+                        $recid_kpkp=$value->id; //id kpkp_keluarga
+                        $param=array();
+                        $param['saldo_akhir']=$total_saldo_new;
+                        $param['last_pembayaran']=NULL;
+                        $param['last_update']=NULL;
+                        $u=$this->m_model->updateas('id', $recid_kpkp, $param, 'kpkp_keluarga_jemaat');
+                    }
+                    echo '</ul></td>';
+                    echo '<td><ul>';
+                    $status_check='';
+                    foreach ($ls_data_kwg_exl[$value->kwg_nama] as $key1 => $value1) {
+                        // code...
+                        $status_check='';
+                        if($total!=$value1['Bulan yang harus dibayar/sudah bayar']){
+                            $status_check='<i style="color:red;">Tidak Sesuai</i>';
+                        }
+                        echo '<li>Wil: <b>'.$value1['Wilayah'].'</b> (saldo: '.$value1['Total Keseluruhan'].'; Jiwa: '.$value1['Jumlah Jiwa KPKP'].'; Total Bulan: '.$value1['Bulan yang harus dibayar/sudah bayar'].' '.$status_check.')</li>';
+                    }
+                    echo '</ul></td>';
+                    echo '</tr>';
+                    $i++;
+                }
+            }
+            /*else{
+                echo '<tr>';
+                echo '<td>'.$i.'</td>';
+                echo '<td>'.$value->kwg_nama.'</td>';
+                echo '<td>'.$value->kwg_wil.'</td>';
+                echo '<td></td>';
+                echo '</tr>';
+                $i++;
+            }*/
+        }
+        echo '</table>';
+
+        //$data['data']=$arrData_new;
+        //$data['po_barang_masuk_supplier']=$po_barang_masuk_supplier;
+        //$this->load->view('tools/import_bulanan_kpkp', $data);
+    }
+
+    private function count_month($periode, $nominal, $tgl_user, $status=1, $last_periode=null, $last_num_month=0){
+        $data=array();
+        $data['num']=0;
+        $data['nominal']=0;
+        $data['last_periode']=null;
+        $tgl_user=date('Y-m', strtotime($tgl_user) ).'-01';
+        $tgl_periode=date('Y-m', strtotime($periode) ).'-01';
+        $today=date('Y-m').'-01';
+        
+        if($status==1){
+            //ini bearti masih aktif
+            if(strtotime($tgl_user) > strtotime($tgl_periode) && $last_periode!=null ){
+                $data['num']=0;
+                $data['nominal']=0;
+            }else{
+                $diff = abs(strtotime($today)-strtotime($tgl_user));
+                //echo ($today.'-'.$tgl_user); die();
+                //echo ($diff); die();
+                $years = floor($diff / (365*60*60*24));
+                $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                $data['num']=(($years*12)+$months)+$last_num_month;
+                if(strtotime($tgl_user)<strtotime($today)){
+                    //ini bearti minus
+                    $data['num']=$data['num']*-1;
+                }
+                $data['last_periode']=$tgl_periode;
+            }
+
+        }
+        else if($status==0){
+            //ini bearti sudah tidak berlaku, tapi masih digunakan untuk melihat tagihan sebelum di periode ini
+            if(strtotime($tgl_user) > strtotime($tgl_periode)){
+                $data['num']=0;
+                $data['nominal']=0;
+            }else{
+                $diff = abs(strtotime($tgl_user)-strtotime($tgl_periode));
+                $years = floor($diff / (365*60*60*24));
+                $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                $data['num']=(($years*12)+$months)+$last_num_month;
+                $data['last_periode']=$tgl_periode;
+                if(strtotime($tgl_user)<strtotime($today)){
+                    //ini bearti minus
+                    $data['num']=$data['num']*-1;
+                }
+            }
+            
+        }
+
+        //die($tgl_user);
+        return $data;
+    }
+
+    private function hitung_saldo($jiwa, $num_bulan, $nominal_pokok){
+        $data=array();
+        $saldo=($jiwa*$nominal_pokok)*$num_bulan;
+
+        return $saldo;
+
+    }
+
 }
 
