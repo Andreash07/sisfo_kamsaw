@@ -870,10 +870,62 @@ class pemakaman extends CI_Controller {
 		// code...
 		$data=array();
 		$param=array();
-		$param['keluarga_jemaat_idd']=$this->input->post('keluarga_jemaat_id');
-		$param['nominal']=$this->input->post('nominal');
-		$param['tgl_bayar']=$this->input->post('tgl_bayar');
-		print_r($param); die();
+		$keluarga_jemaat_id=$this->input->post('keluarga_jemaat_id');
+		$num_anggota_kpkp=$this->input->post('num_anggota_kpkp');
+		$nominal=$this->input->post('nominal');
+		$tgl_bayar=$this->input->post('tgl_bayar');
+		$option_sukarela=$this->input->post('option_sukarela');
+
+		//untuk insert ke kpkp_bayar_bulanan
+		$param['keluarga_jemaat_id']=$keluarga_jemaat_id;;
+		$param['tgl_bayar']=$tgl_bayar;
+		$param['created_at']=date('Y-m-d H:i:s');
+		$param['created_by']=$this->session->userdata('userdata')->id;
+		$param1['type']='1'; //ini sebagai tanda bayar bulanan
+
+		//get id keluarga KPKP dari keluarga jemaat id
+		$qid_kpkp=$this->m_model->selectas('keluarga_jemaat_id', $keluarga_jemaat_id, 'kpkp_keluarga_jemaat');
+		foreach ($qid_kpkp as $key => $value) {
+			// code...
+			$id_kpkp=$value->id;
+			$saldo_akhir=$value->saldo_akhir;
+		}
+
+		switch ($option_sukarela) {
+			case '0':
+				// code... //tidak ada dana sukarela
+				$param['nominal']=$nominal;
+
+				break;
+			case '1':
+				// code...
+				break;
+			
+			default:
+				// code...
+				break;
+		}
+
+
+		//insert pembayaran
+		$i=$this->m_model->insertgetid($param, 'kpkp_bayar_bulanan');
+		if($i){
+			//ini jika berhasil update saldo pada akun kpkp anggota jemaat
+			//pakai $param['nominal'] karena ada kemungkinan nominal yg dibayakan berubah karena ada potongan sukarela, jadi gunakan yg netto
+			$param2=array();
+			$param2['saldo_akhir']=$saldo_akhir+$param['nominal'];
+			$param2['last_pembayaran']=$param['tgl_bayar'];
+			$param2['last_update']=date('Y-m-d H:i:s');
+			$u=$this->m_model->updateas('id', $id_kpkp, $param2, 'kpkp_keluarga_jemaat');
+
+		}else{
+			$u=false;
+		}
+
+
+		redirect(base_url().'pemakaman/DataJemaat?edit=true&id='.$keluarga_jemaat_id);
+
+		//print_r($param); die();
 	}
 
 }

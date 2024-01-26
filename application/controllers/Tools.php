@@ -1446,13 +1446,25 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                             echo '<li>Wil: <b>'.$value1['Wilayah'].'</b> (saldo: '.$total_saldo_new.'; Jiwa: '.$num_jiwa.''.$sts_num_jiwa.'; Tgl Terakhir Bayar: '.$value1['Tgl Terakhir Bayar'].'; Total Bulan: '.$total.' ['.$summary.'])</li>';
                         //}
 
-                        //update ke keluarga KPKP
-                        $recid_kpkp=$value->id; //id kpkp_keluarga
-                        $param=array();
-                        $param['saldo_akhir']=$total_saldo_new;
-                        $param['last_pembayaran']=NULL;
-                        $param['last_update']=NULL;
-                        $u=$this->m_model->updateas('id', $recid_kpkp, $param, 'kpkp_keluarga_jemaat');
+                        //insert dulu data saldo awal setiap keluarga
+                        $param1=array();
+                        $param1['keluarga_jemaat_id']=$value->keluarga_jemaat_id;
+                        $param1['type']='0'; //sebagai initiati saldo awal
+                        $param1['nominal']=$total_saldo_new;
+                        $param1['tgl_bayar']=date('Y-m-d');
+                        $param1['created_at']=date('Y-m-d H:i:s');
+                        $param1['created_by']='1'; //system administrator
+                        $i_databayaranKPKP=$this->m_model->insertgetid($param1, 'kpkp_bayar_bulanan');
+
+                        if($i_databayaranKPKP){
+                            //update ke keluarga KPKP
+                            $recid_kpkp=$value->id; //id kpkp_keluarga
+                            $param=array();
+                            $param['saldo_akhir']=$total_saldo_new;
+                            $param['last_pembayaran']=NULL;
+                            $param['last_update']=NULL;
+                            $u=$this->m_model->updateas('id', $recid_kpkp, $param, 'kpkp_keluarga_jemaat');
+                        }
                     }
                     echo '</ul></td>';
                     echo '<td><ul>';

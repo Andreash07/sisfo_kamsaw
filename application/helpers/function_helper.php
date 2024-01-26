@@ -979,7 +979,7 @@ function spacetobr($value=null){
     return $data;
 
 }
-function checkhubkwg($value=null, $arr_hubkwg, $type_view=null){
+function checkhubkwg($value=null, $arr_hubkwg=null, $type_view=null){
     $data='-';
     if(is_numeric($value)){
         if(isset($arr_hubkwg[$value])){
@@ -993,7 +993,7 @@ function checkhubkwg($value=null, $arr_hubkwg, $type_view=null){
     }
     return $data;
 }
-function checksts_kawin($value=null, $arr_sts_kawin, $type_view=null){
+function checksts_kawin($value=null, $arr_sts_kawin=null, $type_view=null){
     $data='-';
     if(is_numeric($value)){
         if(isset($arr_sts_kawin[$value])){

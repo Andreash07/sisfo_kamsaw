@@ -323,6 +323,9 @@ $this->load->view('layout/header');
 			$anggota_KK=$this->m_model->selectas3('kwg_no', $dataKK[0]->id,'delete_user IS NULL', NULL, 'status', 1, 'anggota_jemaat', 'no_urut', 'ASC');
 			//get_dompet kpkp
 			$dompet_kpkp=$this->m_model->selectas('keluarga_jemaat_id', $dataKK[0]->id, 'kpkp_keluarga_jemaat');
+			$mutasiiuran_kpkp=$this->m_model->selectas('keluarga_jemaat_id', $dataKK[0]->id, 'kpkp_bayar_bulanan');
+
+			$num_anggotaKPKP=0;
 	?>
 
 
@@ -358,193 +361,156 @@ $this->load->view('layout/header');
                         <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
                           
 			<div class="">
+				<div class="x_title"></div>
+							<div class="x_content table-responsive">
+								<table class="table table-striped" id="item_sj">
+									<thead>
+										<tr>
+											<th class="text-center" style="max-width:20px;">#</th>
+											<th class="text-center" colspan="2" style="width:20%">Nomor Anggota</th>
+											<th class="text-center" style="width:40%">Data Diri</th>
+											<th class="text-center" style="width:20%">Data KPKP</th>
+											<th class="text-center" style="width:15%">Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										$lsKawin=array();
 
-				<div class="x_title">
+										if(isset($anggota_KK) && count($anggota_KK)>0){
 
-					
+											foreach ($anggota_KK as $keyAnggota_KK => $valueAnggota_KK) {
+												# code...
 
-				<!--	<a id="addAnggota" class="btn btn-primary" onclick="event.preventDefault()" href="<?= base_url().'/admin/'.$this->uri->segment(2).'?addAnggota=true';?>" data-toggle="modal" data-target="#myModal">
+												if($valueAnggota_KK->telepon == ''){
 
-						<i class="fa fa-plus "></i> Anggota
+													$valueAnggota_KK->telepon= '-';
 
-					</a> -->
+												}
 
-			    </div>
+												if($valueAnggota_KK->sts_anggota==1){
 
-				<div class="x_content table-responsive">
+					            		$sts='<i class="fa fa-check-square text-success" title="Aktif"></i> Aktif';
 
-					<table class="table table-striped" id="item_sj">
+						            }
+						            else{
+					            		$sts='<i class="fa fa-times text-danger" title="Tidak Aktif"></i> Tidak Aktif';
+						            }
 
-						<thead>
+						            if($valueAnggota_KK->sts_kpkp==1){
+						            	$total_biayaKPKP=$total_biayaKPKP+$iuranKpkpp;
 
-							<tr>
+						            	$num_anggotaKPKP++;
+						            }
+										?>
 
-								<th class="text-center" style="max-width:20px;">#</th>
+											<tr>
 
-								<th class="text-center" colspan="2" style="width:20%">Nomor Anggota</th>
+												<td class="text-center" style="max-width:20px;">
+													<?=$keyAnggota_KK+1;?>
+												</td>
 
-								<th class="text-center" style="width:40%">Data Diri</th>
+												<td class="text-center" colspan="2" style="width:20%">
 
-								<th class="text-center" style="width:20%">Data KPKP</th>
+													<?= $valueAnggota_KK->no_anggota;?>
+													<br>
+													<?=$sts;?>
+												</td>
 
-								<th class="text-center" style="width:15%">Action</th>
+												<td class="text-left" style="width:40%; line-height: 2">
 
-							</tr>
+													<b>Nama:</b> <?= $valueAnggota_KK->nama_lengkap;?>
 
-						</thead>
+													<br>
 
-						<tbody>
+													<b>Tempat, TTL:</b> <?= $valueAnggota_KK->tmpt_lahir.', '.convert_tgl_dMY($valueAnggota_KK->tgl_lahir) ;?>
 
-							<?php
-							$lsKawin=array();
+													<br>
 
-							if(isset($anggota_KK) && count($anggota_KK)>0){
+													<b>Telp/HP:</b> <?= $valueAnggota_KK->telepon;?>
 
-								foreach ($anggota_KK as $keyAnggota_KK => $valueAnggota_KK) {
-									# code...
+													<br>
 
-									if($valueAnggota_KK->telepon == ''){
+													<!-- <b>Baptis:</b> <?= $baptis;?>
 
-										$valueAnggota_KK->telepon= '-';
+													<br>
 
-									}
+													<b>Sidi:</b> <?=$sidi;?>
 
-									if($valueAnggota_KK->sts_anggota==1){
+													<br>
 
-		            		$sts='<i class="fa fa-check-square text-success" title="Aktif"></i> Aktif';
+													<b>Nikah:</b> <?= $nikah;?> -->
 
-			            }
-			            else{
-		            		$sts='<i class="fa fa-times text-danger" title="Tidak Aktif"></i> Tidak Aktif';
-			            }
+												</td>
 
-			            if($valueAnggota_KK->sts_kpkp==1){
-			            	$total_biayaKPKP=$total_biayaKPKP+$iuranKpkpp;
-			            }
+												<td class="text-center" style="width:20%">
+													<div class="form-group">
+														<label for="select_stst_kpkp<?=$valueAnggota_KK->id;?>">KPKP</label>
+														<select class="form-control" id="select_stst_kpkp<?=$valueAnggota_KK->id;?>" name="select_stst_kpkp<?=$valueAnggota_KK->id;?>" recid="<?=$valueAnggota_KK->id;?>">
+															<option value="0" <?php if($valueAnggota_KK->sts_kpkp==0){echo 'selected="selected"';}; ?>>Tidak Aktif</option>
+															<option value="1" <?php if($valueAnggota_KK->sts_kpkp==1){echo 'selected="selected"';}; ?> >Aktif</option>
+														</select>
+
+														<select class="form-control" id="select_aturan_kpkp<?=$valueAnggota_KK->id;?>" name="select_aturan_kpkp<?=$valueAnggota_KK->id;?>" recid="<?=$valueAnggota_KK->id;?>">
+															<option value="-1" <?php if($valueAnggota_KK->aturan_kpkp==-1){echo 'selected="selected"';}; ?>> Pilih Kategori Aturan KPKP</option>
+															<option value="0" <?php if($valueAnggota_KK->aturan_kpkp==0){echo 'selected="selected"';}; ?>> < 2020 kebawah</option>
+															<option value="1" <?php if($valueAnggota_KK->aturan_kpkp==1){echo 'selected="selected"';}; ?> > >= 2020 keatas</option>
+														</select>
+													</div>
+
+												</td>
+
+												<td class="text-center" style="width:15%">
+
+													<!--<a id="editAnggota" href="<?= base_url().'admin/'.$this->uri->segment(2).'?editAnggota=true&';?>id=<?php echo $valueAnggota_KK->id; ?>" onclick="event.preventDefault();" data-toggle="modal" data-target="#myModal" class="btn btn-warning" style="padding: 2px 12px 2px 2px">
+
+														<span class="fa fa-pencil" style="width:20%"></span>
+
+													</a>
+
+													<a id="delet" href="<?= base_url().'admin/'.$this->uri->segment(2).'?deleteanggota=true&id='.$valueAnggota_KK->id.'&kode='.md5(base64_encode($valueAnggota_KK->id.'delete')); ?>" class="confirm btn btn-danger" msg="Yakin ingin menghapus data ini?"  style="padding: 2px 12px 2px 2px">
+
+														<span class="fa fa-trash" style="width:20%"></span>
+
+													</a>
+													<input type="text" name="no_urut" value="<?=$valueAnggota_KK->no_urut;?>" class="form-control text-center" recid="<?php echo $valueAnggota_KK->id; ?>">-->
+												</td>
+
+											</tr>
+
+
+
+
+										<?php
+
+											}
+
+										}
+
+										?>
+									</tbody>
+								</table>
+							</div>
+						</div>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+						<div class="x_content">
+							<?php 
+								if(count($dompet_kpkp)==0){
 							?>
-
-								<tr>
-
-									<td class="text-center" style="max-width:20px;">
-										<?=$keyAnggota_KK+1;?>
-									</td>
-
-									<td class="text-center" colspan="2" style="width:20%">
-
-										<?= $valueAnggota_KK->no_anggota;?>
-										<br>
-										<?=$sts;?>
-									</td>
-
-									<td class="text-left" style="width:40%; line-height: 2">
-
-										<b>Nama:</b> <?= $valueAnggota_KK->nama_lengkap;?>
-
-										<br>
-
-										<b>Tempat, TTL:</b> <?= $valueAnggota_KK->tmpt_lahir.', '.convert_tgl_dMY($valueAnggota_KK->tgl_lahir) ;?>
-
-										<br>
-
-										<b>Telp/HP:</b> <?= $valueAnggota_KK->telepon;?>
-
-										<br>
-
-										<!-- <b>Baptis:</b> <?= $baptis;?>
-
-										<br>
-
-										<b>Sidi:</b> <?=$sidi;?>
-
-										<br>
-
-										<b>Nikah:</b> <?= $nikah;?> -->
-
-									</td>
-
-									<td class="text-center" style="width:20%">
-										<div class="form-group">
-											<label for="select_stst_kpkp<?=$valueAnggota_KK->id;?>">KPKP</label>
-											<select class="form-control" id="select_stst_kpkp<?=$valueAnggota_KK->id;?>" name="select_stst_kpkp<?=$valueAnggota_KK->id;?>" recid="<?=$valueAnggota_KK->id;?>">
-												<option value="0" <?php if($valueAnggota_KK->sts_kpkp==0){echo 'selected="selected"';}; ?>>Tidak Aktif</option>
-												<option value="1" <?php if($valueAnggota_KK->sts_kpkp==1){echo 'selected="selected"';}; ?> >Aktif</option>
-											</select>
-
-											<select class="form-control" id="select_aturan_kpkp<?=$valueAnggota_KK->id;?>" name="select_aturan_kpkp<?=$valueAnggota_KK->id;?>" recid="<?=$valueAnggota_KK->id;?>">
-												<option value="-1" <?php if($valueAnggota_KK->aturan_kpkp==-1){echo 'selected="selected"';}; ?>> Pilih Kategori Aturan KPKP</option>
-												<option value="0" <?php if($valueAnggota_KK->aturan_kpkp==0){echo 'selected="selected"';}; ?>> < 2020 kebawah</option>
-												<option value="1" <?php if($valueAnggota_KK->aturan_kpkp==1){echo 'selected="selected"';}; ?> > >= 2020 keatas</option>
-											</select>
-										</div>
-
-									</td>
-
-									<td class="text-center" style="width:15%">
-
-										<!--<a id="editAnggota" href="<?= base_url().'admin/'.$this->uri->segment(2).'?editAnggota=true&';?>id=<?php echo $valueAnggota_KK->id; ?>" onclick="event.preventDefault();" data-toggle="modal" data-target="#myModal" class="btn btn-warning" style="padding: 2px 12px 2px 2px">
-
-											<span class="fa fa-pencil" style="width:20%"></span>
-
-										</a>
-
-										<a id="delet" href="<?= base_url().'admin/'.$this->uri->segment(2).'?deleteanggota=true&id='.$valueAnggota_KK->id.'&kode='.md5(base64_encode($valueAnggota_KK->id.'delete')); ?>" class="confirm btn btn-danger" msg="Yakin ingin menghapus data ini?"  style="padding: 2px 12px 2px 2px">
-
-											<span class="fa fa-trash" style="width:20%"></span>
-
-										</a>
-										<input type="text" name="no_urut" value="<?=$valueAnggota_KK->no_urut;?>" class="form-control text-center" recid="<?php echo $valueAnggota_KK->id; ?>">-->
-									</td>
-
-								</tr>
-
-
-
-
+									<span class="text-danger">Belum memiliki Data Pembayaran KPKP, Silahkan Hubungi Administrator/Pnt/Pengurus KPKP Terkait</span>
 							<?php
-
 								}
-
-							}
-
+								else{
+									$dataKpkp['data']=$dompet_kpkp[0];
+									$dataKpkp['total_biayaKPKP']=$total_biayaKPKP;
+									$this->load->view('pemakaman/rincian_kpkp', $dataKpkp);
+								}
 							?>
-
-
-
-						</tbody>
-
-
-					</table>
-
-					
- 
-				</div>
-
-			</div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
-
-                          <form class="form-horizontal form-label-left" id="form_add_kk"  name="form_add_kk" method="POST" action="">
-
-				
-
-					<div class="x_content">
-						<?php 
-							if(count($dompet_kpkp)==0){
-						?>
-								<span class="text-danger">Belum memiliki Data Pembayaran KPKP, Silahkan Hubungi Administrator/Pnt/Pengurus KPKP Terkait</span>
-						<?php
-							}
-							else{
-								$dataKpkp['data']=$dompet_kpkp[0];
-								$dataKpkp['total_biayaKPKP']=$total_biayaKPKP;
-								$this->load->view('pemakaman/rincian_kpkp', $dataKpkp);
-							}
-						?>
-					</div>	
-                          
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
-                          <div class="row">
+						</div>	     
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
+            <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
@@ -554,70 +520,20 @@ $this->load->view('layout/header');
                    	</ul>
           
                   <div class="x_content">
-
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Bulan</th>
-                          <th>Jumlah Iuran</th>
-                          <th>Tanggal </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      	<tr>
-                          <th scope="row">0</th>
-                          <td>Saldo Awal</td>
-                          <td>-1.104.000</td>
-                          <td>17-10-2023</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">1</th>
-                          <td>Iuran January 2023</td>
-                          <td>-5.000</td>
-                          <td>17-10-2023</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">2</th>
-                          <td>Iuran February 2023</td>
-                          <td>-5.000</td>
-                          <td>17-11-2023</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">3</th>
-                          <td>Iuran Maret 2023</td>
-                          <td>-5.000</td>
-                          <td>17-12-2023</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">4</th>
-                          <td>Pembayaran Iuran KPKP</td>
-                          <td>+800.000</td>
-                          <td>17-12-2023</td>
-                        </tr>
-                      </tbody>
-                    </table>
-
+									<?php
+										$mutasiiuran_kpkp['data']=$mutasiiuran_kpkp;
+										$this->load->view('pemakaman/iuran_kpkp.php', $mutasiiuran_kpkp);
+									?>
                   </div>
                 </div>
               </div>
               </div>
             </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab_content4" aria-labelledby="profile-tab">
-                          <p>xxFood truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo
-                            booth letterpress, commodo enim craft beer mlkshk </p>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab_content5" aria-labelledby="profile-tab">
-                          <p>xxFood truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo
-                            booth letterpress, commodo enim craft beer mlkshk </p>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 <!--modal nekat -->
@@ -631,11 +547,13 @@ $this->load->view('layout/header');
                 </div>
                 <div class="modal-body">
                 	<div class="row">
-	                	<form>
+	                	<form id="form_pembayaran" action="<?=base_url();?>/pemakaman/simpan_pembayaran" method="POST">
 	                    <div class="item form-group col-xs-12">
 	                      <label class="text-right control-label col-md-3 col-sm-6 col-xs-6" for="tgl_bayar">Tanggal Pembayaran <span class="required text-right"></span>
 	                      </label>
 	                      <div class="col-md-6 col-sm-6 col-xs-6">
+	                        <input type="hidden" id="keluarga_jemaat_id_pembayaran" name="keluarga_jemaat_id" value="<?=$id;?>">
+	                        <input type="hidden" id="num_anggota_kpkp" name="num_anggota_kpkp" value="<?=$num_anggotaKPKP;?>">
 	                        <input type="date" id="tgl_bayar" name="tgl_bayar" required="required" class="form-control col-md-6 col-xs-6">
 	                      </div>
 	                    </div>
@@ -651,7 +569,7 @@ $this->load->view('layout/header');
 	                      	<span style="font-weight: 400;">Jika "<b class="text-danger text-sm">Ya</b>" akan memotong dari nilai <b class="text-danger text-sm">Nominal</b></span>
 	                      </label>
 	                      <div class="col-md-4 col-sm-6 col-xs-6">
-	                        <select class="form-control" id="option_sukarela">
+	                        <select class="form-control" id="option_sukarela" name="option_sukarela">
 	                        	<option value="0">Tidak, Terimakasih!</option>
 	                        	<option value="1">Ya, dengan nominal tertentu!</option>
 	                        	<option value="2">Ya, dipotong otomatis dari sistem!</option>
@@ -697,14 +615,15 @@ $this->load->view('layout/header');
 
 	?>
 		<script type="text/javascript">
-			$(document).on('click', '[id=btn_simpan_bayar]', function(e){
-				dataMap={}
-				dataMap=$('#form_bayar').serialize()
-				url=$('#form_bayar').attr('action') 
-				console.log(url)
-				$.post(url, dataMap, function(data){
+			$(document).on('click touchstart', '[id=btn_simpan_bayar]', function(e){
+				$('#form_pembayaran').submit();
+				//dataMap={}
+				//dataMap=$('#form_bayar').serialize()
+				//url=$('#form_bayar').attr('action') 
+				//console.log(url)
+				//$.post(url, dataMap, function(data){
 
-				})
+				//})
 			})
 
 
@@ -1201,12 +1120,10 @@ $this->load->view('layout/header');
 	</div>
 
 </div>
+</div>
+</div>
 
 <!-- /page content -->
-
-
-
-
 
 <?php
 
