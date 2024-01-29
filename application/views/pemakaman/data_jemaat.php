@@ -561,7 +561,7 @@ $this->load->view('layout/header');
 	                      <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="nominal">Nominal <span class="required text-right">*</span>
 	                      </label>
 	                      <div class="col-md-6 col-sm-6 col-xs-6">
-	                        <input type="text" id="nominal" name="nominal" required="required" class="form-control">
+	                        <input type="text" id="nominal" name="nominal" required="required" class="form-control" placeholder="Contoh: <?=number_format($total_biayaKPKP,0,",",".");?>">
 	                      </div>
 		                	</div>
 		                	<div class="item form-group col-xs-12">
@@ -574,6 +574,9 @@ $this->load->view('layout/header');
 	                        	<option value="1">Ya, dengan nominal tertentu!</option>
 	                        	<option value="2">Ya, dipotong otomatis dari sistem!</option>
 	                        </select>
+	                      </div>
+	                      <div class="col-md-2 col-sm-6 col-xs-6">
+	                        <input type="text" name="nominal_sukarela" id="nominal_sukarela" class="form-control" style="display: none;" placeholder="Contoh: 10.000">
 	                      </div>
 		                	</div>
 	                	</form>
@@ -1220,18 +1223,32 @@ $this->load->view('layout/footer');
 		})
 	})
 
+	$(document).on('keyup', '[id=nominal_sukarela]', function(e){
+		dataMap={}
+		value=parseFloat($(this).val())
+		max=parseFloat($(this).attr('max'))
+		if(value>=max){
+			alert("Peringatan: \nNominal Sukarela lebih besar dari Nominal Setoran!");
+			$(this).val(max-1)
+		}
+
+	})
+
 	$(document).on('change', '[id=option_sukarela]', function(e){
 		dataMap={}
 		dataMap['option']=$(this).val() //1:tidak dipotong; 2:dipotong nominal tertentu; 3:dipotong oleh sisfo dari sisa yg dibayarkan.
 		dataMap['recid']=$(this).attr('recid')
+		nominal_setor=$('#nominal').val()
+		console.log('option '+dataMap['option']+' | '+nominal_setor)
 
-		if(dataMap['option']==1){
-			$().hide();
+		if(dataMap['option']=='0'){
+			$('#nominal_sukarela').hide();
 		}
-		else if(dataMap['option']==2){
-			$().show();
+		else if(dataMap['option']=='1'){
+			$('#nominal_sukarela').attr('max',nominal_setor);
+			$('#nominal_sukarela').show();
 		}
-		else if(dataMap['option']==3){
+		else if(dataMap['option']=='2'){
 			$().show();
 		}
 		

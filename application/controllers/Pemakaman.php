@@ -873,6 +873,7 @@ class pemakaman extends CI_Controller {
 		$keluarga_jemaat_id=$this->input->post('keluarga_jemaat_id');
 		$num_anggota_kpkp=$this->input->post('num_anggota_kpkp');
 		$nominal=$this->input->post('nominal');
+		$nominal_sukarela=$this->input->post('nominal_sukarela');
 		$tgl_bayar=$this->input->post('tgl_bayar');
 		$option_sukarela=$this->input->post('option_sukarela');
 
@@ -881,7 +882,7 @@ class pemakaman extends CI_Controller {
 		$param['tgl_bayar']=$tgl_bayar;
 		$param['created_at']=date('Y-m-d H:i:s');
 		$param['created_by']=$this->session->userdata('userdata')->id;
-		$param1['type']='1'; //ini sebagai tanda bayar bulanan
+		$param['type']='1'; //ini sebagai tanda bayar bulanan
 
 		//get id keluarga KPKP dari keluarga jemaat id
 		$qid_kpkp=$this->m_model->selectas('keluarga_jemaat_id', $keluarga_jemaat_id, 'kpkp_keluarga_jemaat');
@@ -898,7 +899,9 @@ class pemakaman extends CI_Controller {
 
 				break;
 			case '1':
-				// code...
+				// code... //ini bearti ada sukarelanya dengan nominal yg di tentukan
+				$param['nominal']=$nominal-$nominal_sukarela;
+				$param['nominal_sukarela']=$nominal_sukarela;
 				break;
 			
 			default:

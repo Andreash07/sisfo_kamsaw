@@ -20,6 +20,10 @@
             // code...
               $name="Setor Iuran";
             break;
+          case '2':
+            // code...
+              $name="Pembayaran Iuran";
+            break;
           default:
             // code...
               $name="<i class='text-danger'>Tidak diketahui</i>";
@@ -38,7 +42,7 @@
           <th scope="row"><?=$key+1;?></th>
           <td><?=$name;?></td>
           <td><?=$nominal;?></td>
-          <td><?=$value->tgl_bayar;?></td>
+          <td><?=convert_tgl_dMY($value->tgl_bayar);?></td>
         </tr>
     <?php
       }
