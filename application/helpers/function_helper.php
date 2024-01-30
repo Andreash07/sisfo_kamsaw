@@ -867,8 +867,8 @@ function create_folder_store($combine2=null, $combine1=null){
 function clearText($value){
     if($value!=null){
         $value = trim($value);
-        //$value = filter_var($value, FILTER_SANITIZE_MAGIC_QUOTES);
-        $value = filter_var($value, FILTER_SANITIZE_ADD_SLASHES);
+        $value = filter_var($value, FILTER_SANITIZE_MAGIC_QUOTES);
+        //$value = filter_var($value, FILTER_SANITIZE_ADD_SLASHES);
     }
     return $value;
 }

@@ -928,5 +928,9 @@ class pemakaman extends CI_Controller {
 		//print_r($param); die();
 	}
 
+	public function anggota_mantan(){
+
+	$this->load->view('pemakaman/anggota_mantan');
+    }
 }
 

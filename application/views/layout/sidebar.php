@@ -188,21 +188,21 @@
 
                       <a href="<?=base_url();?>pemakaman/anggota_jemaat">
 
-                        Anggota Jemaat
+                        Iuran Bulanan
 
                       </a>
 
                     </li>
 
-                    <!-- <li>
+                     <li>
 
-                      <a href="<?=base_url();?>report/anggota_jemaat/baptis_sidi">
+                      <a href="<?=base_url();?>pemakaman/anggota_mantan">
 
-                        Baptis-Sidi
+                        Iuran Tahunan
 
                       </a>
 
-                    </li> -->
+                    </li> 
 
                     <!--<li>
 
