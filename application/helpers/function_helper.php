@@ -865,10 +865,15 @@ function create_folder_store($combine2=null, $combine1=null){
 }
 
 function clearText($value){
+    $version = explode('.', PHP_VERSION);
     if($value!=null){
         $value = trim($value);
-        $value = filter_var($value, FILTER_SANITIZE_MAGIC_QUOTES);
-        //$value = filter_var($value, FILTER_SANITIZE_ADD_SLASHES);
+        if($version[0].$version[1]>=56){
+            $value = filter_var($value, FILTER_SANITIZE_ADD_SLASHES);
+        }
+        else{
+            $value = filter_var($value, FILTER_SANITIZE_MAGIC_QUOTES);
+        }
     }
     return $value;
 }
