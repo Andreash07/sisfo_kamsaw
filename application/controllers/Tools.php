@@ -1383,7 +1383,7 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                         $arrData[$nameField[$i]]=gmdate("Y-m-d", $UNIX_DATE);
                     }
                 }
-                $ls_data_kwg_exl[$arrData['Nama KK']][]=$arrData;
+                $ls_data_kwg_exl[$arrData['Nama KK'].'|'.$arrData['Wilayah']][]=$arrData;
             }
         }
 
@@ -1403,10 +1403,10 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
         foreach ($ls_keluarga as $key => $value) {
             // code...
 
-            if(isset($ls_data_kwg_exl[$value->kwg_nama])){
-                if(count($ls_data_kwg_exl[$value->kwg_nama] ) == 1){
+            if(isset($ls_data_kwg_exl[$value->kwg_nama.'|'.$value->kwg_wil])){
+                if(count($ls_data_kwg_exl[$value->kwg_nama.'|'.$value->kwg_wil] ) == 1){
                     //continue;
-                    if($value->num_jiwa!=$ls_data_kwg_exl[$value->kwg_nama][0]['Jumlah Jiwa KPKP']){
+                    if($value->num_jiwa!=$ls_data_kwg_exl[$value->kwg_nama.'|'.$value->kwg_wil][0]['Jumlah Jiwa KPKP']){
                         //continue;
                     }
                     else{
@@ -1418,7 +1418,7 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                     echo '<td>'.$value->kwg_nama.'</td>';
                     echo '<td>'.$value->kwg_wil.'</td>';
                     echo '<td><ul>';
-                    foreach ($ls_data_kwg_exl[$value->kwg_nama] as $key1 => $value1) {
+                    foreach ($ls_data_kwg_exl[$value->kwg_nama.'|'.$value->kwg_wil] as $key1 => $value1) {
                         // code...
                         //hitung bulan berdasarkan pokok_iuran
                         $summary="";
@@ -1476,7 +1476,7 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                     echo '</ul></td>';
                     echo '<td><ul>';
                     $status_check='';
-                    foreach ($ls_data_kwg_exl[$value->kwg_nama] as $key1 => $value1) {
+                    foreach ($ls_data_kwg_exl[$value->kwg_nama.'|'.$value->kwg_wil] as $key1 => $value1) {
                         // code...
                         $status_check='';
                         if($total!=$value1['Bulan yang harus dibayar/sudah bayar']){
