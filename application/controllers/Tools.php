@@ -1304,13 +1304,15 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
     public function import_bulanan_kpkp(){
         $data=array();
         //get keluarga jemaat dulu
-        $s="select B.kwg_nama, B.kwg_alamat, B.kwg_telepon, D.*, B.kwg_wil, C.num_jiwa
+        $s="select B.kwg_nama, B.kwg_alamat, B.kwg_telepon, D.*, B.kwg_wil, C.num_jiwa, B.status
             from keluarga_jemaat B
             join kpkp_keluarga_jemaat D on D.keluarga_jemaat_id = B.id
             join (select z.kwg_no, COUNT(z.id) as num_jiwa 
                     from anggota_jemaat z where z.status=1 && z.sts_kpkp=1 && z.sts_anggota=1 && tgl_meninggal='0000-00-00' && (z.tmpt_meninggal='' || z.tmpt_meninggal is NULL) 
                     group by z.kwg_no
                 ) C on C.kwg_no = B.id 
+            where B.status=1
+            order by B.kwg_wil ASC, B.kwg_nama ASC
             ";
         $q=$this->m_model->selectcustom($s);
         $ls_keluarga=array();
@@ -1403,8 +1405,13 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
 
             if(isset($ls_data_kwg_exl[$value->kwg_nama])){
                 if(count($ls_data_kwg_exl[$value->kwg_nama] ) == 1){
+                    //continue;
                     if($value->num_jiwa!=$ls_data_kwg_exl[$value->kwg_nama][0]['Jumlah Jiwa KPKP']){
+                        //continue;
+                    }
+                    else{
                         continue;
+
                     }
                     echo '<tr>';
                     echo '<td>'.$i.'</td>';
@@ -1454,8 +1461,8 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                         $param1['tgl_bayar']=date('Y-m-d');
                         $param1['created_at']=date('Y-m-d H:i:s');
                         $param1['created_by']='1'; //system administrator
-                        $i_databayaranKPKP=$this->m_model->insertgetid($param1, 'kpkp_bayar_bulanan');
-
+                        //$i_databayaranKPKP=$this->m_model->insertgetid($param1, 'kpkp_bayar_bulanan');
+                        $i_databayaranKPKP=true;
                         if($i_databayaranKPKP){
                             //update ke keluarga KPKP
                             $recid_kpkp=$value->id; //id kpkp_keluarga
@@ -1463,7 +1470,7 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                             $param['saldo_akhir']=$total_saldo_new;
                             $param['last_pembayaran']=NULL;
                             $param['last_update']=NULL;
-                            $u=$this->m_model->updateas('id', $recid_kpkp, $param, 'kpkp_keluarga_jemaat');
+                            //$u=$this->m_model->updateas('id', $recid_kpkp, $param, 'kpkp_keluarga_jemaat');
                         }
                     }
                     echo '</ul></td>';
@@ -1482,15 +1489,15 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                     $i++;
                 }
             }
-            /*else{
+            else{
                 echo '<tr>';
                 echo '<td>'.$i.'</td>';
-                echo '<td>'.$value->kwg_nama.'</td>';
-                echo '<td>'.$value->kwg_wil.'</td>';
+                echo '<td>'.$value->kwg_nama.' | jiwa:'.$value->num_jiwa.' | status:'.$value->status.' (tidak ada)</td>';
+                echo '<td>'.$value->kwg_wil.' | '.$value->keluarga_jemaat_id.'</td>';
                 echo '<td></td>';
                 echo '</tr>';
                 $i++;
-            }*/
+            }
         }
         echo '</table>';
 

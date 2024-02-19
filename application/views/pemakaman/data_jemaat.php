@@ -517,6 +517,10 @@ $this->load->view('layout/header');
                 	<ul class="nav navbar-right panel_toolbox">
 
                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Tambah Pembayaran </button>
+
+                   <a class="btn btn-warning" href="<?=base_url();?>pemakaman/transaksi_mutasi/print?id=<?=$dataKK[0]->id;?>" target="_BLANK">
+                   	<i class="fa fa-print"></i> Cetak Rekap
+                   </a>
                    	</ul>
           
                   <div class="x_content">
@@ -1249,7 +1253,13 @@ $this->load->view('layout/footer');
 			$('#nominal_sukarela').show();
 		}
 		else if(dataMap['option']=='2'){
-			$().show();
+			//nominal_sukarela
+			beban_iuran_perbulan=parseFloat($('#beban_iuran_perbulan').val().replace(".", "") )
+			console.log(beban_iuran_perbulan);
+			if(nominal_setor<beban_iuran_perbulan){
+				alert("Nominal Setoran lebih kecil daripada Beban Iuran per Bulan ("+beban_iuran_perbulan+")");
+				e.preventDefault()
+			}
 		}
 		
 	})

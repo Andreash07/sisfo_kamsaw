@@ -85,7 +85,8 @@
                 </li>-->
                 <?php 
                 //print_r($this->session->userdata()); die();
-                if($this->session->userdata('userdata')->id != 22){
+                if(!in_array($this->session->userdata('userdata')->id, array(22)) ){
+                  if(!in_array($this->session->userdata('userdata')->id, array(23)) ){
                 ?>
                 <li><a><i class="fa fa-edit"></i> Admin <span class="fa fa-chevron-down"></span></a>
 
@@ -179,7 +180,13 @@
                     </li>
                   </ul>
                 </li>
+                <?php 
+                  }
+                ?>
 
+                <?php 
+                  if(!in_array($this->session->userdata('userdata')->id, array(22)) ){
+                ?>
                 <li><a><i class="fa fa-clone"></i> KPKP <span class="fa fa-chevron-down"></span></a>
 
                   <ul class="nav child_menu">
@@ -217,6 +224,12 @@
                   </ul>
 
                 </li>
+                <?php 
+                }
+                ?>
+                 <?php 
+                  if(!in_array($this->session->userdata('userdata')->id, array(23)) ){
+                ?>
 
                 <li><a><i class="fa fa-bar-chart-o"></i> Chart Ibadah<span class="fa fa-chevron-down"></span></a>
 
@@ -231,6 +244,9 @@
                       </a>
 
                     </li>
+                    <?php 
+                }
+                ?>
 
                     <!-- <li>
 

@@ -310,6 +310,45 @@ $this->load->view('layout/header');
 
     </div>
 
+
+    <div class="row top_tiles">
+      <div class="col-xs-12">
+        <h3>Data Tunggakan KPKP</h3>
+      </div>
+      <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="tile-stats">
+          <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
+          <div class="count">179</div>
+          <h3>3 Bulan</h3>
+          <p></p>
+        </div>
+      </div>
+      <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="tile-stats">
+          <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
+          <div class="count">179</div>
+          <h3>6 Bulan</h3>
+          <p></p>
+        </div>
+      </div>
+      <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="tile-stats">
+          <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
+          <div class="count">179</div>
+          <h3>>1 Tahun</h3>
+          <p></p>
+        </div>
+      </div>
+      <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="tile-stats">
+          <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
+          <div class="count">179</div>
+          <h3>>3 Tahun</h3>
+          <p></p>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>

@@ -21,7 +21,7 @@
   </div>
 
   <div class="form-group">
-    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_alamat">Estimasi Bulan Tercover
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_alamat">Estimasi Bulan Tertampung
     </label>
 
     <div class="col-md-6 col-sm-6 col-xs-12">
@@ -30,9 +30,9 @@
   </div>
 
   <div class="form-group">
-    <label for="kwg_telepon" class="control-label col-md-3 col-sm-3 col-xs-12">Beban Iuaran per Bulan</label>
+    <label for="beban_iuran_perbulan" class="control-label col-md-3 col-sm-3 col-xs-12">Beban Iuaran per Bulan</label>
     <div class="col-md-6 col-sm-6 col-xs-12">
-      <input id="kwg_telepon" name="kwg_telepon" class="form-control col-md-7 col-xs-12" type="text" value="<?= number_format($total_biayaKPKP,0,",",".");?>" disabled>
+      <input id="beban_iuran_perbulan" name="beban_iuran_perbulan" class="form-control col-md-7 col-xs-12" type="text" value="<?= number_format($total_biayaKPKP,0,",",".");?>" disabled>
     </div>
   </div>
 
@@ -45,7 +45,7 @@
     }
   ?>
   <div class="form-group">
-    <label for="kwg_telepon" class="control-label col-md-3 col-sm-3 col-xs-12">Tanggal Terakkhir Pembayaran</label>
+    <label for="kwg_telepon" class="control-label col-md-3 col-sm-3 col-xs-12">Tanggal Terakkhir Penyetoran</label>
     <div class="col-md-6 col-sm-6 col-xs-12">
       <input id="kwg_telepon" name="kwg_telepon" class="form-control col-md-7 col-xs-12" type="text" value="<?=$data->last_pembayaran;?>" disabled>
     </div>

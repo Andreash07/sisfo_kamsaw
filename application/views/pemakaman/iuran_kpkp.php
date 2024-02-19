@@ -1,16 +1,20 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>#</th>
-      <th>Bulan</th>
-      <th>Jumlah Iuran</th>
-      <th>Tanggal </th>
+      <th class="text-center">#</th>
+      <th class="text-center" style="width: 150px;">Tanggal</th>
+      <th class="text-center">Transaksi</th>
+      <!--<th>Jumlah Iuran</th>-->
+      <th class="text-center">Nominal</th>
     </tr>
   </thead>
   <tbody>
     <?php 
       foreach ($data as $key => $value) {
         // code...
+        if($value->note!=''){
+          $value->note="<br><label style='font-size:9pt;'>".$value->note."</label>";
+        }
         switch ($value->type) {
           case '0':
             // code...
@@ -22,7 +26,11 @@
             break;
           case '2':
             // code...
-              $name="Pembayaran Iuran";
+              $name="Pembayaran Iuran ".$value->note;
+            break;
+          case '3':
+            // code...
+              $name="Setor Sukarela".$value->note;
             break;
           default:
             // code...
@@ -39,10 +47,10 @@
         }
     ?>
         <tr>
-          <th scope="row"><?=$key+1;?></th>
+          <th class="text-center" scope="row"><?=$key+1;?></th>
+          <td class="text-center" style="width: 150px;"><?=convert_tgl_dMY($value->tgl_bayar);?></td>
           <td><?=$name;?></td>
-          <td><?=$nominal;?></td>
-          <td><?=convert_tgl_dMY($value->tgl_bayar);?></td>
+          <td class="text-center"><?=$nominal;?></td>
         </tr>
     <?php
       }

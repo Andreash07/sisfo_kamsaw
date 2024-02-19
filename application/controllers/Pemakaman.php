@@ -896,12 +896,52 @@ class pemakaman extends CI_Controller {
 			case '0':
 				// code... //tidak ada dana sukarela
 				$param['nominal']=$nominal;
+				//insert pembayaran
+				$i=$this->m_model->insertgetid($param, 'kpkp_bayar_bulanan');
 
 				break;
 			case '1':
 				// code... //ini bearti ada sukarelanya dengan nominal yg di tentukan
 				$param['nominal']=$nominal-$nominal_sukarela;
-				$param['nominal_sukarela']=$nominal_sukarela;
+				//insert pembayaran
+				$i=$this->m_model->insertgetid($param, 'kpkp_bayar_bulanan');
+
+				$nominal_sukarela=$nominal_sukarela;
+				//untuk insert ke kpkp_bayar_bulanan
+				$param3=array();
+				$param3['nominal']=$nominal_sukarela;
+				$param3['keluarga_jemaat_id']=$keluarga_jemaat_id;;
+				$param3['tgl_bayar']=$tgl_bayar;
+				$param3['created_at']=date('Y-m-d H:i:s');
+				$param3['created_by']=$this->session->userdata('userdata')->id;
+				$param3['type']='3'; //ini sebagai tanda bayar sukarela
+				//insert pembayaran sukarela
+				$i2=$this->m_model->insertgetid($param3, 'kpkp_bayar_bulanan');
+
+
+				//$param['note']="Memberikan Iuran Sukarela ".$nominal_sukarela;
+				break;
+
+			case '2':
+				// code... //ini bearti ada sukarelanya dengan nominal yg di tentukan
+				$param['nominal']=$nominal-$nominal_sukarela;
+				//insert pembayaran
+				$i=$this->m_model->insertgetid($param, 'kpkp_bayar_bulanan');
+
+				$nominal_sukarela=$nominal_sukarela;
+				//untuk insert ke kpkp_bayar_bulanan
+				$param3=array();
+				$param3['nominal']=$nominal_sukarela;
+				$param3['keluarga_jemaat_id']=$keluarga_jemaat_id;;
+				$param3['tgl_bayar']=$tgl_bayar;
+				$param3['created_at']=date('Y-m-d H:i:s');
+				$param3['created_by']=$this->session->userdata('userdata')->id;
+				$param3['type']='3'; //ini sebagai tanda bayar sukarela
+				//insert pembayaran sukarela
+				$i2=$this->m_model->insertgetid($param3, 'kpkp_bayar_bulanan');
+
+
+				//$param['note']="Memberikan Iuran Sukarela ".$nominal_sukarela;
 				break;
 			
 			default:
@@ -910,13 +950,12 @@ class pemakaman extends CI_Controller {
 		}
 
 
-		//insert pembayaran
-		$i=$this->m_model->insertgetid($param, 'kpkp_bayar_bulanan');
 		if($i){
 			//ini jika berhasil update saldo pada akun kpkp anggota jemaat
 			//pakai $param['nominal'] karena ada kemungkinan nominal yg dibayakan berubah karena ada potongan sukarela, jadi gunakan yg netto
 			$param2=array();
 			$param2['saldo_akhir']=$saldo_akhir+$param['nominal'];
+			$param2['saldo_akhir_sukarela']=$saldo_akhir_sukarela+$nominal_sukarela;
 			$param2['last_pembayaran']=$param['tgl_bayar'];
 			$param2['last_update']=date('Y-m-d H:i:s');
 			$u=$this->m_model->updateas('id', $id_kpkp, $param2, 'kpkp_keluarga_jemaat');
@@ -933,7 +972,104 @@ class pemakaman extends CI_Controller {
 
 	public function anggota_mantan(){
 
-	$this->load->view('pemakaman/anggota_mantan');
+		$this->load->view('pemakaman/anggota_mantan');
+    }
+
+
+    public function pembayaran_iuran(){
+    	$data=array();
+    	$s="select B.kwg_nama, B.kwg_alamat, B.kwg_telepon, D.*, B.kwg_wil, C.num_jiwa
+            from keluarga_jemaat B
+            join kpkp_keluarga_jemaat D on D.keluarga_jemaat_id = B.id
+            join (select z.kwg_no, COUNT(z.id) as num_jiwa 
+                    from anggota_jemaat z where z.status=1 && z.sts_kpkp=1 && z.sts_anggota=1 && tgl_meninggal='0000-00-00' && (z.tmpt_meninggal='' || z.tmpt_meninggal is NULL) 
+                    group by z.kwg_no
+                ) C on C.kwg_no = B.id 
+            ";
+        $q=$this->m_model->selectcustom($s);
+
+        $rIruranPokok=$this->m_model->selectas('status', '1', 'kpkp_pokok_iuran');
+    	$IruranPokok=0;
+        foreach ($rIruranPokok as $key1 => $value1) {
+        	// code...
+        	$IruranPokok=$value1->nominal;
+        }
+
+        $iSuccess=0;
+        $iFailed=0;
+        foreach ($q as $key => $value) {
+        	// code...
+        	if($value->num_jiwa==0){
+        		//continue; //ini bearti tidak di proses karena tidak ada jumlah jiwanya
+        		//masih ragu
+        	}
+        	$note="";
+        	$note.=date('F Y');
+        	$periode_bulan=date('Y-m-d');
+        	$type='2';//pembayaran iuran
+        	$nominal=($value->num_jiwa*$IruranPokok) *-1;//dikali -1 karena ini untuk ngurangin saldo terakhir/tersedia
+        	$note.=' ('.$value->num_jiwa.'jiwa @'.$IruranPokok.')';
+
+        	//insert data dulu ke data iuran bulanan
+        	$param=array();
+        	$param['keluarga_jemaat_id']=$value->keluarga_jemaat_id;
+        	$param['periode_bulan']=$periode_bulan;
+        	$param['type']=$type;
+        	$param['nominal']=$nominal;
+        	$param['note']=$note;
+        	$param['tgl_bayar']=date('Y-m-d');
+        	$param['created_at']=date('Y-m-d H:i:s');
+        	$param['created_by']=1; //administrator
+
+        	$i=$this->m_model->insertgetid($param, 'kpkp_bayar_bulanan');
+
+        	if($i){
+        		//jika berhasil maka lanjut untuk update saldo KPKP terakhir kel. jemaat
+        		$qupdate="update kpkp_keluarga_jemaat set saldo_akhir=saldo_akhir+".$nominal.", last_update='".date('Y-m-d H:i:s')."' where id='".$value->id."'";
+        		$update=$this->m_model->querycustom($qupdate);
+        		if($update){
+        			$iSuccess++;
+        		}
+        		else{
+        			$iFailed++;
+        		}
+        	}
+        	else{
+        		$iFailed++;
+        	}
+        }
+
+        $iTotal=$iSuccess+$iFailed;
+        //insert log auto debet
+        $param2=array();
+        $param2['periode_bulan']=date('Y-m-d');
+        $param2['success']=$iSuccess;
+        $param2['failed']=$iFailed;
+        $param2['total']=$iTotal;
+        $param2['created_at']=date('Y-m-d H:i:s');
+        $i2=$this->m_model->insertgetid($param2, 'kpkp_log_auto_debet');
+    }
+
+    function transaksi_mutasi($action="print"){
+    	$data=array();
+    	$kk_id=$this->input->get('id');
+    	//get detail KK
+    	//$KK=$this->m_model->selectas2('id',$kk_id,'status', '1',' keluarga_jemaat');
+    	$sKK="select A.*, COUNT(B.id) as num_jiwa, C.saldo_akhir, C.saldo_akhir_sukarela, C.last_pembayaran
+    			from keluarga_jemaat A 
+    			join anggota_jemaat B on B.kwg_no = A.id
+    			left join kpkp_keluarga_jemaat C on C.keluarga_jemaat_id = A.id
+    			where A.status=1 && B.sts_anggota=1 && B.status=1 && sts_kpkp=1 && A.id = '".$kk_id."'";
+    	$KK=$this->m_model->selectcustom($sKK); //die($sKK);
+    	$mutasi_transaksi=$this->m_model->selectas('keluarga_jemaat_id',$kk_id, 'kpkp_bayar_bulanan');
+    	$dompet_keluarga_kpkp=$this->m_model->selectas('keluarga_jemaat_id',$kk_id, 'kpkp_keluarga_jemaat');
+
+    	$data['KK']=$KK;
+    	$data['mutasi_transaksi']=$mutasi_transaksi;
+    	$data['dompet_keluarga_kpkp']=$dompet_keluarga_kpkp;
+
+    	$this->load->view('pemakaman/print',$data);
+
     }
 }
 
