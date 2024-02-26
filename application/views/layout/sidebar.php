@@ -86,7 +86,7 @@
                 <?php 
                 //print_r($this->session->userdata()); die();
                 if(!in_array($this->session->userdata('userdata')->id, array(22)) ){
-                  if(!in_array($this->session->userdata('userdata')->id, array(23)) ){
+                  if(!in_array($this->session->userdata('userdata')->id, array(23,24)) ){
                 ?>
                 <li><a><i class="fa fa-edit"></i> Admin <span class="fa fa-chevron-down"></span></a>
 
@@ -201,16 +201,35 @@
 
                     </li>
 
-                     <li>
 
-                      <a href="<?=base_url();?>pemakaman/anggota_mantan">
+                    <li>
 
-                        Iuran Tahunan
+                      <a href="<?=base_url();?>pemakaman/laporan_iuran_anggota">
+
+                        Laporan Iuran Anggota
 
                       </a>
 
                     </li> 
 
+                    <li>
+
+                      <a href="<?=base_url();?>pemakaman/data_blok_makam">
+
+                        Data Blok Makam
+
+                      </a>
+
+                    </li>
+                    <li>
+
+                      <a href="<?=base_url();?>pemakaman/data_makam">
+
+                        Data Makam
+
+                      </a>
+
+                    </li>
                     <!--<li>
 
                       <a href="<?=base_url();?>report/anggota_jemaat/profesi">
@@ -228,7 +247,7 @@
                 }
                 ?>
                  <?php 
-                  if(!in_array($this->session->userdata('userdata')->id, array(23)) ){
+                  if(!in_array($this->session->userdata('userdata')->id, array(23,24)) ){
                 ?>
 
                 <li><a><i class="fa fa-bar-chart-o"></i> Chart Ibadah<span class="fa fa-chevron-down"></span></a>

@@ -1407,10 +1407,10 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                 if(count($ls_data_kwg_exl[$value->kwg_nama] ) == 1){
                     //continue;
                     if($value->num_jiwa!=$ls_data_kwg_exl[$value->kwg_nama][0]['Jumlah Jiwa KPKP']){
-                        //continue;
+                        continue;
                     }
                     else{
-                        continue;
+                        //continue;
 
                     }
                     echo '<tr>';
@@ -1459,9 +1459,10 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                         $param1['type']='0'; //sebagai initiati saldo awal
                         $param1['nominal']=$total_saldo_new;
                         $param1['tgl_bayar']=date('Y-m-d');
+                        $param1['tgl_bayar']='2024-01-27';
                         $param1['created_at']=date('Y-m-d H:i:s');
                         $param1['created_by']='1'; //system administrator
-                        //$i_databayaranKPKP=$this->m_model->insertgetid($param1, 'kpkp_bayar_bulanan');
+                        $i_databayaranKPKP=$this->m_model->insertgetid($param1, 'kpkp_bayar_bulanan');
                         $i_databayaranKPKP=true;
                         if($i_databayaranKPKP){
                             //update ke keluarga KPKP
@@ -1470,7 +1471,7 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                             $param['saldo_akhir']=$total_saldo_new;
                             $param['last_pembayaran']=NULL;
                             $param['last_update']=NULL;
-                            //$u=$this->m_model->updateas('id', $recid_kpkp, $param, 'kpkp_keluarga_jemaat');
+                            $u=$this->m_model->updateas('id', $recid_kpkp, $param, 'kpkp_keluarga_jemaat');
                         }
                     }
                     echo '</ul></td>';
@@ -1513,7 +1514,7 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
         $data['last_periode']=null;
         $tgl_user=date('Y-m', strtotime($tgl_user) ).'-01';
         $tgl_periode=date('Y-m', strtotime($periode) ).'-01';
-        $today=date('Y-m').'-01';
+        $today=date('Y-01').'-01';
         
         if($status==1){
             //ini bearti masih aktif

@@ -1130,5 +1130,80 @@ class Ajax extends CI_Controller {
 		}
 		echo json_encode(array('sts'=>1));
 	}
+
+	public function get_tunggakan_kpkp($value='')
+	{
+		// code...
+		$data=array();
+		$s="select  A.*, B.kwg_nama, B.kwg_wil, C.num_kpkp
+				from kpkp_keluarga_jemaat A 
+				join keluarga_jemaat B on B.id = A.keluarga_jemaat_id
+				join (select kwg_no, count(id) as num_kpkp) from anggota_jemaat where sts_anggota=1 && sts_anggota=1 && status=1 group by kwg_no) C on C.kwg_no = B.id
+				where B.status=1 && A.saldo_akhir <0
+				";
+		$q=$this->m_model->selectcustom($s);
+		$bulan3=0;
+		$bulan6=0;
+		$bulan12=0;
+		$bulan36=0;
+		$total_biayaKPKP=0;
+
+		foreach ($q as $key => $value) {
+			// code...
+			$total_biayaKPKP=$value->num_kpkp * 5000;
+			$bulan_tertampung=countBulanTercover($total_biayaKPKP, $value->saldo_akhir, date('Y-m'));
+			if($bulan_tertampung >= -3){
+				$bulan3++;
+			}
+			else if($bulan_tertampung <= -6 && $bulan_tertampung < -12){
+				$bulan6++;
+			}
+			else if($bulan_tertampung <= -12 && $bulan_tertampung < -36){
+				$bulan12++;
+			}
+			else if($bulan_tertampung <= -36){
+				$bulan36++;
+			}
+
+		}
+
+		$data['bulan3']=$bulan3;
+		$data['bulan6']=$bulan6;
+		$data['bulan12']=$bulan12;
+		$data['bulan36']=$bulan36;
+	}
+
+
+	public function detail_keluarga_kpkp($value='')
+	{
+		// code...
+		$data=array();
+		$ls_kk_id=$this->input->post('ls_kk_id');
+		$s="select  A.*, B.kwg_nama, B.kwg_wil, C.num_kpkp, '0' as bulan_tertampung, '0' as est_tunggakan_kpkp, '' as nama_bulan_tertampung
+				from kpkp_keluarga_jemaat A 
+				join keluarga_jemaat B on B.id = A.keluarga_jemaat_id
+				join (select kwg_no, count(id) as num_kpkp from anggota_jemaat where sts_anggota=1 && sts_anggota=1 && status=1 && kwg_no in (".$ls_kk_id.") group by kwg_no ) C on C.kwg_no = B.id
+				where B.status=1 && A.saldo_akhir <0 && A.keluarga_jemaat_id in (".$ls_kk_id.")
+				order by B.kwg_wil ASC, B.kwg_nama ASC
+				";
+		$q=$this->m_model->selectcustom($s); //die($s);
+		
+		$kk=array();
+		foreach ($q as $key => $value) {
+			// code...
+			$total_biayaKPKP=$value->num_kpkp * 5000;
+			$bulan_tertampung=countBulanTercover($total_biayaKPKP, $value->saldo_akhir, date('Y-m'));
+			
+			$value->nama_bulan_tertampung=$bulan_tertampung['month'];
+			$value->bulan_tertampung=$bulan_tertampung['num_month'];
+			$value->est_tunggakan_kpkp=$total_biayaKPKP * $bulan_tertampung['num_month'];
+			$kk[]=$value;
+
+		}
+
+		$data['kk']=$kk;
+		$data['title']=$this->input->post('title');
+		$this->load->view('ajax/ls_kk_kpkp', $data);
+	}
 }
 

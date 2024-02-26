@@ -118,6 +118,68 @@ class Home extends CI_Controller {
 			}
 
 
+			$s="select  A.*, B.kwg_nama, B.kwg_wil, C.num_kpkp
+				from kpkp_keluarga_jemaat A 
+				join keluarga_jemaat B on B.id = A.keluarga_jemaat_id
+				join (select kwg_no, count(id) as num_kpkp from anggota_jemaat where sts_anggota=1 && sts_anggota=1 && status=1 group by kwg_no) C on C.kwg_no = B.id
+				where B.status=1 && A.saldo_akhir <0
+				";
+			$q=$this->m_model->selectcustom($s);
+			$bulan3=0;
+			$bulan6=0;
+			$bulan12=0;
+			$bulan36=0;
+
+			$bulan3_ls=array();
+			$bulan6_ls=array();
+			$bulan12_ls=array();
+			$bulan36_ls=array();
+
+			$bulan3_ls[]=0;
+			$bulan6_ls[]=0;
+			$bulan12_ls[]=0;
+			$bulan36_ls[]=0;
+
+			$total_biayaKPKP=0;
+
+			foreach ($q as $key => $value) {
+				// code...
+				$total_biayaKPKP=$value->num_kpkp * 5000;
+				$bulan_tertampung=countBulanTercover($total_biayaKPKP, $value->saldo_akhir, date('Y-m'));
+				//echo $value->kwg_nama." ".$bulan_tertampung['num_month'];
+				if($bulan_tertampung['num_month'] >= -3){
+					$bulan3++;
+					$bulan3_ls[]= $value->keluarga_jemaat_id;
+			
+				}
+				else if($bulan_tertampung['num_month'] > -12){
+					$bulan6++;
+					$bulan6_ls[]=$value->keluarga_jemaat_id;
+			
+				}
+				else if($bulan_tertampung['num_month'] <= -12 && $bulan_tertampung['num_month'] > -36){
+					$bulan12++;
+					$bulan12_ls[]=$value->keluarga_jemaat_id;
+				}
+				else if($bulan_tertampung['num_month'] <= -36){
+					$bulan36++;
+					$bulan36_ls[]=$value->keluarga_jemaat_id;
+				}
+
+			}
+
+			$data['kpkpbulan3']=$bulan3;
+			$data['kpkpbulan6']=$bulan6;
+			$data['kpkpbulan12']=$bulan12;
+			$data['kpkpbulan36']=$bulan36;
+
+
+			$data['kpkpbulan3_ls']=$bulan3_ls;
+			$data['kpkpbulan6_ls']=$bulan6_ls;
+			$data['kpkpbulan12_ls']=$bulan12_ls;
+			$data['kpkpbulan36_ls']=$bulan36_ls;
+
+
 			$this->load->view('admin/home/dashboard', $data);
 		}
 		else{
