@@ -890,6 +890,7 @@ class pemakaman extends CI_Controller {
 			// code...
 			$id_kpkp=$value->id;
 			$saldo_akhir=$value->saldo_akhir;
+			$saldo_akhir_sukarela=$value->saldo_akhir_sukarela;
 		}
 
 		switch ($option_sukarela) {
@@ -924,7 +925,23 @@ class pemakaman extends CI_Controller {
 
 			case '2':
 				// code... //ini bearti ada sukarelanya dengan nominal yg di tentukan
-				$param['nominal']=$nominal-$nominal_sukarela;
+				//get nominal pokok_iuran
+				$rpokok=$this->m_model->selectas('status', '1', 'kpkp_pokok_iuran');
+				$pokok=0;
+				foreach ($rpokok as $key => $value) {
+					// code...
+					$pokok=$value->nominal;
+				}
+				$pokok_iuranKeluarga=$pokok*$this->input->post('num_anggota_kpkp');
+				//potong pembayaran iuran pokok keluarga
+				$bulan_terbayar=floor($nominal/$pokok_iuranKeluarga);
+				$total_bayar_iuran_wajib=$bulan_terbayar*$pokok_iuranKeluarga;
+
+				//get sisa setelah di potong pokok untuk 
+				$nominal_sukarela=$nominal-$total_bayar_iuran_wajib;
+
+
+				$param['nominal']=$total_bayar_iuran_wajib;
 				//insert pembayaran
 				$i=$this->m_model->insertgetid($param, 'kpkp_bayar_bulanan');
 
@@ -1071,6 +1088,10 @@ class pemakaman extends CI_Controller {
         $param2['total']=$iTotal;
         $param2['created_at']=date('Y-m-d H:i:s');
         $i2=$this->m_model->insertgetid($param2, 'kpkp_log_auto_debet');
+
+        echo 'success: '.$iSuccess;
+        echo '<br><br>';
+        echo 'error: '.$iFailed;
     }
 
     function transaksi_mutasi($action="print"){
