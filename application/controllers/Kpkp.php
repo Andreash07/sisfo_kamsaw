@@ -70,8 +70,28 @@ class Kpkp extends CI_Controller {
             $alt="Nama Lengkap dan Tanggal Lahir";
         }
         else if($this->input->post('namalengkap') && $this->input->post('namalengkap') != '' && $this->input->post('tgl_lahir') && $this->input->post('tgl_lahir') != ''){
-            $s="select * from anggota_jemaat where lower(nama_lengkap)='".clearText(strtolower($this->input->post('namalengkap')))."' && tgl_lahir='".clearText(strtolower($this->input->post('tgl_lahir')))."' && sts_kpkp=1";
-            $q=$this->m_model->selectcustom($s);
+            $tgl_lahir="";
+
+            $num=1;;
+            //foreach ($this->input->post('tgl_lahir') as $key => $value) {
+            for ($i=0; $i < 3; $i++) { 
+                // code...
+                $value='00';
+                if(isset($this->input->post('tgl_lahir')[$i])){
+                   $value =$this->input->post('tgl_lahir')[$i];
+                }
+                if($value<10){
+                    $value='0'.$value;
+                }
+                $tgl_lahir.=$value;
+                $num++;
+                if($num<=3){
+                    $tgl_lahir.='-';
+                }
+                
+            }
+            $s="select * from anggota_jemaat where lower(nama_lengkap)='".clearText(strtolower($this->input->post('namalengkap')))."' && tgl_lahir='".clearText(strtolower($tgl_lahir))."' && sts_kpkp=1";
+            $q=$this->m_model->selectcustom($s); //die($s);
             $alt="NIK Anggota Jemaat";
         }
         else{

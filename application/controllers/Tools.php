@@ -1567,5 +1567,23 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
 
     }
 
+    function count_numKPKP(){
+        $data=array();
+        $s="select B.id, COUNT(A.id) as num_kpkp, B.keluarga_jemaat_id, A.kwg_no
+                from anggota_jemaat A
+                join kpkp_keluarga_jemaat B on B.keluarga_jemaat_id = A.kwg_no
+                where A.sts_kpkp =1 && A.status=1 && A.sts_anggota=1
+                group by A.kwg_no;";
+        $q=$this->m_model->selectcustom($s);
+        foreach ($q as $key => $value) {
+            // code...
+            $param=array();
+            $param['num_kpkp']=$value->num_kpkp;
+            $this->m_model->updateas('id', $value->id, $param, 'kpkp_keluarga_jemaat');
+        }
+
+
+    }
+
 }
 

@@ -35,6 +35,7 @@ class Home extends CI_Controller {
 			$data['sumKK']=0;
 			$data['sumjiwa']=0;
 			$data['sumKKOld']=0;
+			$data['sumKKOld_label']=0;
 			$data['sumjiwaOld']=0;
 			foreach ($perwilayah as $key => $value) {
 				# code...
@@ -48,6 +49,11 @@ class Home extends CI_Controller {
 				$data['perwilayahOld'][$valueperwilayah_old->kwg_wil]=$valueperwilayah_old;
 				$data['sumKKOld']=$data['sumKKOld']+$valueperwilayah_old->NUM_keluarga;
 				$data['sumjiwaOld']=$data['sumjiwaOld']+$valueperwilayah_old->NUM_jiwa;
+			}
+
+			$data['sumKKOld_label']=$data['sumKKOld'];
+			if($data['sumKKOld']<$data['sumKK']){
+				$data['sumKKOld']=$data['sumKK'];
 			}
 
 			$query3="select A.*, B.name from keluarga_jemaat A join ags_users B on  (A.created_user = B.username) order by A.id DESC limit 10 ";
@@ -124,7 +130,14 @@ class Home extends CI_Controller {
 				join (select kwg_no, count(id) as num_kpkp from anggota_jemaat where sts_anggota=1 && sts_anggota=1 && status=1 group by kwg_no) C on C.kwg_no = B.id
 				where B.status=1 && A.saldo_akhir <0
 				";
-			$q=$this->m_model->selectcustom($s);
+			$s="select  A.*, B.kwg_nama, B.kwg_wil, C.num_kpkp as num_kpkp_inti, IF(D.num_kpkp is null, 0, D.num_kpkp)  as num_kpkp_tambahan, (C.num_kpkp + IF(D.num_kpkp is null, 0, D.num_kpkp)) as num_kpkp
+				from kpkp_keluarga_jemaat A 
+				join keluarga_jemaat B on B.id = A.keluarga_jemaat_id
+				join (select kwg_no, count(id) as num_kpkp from anggota_jemaat where sts_anggota=1 && sts_anggota=1 && status=1 group by kwg_no) C on C.kwg_no = B.id
+				left join (select kwg_no_kpkp, count(id) as num_kpkp from anggota_jemaat where sts_anggota=1 && sts_anggota=1 && status=1 group by kwg_no_kpkp) D on D.kwg_no_kpkp = B.id
+				where B.status=1 && A.saldo_akhir <0
+				";
+			$q=$this->m_model->selectcustom($s);// die($s);
 			$bulan3=0;
 			$bulan6=0;
 			$bulan12=0;

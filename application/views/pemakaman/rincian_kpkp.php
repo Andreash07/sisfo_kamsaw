@@ -2,13 +2,19 @@
   <?php 
   //hitung estimasi bulan terkover
   $est_bulanTercover=countBulanTercover($total_biayaKPKP, $data->saldo_akhir, date('Y-m'));
+
+  $saldo_akhir=number_format($data->saldo_akhir,0,",",".");
+  if($data->saldo_akhir<0){
+    $data->saldo_akhir=$data->saldo_akhir*-1;
+    $saldo_akhir="(".number_format($data->saldo_akhir,0,",",".").")";
+  }
   ?>
 
   <div class="form-group">
-    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_nama">Saldo Akhir<span class="required">*</span>
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_nama">Lebih/(Kurang) Bayar<span class="required">*</span>
     </label>
     <div class="col-md-6 col-sm-6 col-xs-12">
-      <input class="form-control col-md-7 col-xs-12" type="text" id="kwg_no" name="kwg_no" required="required" value="<?=number_format($data->saldo_akhir,0,",",".");?>" disabled>
+      <input class="form-control col-md-7 col-xs-12" type="text" id="kwg_no" name="kwg_no" required="required" value="<?=$saldo_akhir;?>" disabled>
     </div>
   </div>
 
@@ -21,7 +27,7 @@
   </div>
 
   <div class="form-group">
-    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_alamat">Estimasi Bulan Tertampung
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_alamat">Cakupan Bulan Tertampung
     </label>
 
     <div class="col-md-6 col-sm-6 col-xs-12">

@@ -538,6 +538,14 @@ function get_month() {
   );
     return $MonthArray;
 }
+function get_month_id() {
+  $MonthArray = array(
+    "01" => "Januari", "02" => "Februari", "03" => "Maret", "04" => "April",
+    "05" => "Mei", "06" => "Juni", "07" => "Juli", "08" => "Agustus",
+    "09" => "September", "10" => "Oktober", "11" => "November", "12" => "Desember",
+  );
+    return $MonthArray;
+}
 
 function getChannelPayment() {
     $MerchantId="32451";
@@ -1200,10 +1208,74 @@ function countBulanTercover($total_biayaKPKP, $saldo_akhir, $current_Month){
     $data=array();
     //hitung jumlah bulan yg dapat tercover karena tagihannya ini perbulan 
     //berdasarkan total_biayaKPKP (bulanan) dengan saldo akhir yg dipunya
-
     $est=$saldo_akhir/$total_biayaKPKP;//die($est);
-    $est_tercover=date('F Y', strtotime(floor($est).' months') );
+    $est_tercover=date('M Y', strtotime(floor($est).' months') );
     $data['month']=$est_tercover;
     $data['num_month']=floor($est);
+    $num_month=floor($est);
+    $num_jiwa=0;
+
+
+    $model = get_instance();
+    $model->load->model('m_model');
+    $checkPokokIuranKPKP = $model->m_model->selectcustom('select * from kpkp_pokok_iuran order by status DESC, periode DESC');
+    $today=date('Y-m-').'02';
+    $last_month_periode=0;
+
+    $total_sisasaldo=$saldo_akhir;
+    foreach ($checkPokokIuranKPKP as $key => $value) {
+        // code...
+        //get batas banyak bulan berjalan pada periode iruan pokok
+        //agar mendapatkan beban iuran pokok yg sesuai dengan beban iruan disetiap periode
+        $sisa_month_tunggakan=0;
+        if($value->status==1){
+            $tgl_periode=$value->periode_mulai;
+        }
+        else{
+            $tgl_periode=$value->periode;   
+        }
+        //echo $tgl_periode;
+        //$diff = abs(strtotime($tgl_periode)-strtotime($today));
+        $diff = strtotime($tgl_periode)-strtotime($today);
+        //echo ($today.'-'.$tgl_user); die();
+        //echo ($diff); die();
+        $years = floor($diff / (365*60*60*24));
+        $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+        $max_month_periode=(($years*12)+$months);
+
+        //die($max_month_periode);
+        if($value->status==1){
+            $num_jiwa=$total_biayaKPKP/$value->nominal;
+            if($max_month_periode<0){
+                $max_month_periode=$max_month_periode-1;
+            }else{
+                $max_month_periode=$max_month_periode+1;
+            }
+        }
+        if($data['num_month'] > $max_month_periode && $value->status==1){
+            $last_month_periode=$last_month_periode+$max_month_periode;
+        
+        
+            break; //langsung keluar jika jumlah datanya masih lebih besar dari jumlah max bulan tunggakan dari periode yg status aktif
+        }else{
+
+            if($value->status==0){
+                //echo $num_month." + (".$total_sisasaldo."/(".$num_jiwa."*".$value->nominal.") ) <br>";
+                $num_month=$num_month+($total_sisasaldo/($num_jiwa*$value->nominal));
+                //khusus periode tidak aktif
+            }else{
+                //khusu untuk hitung periode tidak aktif
+            //echo $total_sisasaldo."+(".$num_jiwa." * ".$value->nominal."*".abs($max_month_periode).") aa<br>";
+                $total_sisasaldo=$total_sisasaldo + ($num_jiwa*$value->nominal*abs($max_month_periode));
+                $num_month=$max_month_periode;
+
+            }
+            //kalua ada belum bayar dibawah maret 2016
+            $est_tercover=date('M Y', strtotime(floor($num_month).' months') );
+            $data['month']=$est_tercover;
+            $data['num_month']=floor($num_month);
+        }
+
+    }
     return $data;
 }

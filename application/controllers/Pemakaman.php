@@ -223,6 +223,26 @@ class pemakaman extends CI_Controller {
 				break;
 		}
 
+		if(!isset($_GET['sts_anggota'])) {
+			$sts_anggota=1;
+		}
+		else if($this->input->get('sts_anggota') || $this->input->get('sts_anggota')==0 ){
+			$sts_anggota=$this->input->get('sts_anggota');
+			$param_active.="sts_anggota=".$this->input->get('sts_anggota')."&";
+		}
+
+		if($this->input->get('sts_angjem') || $this->input->get('sts_angjem') =='0'){
+
+			$param_active.="sts_anggota=".$this->input->get('sts_angjem')."&";
+
+			$where.=" && A.sts_anggota = '".$this->input->get('sts_angjem')."'";
+			$data['sts_angjem']=$this->input->get('sts_angjem');
+
+		}else{
+			$data['sts_angjem']=1;
+		}
+
+
 		if($this->input->get('tahun_dari') && $this->input->get('tahun_dari') !=''){
 
 			$param_active.="tahun_dari=".$this->input->get('tahun_dari')."&";
@@ -300,6 +320,7 @@ class pemakaman extends CI_Controller {
 
         }
 
+        $data['sts_anggota']=$sts_anggota;
         $data['page']=$page;
 
         $data['numStart']=$numStart;
@@ -876,10 +897,12 @@ class pemakaman extends CI_Controller {
 		$nominal_sukarela=$this->input->post('nominal_sukarela');
 		$tgl_bayar=$this->input->post('tgl_bayar');
 		$option_sukarela=$this->input->post('option_sukarela');
+		$note=$this->input->post('note');
 
 		//untuk insert ke kpkp_bayar_bulanan
 		$param['keluarga_jemaat_id']=$keluarga_jemaat_id;;
 		$param['tgl_bayar']=$tgl_bayar;
+		$param['note']=$note;
 		$param['created_at']=date('Y-m-d H:i:s');
 		$param['created_by']=$this->session->userdata('userdata')->id;
 		$param['type']='1'; //ini sebagai tanda bayar bulanan
@@ -1015,13 +1038,17 @@ class pemakaman extends CI_Controller {
 
     public function pembayaran_iuran(){
     	$data=array();
-    	$s="select B.kwg_nama, B.kwg_alamat, B.kwg_telepon, D.*, B.kwg_wil, C.num_jiwa
+    	$s="select B.kwg_nama, B.kwg_alamat, B.kwg_telepon, D.*, B.kwg_wil, C.num_jiwa_utama, E.num_jiwa_tambahan, 0 as num_jiwa
             from keluarga_jemaat B
             join kpkp_keluarga_jemaat D on D.keluarga_jemaat_id = B.id
-            join (select z.kwg_no, COUNT(z.id) as num_jiwa 
+            join (select z.kwg_no, COUNT(z.id) as num_jiwa_utama
                     from anggota_jemaat z where z.status=1 && z.sts_kpkp=1 && z.sts_anggota=1 && tgl_meninggal='0000-00-00' && (z.tmpt_meninggal='' || z.tmpt_meninggal is NULL) 
                     group by z.kwg_no
-                ) C on C.kwg_no = B.id 
+                ) C on C.kwg_no = B.id
+            left join (select z.kwg_no_kpkp, COUNT(z.id) as num_jiwa_tambahan
+                    from anggota_jemaat z where z.kwg_no_kpkp!=0 &&  z.status=1 && z.sts_kpkp=1 && z.sts_anggota=1 && tgl_meninggal='0000-00-00' && (z.tmpt_meninggal='' || z.tmpt_meninggal is NULL) 
+                    group by z.kwg_no_kpkp
+                ) E on E.kwg_no_kpkp = B.id
             ";
         $q=$this->m_model->selectcustom($s);
 
@@ -1036,9 +1063,18 @@ class pemakaman extends CI_Controller {
         $iFailed=0;
         foreach ($q as $key => $value) {
         	// code...
+
+        	if($value->num_jiwa_tambahan==null){
+        		//continue; //ini bearti tidak di proses karena tidak ada jumlah jiwanya
+        		//masih ragu
+        		$value->num_jiwa_tambahan=0;
+        	}
+
+
         	if($value->num_jiwa==0){
         		//continue; //ini bearti tidak di proses karena tidak ada jumlah jiwanya
         		//masih ragu
+        		$value->num_jiwa=$value->num_jiwa_utama+$value->num_jiwa_tambahan;
         	}
         	$note="";
         	$note.=date('F Y');
@@ -1174,6 +1210,91 @@ class pemakaman extends CI_Controller {
     	}else{
     		$this->load->view('pemakaman/laporan_iuran_anggota',$data);
     	}
+
+    }
+
+
+    function bukadompetkpkp(){
+    	$data=array();
+    	$recid=$this->input->post('recid');
+    	$nominal=$this->input->post('nominal');
+    	//create dompet KPKP
+    	$param=array();
+    	$param['keluarga_jemaat_id']=$recid;
+    	$param['saldo_akhir']=$nominal;
+    	$param['saldo_akhir_sukarela']=0;
+    	$param['last_pembayaran']='0000-00-00';
+    	$param['created_at']=date('Y-m-d H:i:s');
+    	$param['created_by']=$this->session->userdata('userdata')->id;
+    	$param['last_update']=NULL;
+    	$i=$this->m_model->insertgetid($param, 'kpkp_keluarga_jemaat');
+
+    	//create mutasi transksi
+    	$param2=array();
+    	$param2['type']=0;
+    	$param2['keluarga_jemaat_id']=$recid;
+    	$param2['nominal']=$nominal;
+    	$param2['tgl_bayar']=date('Y-m-d');
+    	$param2['created_at']=date('Y-m-d H:i:s');
+    	$param2['created_by']=$this->session->userdata('userdata')->id;
+    	$i=$this->m_model->insertgetid($param2, 'kpkp_bayar_bulanan');
+
+    	redirect(base_url().'pemakaman/DataJemaat?edit=true&id='.$recid);
+
+    }
+
+
+    function form_tautaangjem(){
+    	$data=array();
+    	$data['keluarga_jemaat_id']=$this->input->get('id');
+    	$param=array();
+    	
+
+    	$this->load->view('pemakaman/form_tautaangjem', $data);
+
+    }
+
+
+    function mutasi_keluarga($action){
+    	$data=array();
+    	$param=array();
+
+    	$kwg_old=$this->input->get('kwg_id');
+		$ls_jemaat_id=$this->input->post('jemaat_id'); //id angjem yang di pilih untuk dimasukan kekeluarga yang disedang diedit
+		//print_r($this->input->post()); die();
+		$kwg_new=$this->input->get('kwg_new');
+
+		$updateAngjem=$this->m_model->updateas('id', $ls_jemaat_id, array('kwg_no_kpkp'=>$kwg_new, 'last_modified'=> date('Y-m-d H:i:s')), 'anggota_jemaat');
+
+		if($updateAngjem){
+			$sql="update kpkp_keluarga_jemaat  set num_kpkp=num_kpkp+1 where id='".$kwg_new."'";
+			$this->m_model->querycustom($sql);
+
+
+			$sql1="update kpkp_keluarga_jemaat  set num_kpkp=num_kpkp-1 where id='".$this->input->post('kwg_id')."'";
+			$this->m_model->querycustom($sql1);
+
+			$json['status']=1;
+
+			$json['msg']="Wow... Berhasil menambahkan Anggota KPKP ke dalam Keluarga KPKP!";
+
+		}
+
+		else{
+
+			$json['status']=0;
+
+			$json['msg']="Oooppss, Maaf... Ada yang Gagal saat mutasi Anggota Keluarga menjadi Keluarga KPKP!";
+
+		}
+
+		echo json_encode($json);
+
+		return;
+
+    	
+
+    	$this->load->view('pemakaman/form_tautaangjem', $data);
 
     }
 }

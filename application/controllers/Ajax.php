@@ -1135,13 +1135,14 @@ class Ajax extends CI_Controller {
 	{
 		// code...
 		$data=array();
-		$s="select  A.*, B.kwg_nama, B.kwg_wil, C.num_kpkp
+		$s="select  A.*, B.kwg_nama, B.kwg_wil, C.num_kpkp as num_kpkp_inti, IF(D.num_kpkp is null, 0, D.num_kpkp) as num_kpkp_tambahan, (C.num_kpkp + IF(D.num_kpkp is null, 0, D.num_kpkp)) as num_kpkp
 				from kpkp_keluarga_jemaat A 
 				join keluarga_jemaat B on B.id = A.keluarga_jemaat_id
 				join (select kwg_no, count(id) as num_kpkp) from anggota_jemaat where sts_anggota=1 && sts_anggota=1 && status=1 group by kwg_no) C on C.kwg_no = B.id
+				left join (select kwg_no_kpkp, count(id) as num_kpkp from anggota_jemaat where sts_anggota=1 && sts_anggota=1 && status=1 group by kwg_no_kpkp) D on D.kwg_no_kpkp = B.id
 				where B.status=1 && A.saldo_akhir <0
 				";
-		$q=$this->m_model->selectcustom($s);
+		$q=$this->m_model->selectcustom($s);// die($s);
 		$bulan3=0;
 		$bulan6=0;
 		$bulan12=0;
@@ -1179,14 +1180,16 @@ class Ajax extends CI_Controller {
 		// code...
 		$data=array();
 		$ls_kk_id=$this->input->post('ls_kk_id');
-		$s="select  A.*, B.kwg_nama, B.kwg_wil, C.num_kpkp, '0' as bulan_tertampung, '0' as est_tunggakan_kpkp, '' as nama_bulan_tertampung
+		$s="select  A.*, B.kwg_nama, B.kwg_wil,  C.num_kpkp as num_kpkp_inti, IF(D.num_kpkp is null, 0, D.num_kpkp) as num_kpkp_tambahan, (C.num_kpkp + IF(D.num_kpkp is null, 0, D.num_kpkp)) as num_kpkp, '0' as bulan_tertampung, '0' as est_tunggakan_kpkp, '' as nama_bulan_tertampung
 				from kpkp_keluarga_jemaat A 
 				join keluarga_jemaat B on B.id = A.keluarga_jemaat_id
 				join (select kwg_no, count(id) as num_kpkp from anggota_jemaat where sts_anggota=1 && sts_anggota=1 && status=1 && kwg_no in (".$ls_kk_id.") group by kwg_no ) C on C.kwg_no = B.id
+				left join (select kwg_no_kpkp, count(id) as num_kpkp from anggota_jemaat where sts_anggota=1 && sts_anggota=1 && status=1 group by kwg_no_kpkp) D on D.kwg_no_kpkp = B.id
 				where B.status=1 && A.saldo_akhir <0 && A.keluarga_jemaat_id in (".$ls_kk_id.")
 				order by B.kwg_wil ASC, B.kwg_nama ASC
 				";
-		$q=$this->m_model->selectcustom($s); //die($s);
+		//die($s);
+		$q=$this->m_model->selectcustom($s); 
 		
 		$kk=array();
 		foreach ($q as $key => $value) {
