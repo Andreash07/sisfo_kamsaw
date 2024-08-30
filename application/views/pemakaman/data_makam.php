@@ -8,22 +8,22 @@ $this->load->view('layout/header');
 <div class="row">
     
 
-	<div class="col-xs-12">
-		
+  <div class="col-xs-12">
+    
 
       <div class="x_panel">
-      	<div class="x_title">
+        <div class="x_title">
 
-						<h4>Data Blok Makam</h4>
+            <h4>Data Makam</h4>
 
-				    </div>
-      	<ul class="nav navbar-right panel_toolbox">
+            </div>
+        <ul class="nav navbar-right panel_toolbox">
 
                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Tambah Data </button>
-                   	</ul>
+                    </ul>
 
- <!--  modalah    -->              	
-                   	<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+ <!--  modalah    -->               
+                    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-header">
@@ -32,34 +32,26 @@ $this->load->view('layout/header');
                   <h4 class="modal-title" id="myModalLabel">Data Pemakaman</h4>
                 </div>
                 <div class="modal-body">
-                	<div class="row">
-	                	<form id="form_pembayaran" action="" method="POST">
-	                    <div class="item form-group col-xs-12">
-	                      <label class="control-label col-md-3 col-sm-6 col-xs-6 text-right" for="nominal">Lokasi <span class="required"></span><br>
-	                      	
-	                      </label>
-	                      <div class="col-md-4 col-sm-6 col-xs-6">
-	                        <select class="form-control" id="option_sukarela" name="option_sukarela">
-	                        	<option value="0">--Silahkan Pilih--</option>
-	                        	<option value="1">TPK Jamblang</option>
-	                        </select>
-                          <!--
-                            <option value="2">TPU Jati Sari</option>
-                            <option value="3">TPU Bitung</option>
-                          -->
-	                      </div>
-		                	</div>
-	                    <div class="item form-group col-xs-12">
-	                      <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="nominal">Blok <span class="required text-right"></span>
-	                      </label>
-	                      <div class="col-md-6 col-sm-6 col-xs-6">
-	                        <input type="text" id="nominal" name="nominal" required="required" class="form-control">
-	                      </div>
-		                	</div>
-		                	
-	                	</form>
-	                </div>
-              	</div>
+                  <div class="row">
+                    <form id="form_pembayaran" action="" method="POST">
+                      <div class="item form-group col-xs-12">
+                        <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="blok">Blok <span class="required text-right"></span>
+                        </label>
+                        <select>
+                          <?php 
+                            foreach ($blok as $key => $value) {
+                              // code...
+                          ?>
+                              <option value="<?= $value->id;?>"><?=$value->blok;?><?=$value->blok;?></option>
+                          <?php
+                            }
+                          ?>
+                        </select>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
                   <button type="button" class="btn btn-primary" id="btn_simpan_bayar">Simpan</button>
@@ -131,77 +123,77 @@ $this->load->view('layout/header');
 
             </tr>
             <tr>
-            	<td class='text-center'>2</td>
+              <td class='text-center'>2</td>
               <td class='text-center'>TPK Jati Sari</td>
               <td class='text-center'>Blok B</td>
               <td class='text-center'>7</td>
               <td class='text-center'>Aktif</td>
             </tr>
               <tr>
-            	<td class='text-center'>3</td>
+              <td class='text-center'>3</td>
               <td class='text-center'>TPK Bitung</td>
               <td class='text-center'>Blok C</td>
               <td class='text-center'>8</td>
               <td class='text-center'>Aktif</td>
             </tr>
               <tr>
-            	<td class='text-center'>4</td>
+              <td class='text-center'>4</td>
               <td class='text-center'>TPK Jamblang</td>
               <td class='text-center'>Blok H</td>
               <td class='text-center'>3</td>
               <td class='text-center'>Aktif</td>
             </tr>
               <tr>
-            	<td class='text-center'>5</td>
+              <td class='text-center'>5</td>
               <td class='text-center'>TPK Jamblang</td>
               <td class='text-center'>Blok N</td>
               <td class='text-center'>21</td>
               <td class='text-center'>Aktif</td>
             </tr>
               <tr>
-            	<td class='text-center'>6</td>
+              <td class='text-center'>6</td>
               <td class='text-center'>TPK Jamblang</td>
               <td class='text-center'>Blok C</td>
               <td class='text-center'>11</td>
               <td class='text-center'>Aktif</td>
             </tr>
                 <tr>
-            	<td class='text-center'>7</td>
+              <td class='text-center'>7</td>
               <td class='text-center'>TPK Jamblang</td>
               <td class='text-center'>Blok C</td>
               <td class='text-center'>11</td>
               <td class='text-center'>Aktif</td>
             </tr>
                 <tr>
-            	<td class='text-center'>8</td>
+              <td class='text-center'>8</td>
               <td class='text-center'>TPK Jamblang</td>
               <td class='text-center'>Blok C</td>
               <td class='text-center'>11</td>
               <td class='text-center'>Aktif</td>
             </tr>
                 <tr>
-            	<td class='text-center'>9</td>
+              <td class='text-center'>9</td>
               <td class='text-center'>TPK Jamblang</td>
               <td class='text-center'>Blok C</td>
               <td class='text-center'>11</td>
               <td class='text-center'>Aktif</td>
             </tr>
                 <tr>
-            	<td class='text-center'>10</td>
+              <td class='text-center'>10</td>
               <td class='text-center'>TPK Jamblang</td>
               <td class='text-center'>Blok C</td>
               <td class='text-center'>11</td>
               <td class='text-center'>Aktif</td>
             </tr>
                 <tr>
-            	<td class='text-center'>11</td>
+              <td class='text-center'>11</td>
               <td class='text-center'>TPK Jamblang</td>
               <td class='text-center'>Blok C</td>
               <td class='text-center'>11</td>
               <td class='text-center'>Aktif</td>
             </tr>
                 <tr>
-            	<td class='text-center'>12</td>
+              <td class='text-center'>12</td>
               <td class='text-center'>TPK Jamblang</td>
               <td class='text-center'>Blok C</td>
               <td class='text-center'>11</td>
@@ -247,25 +239,25 @@ $this->load->view('layout/footer');
   });
 
 
-	$(document).on('click', '[id=btn_exec_print]', function(e){
-		$('#form_field').submit();
-	})
+  $(document).on('click', '[id=btn_exec_print]', function(e){
+    $('#form_field').submit();
+  })
 
-	$(document).on('click', '[id=btn_checkFieldPrint]', function(e){
-		e.preventDefault()
-		$('#modal_checkField').modal('show');
-	})
+  $(document).on('click', '[id=btn_checkFieldPrint]', function(e){
+    e.preventDefault()
+    $('#modal_checkField').modal('show');
+  })
 
-	$(document).on('click', '[id=editKebaktian]', function(e){
+  $(document).on('click', '[id=editKebaktian]', function(e){
 
-		url=$(this).attr('href');
+    url=$(this).attr('href');
 
-		$.get(url, function(data){
+    $.get(url, function(data){
 
-			$('#modal-content').html(data)
+      $('#modal-content').html(data)
 
-		})
+    })
 
-	})
+  })
 
 </script>

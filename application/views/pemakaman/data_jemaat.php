@@ -320,10 +320,25 @@ $this->load->view('layout/header');
 
 			//kwg_no pada anggota_jemaat adalah value dari anggota_jemaat_id
 
-			$anggota_KK=$this->m_model->selectas3('kwg_no', $dataKK[0]->id,'delete_user IS NULL', NULL, 'status', 1, 'anggota_jemaat', 'no_urut', 'ASC');
+			//$anggota_KK=$this->m_model->selectas3('kwg_no', $dataKK[0]->id,'delete_user IS NULL', NULL, 'status', 1, 'anggota_jemaat', 'no_urut', 'ASC');
+			$s10="select Z.* from ( select *, '1' as keluarga_inti 
+						from anggota_jemaat A 
+						where A.kwg_no='".$dataKK[0]->id."'
+						UNION ALL 
+						select *, '0' as keluarga_inti 
+						from anggota_jemaat A
+						where A.kwg_no_kpkp='".$dataKK[0]->id."') Z
+						where Z.delete_user IS NULL && Z.status
+						order by Z.keluarga_inti DESC, Z.no_urut ASC";
+			//die($s10);
+			$anggota_KK=$this->m_model->selectcustom($s10); 
+
+
 			//get_dompet kpkp
 			$dompet_kpkp=$this->m_model->selectas('keluarga_jemaat_id', $dataKK[0]->id, 'kpkp_keluarga_jemaat');
-			$mutasiiuran_kpkp=$this->m_model->selectas('keluarga_jemaat_id', $dataKK[0]->id, 'kpkp_bayar_bulanan');
+			$sq="select * from kpkp_bayar_bulanan where keluarga_jemaat_id='".$dataKK[0]->id."' order by tgl_bayar ASC, type ASC,  created_at ASC";
+			$mutasiiuran_kpkp=$this->m_model->selectcustom($sq);
+
 
 			$num_anggotaKPKP=0;
 	?>
@@ -361,7 +376,9 @@ $this->load->view('layout/header');
                         <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
                           
 			<div class="">
-				<div class="x_title"></div>
+				<div class="x_title">
+					<div class="btn btn-warning" data-toggle="modal" data-target="#myModal" id="btn_form_tautanangjem" href="<?=base_url()."pemakaman/form_tautaangjem?id=".$dataKK[0]->id;?>">Tautkan Angjem Lain</div>
+				</div>
 							<div class="x_content table-responsive">
 								<table class="table table-striped" id="item_sj">
 									<thead>
@@ -402,6 +419,9 @@ $this->load->view('layout/header');
 
 						            	$num_anggotaKPKP++;
 						            }
+										?>
+										<?php 
+											if($valueAnggota_KK->keluarga_inti==1){
 										?>
 
 											<tr>
@@ -477,7 +497,87 @@ $this->load->view('layout/header');
 												</td>
 
 											</tr>
+											<?php 
+												}else{
+											?>
+													<tr>
+														<td class="text-center" style="max-width:20px;">
+															<?=$keyAnggota_KK+1;?>
+														</td>
 
+														<td class="text-center" colspan="2" style="width:20%">
+
+															<?= $valueAnggota_KK->no_anggota;?>
+															<br>
+															<?=$sts;?>
+														</td>
+
+														<td class="text-left" style="width:40%; line-height: 2">
+
+															<b>Nama:</b> <?= $valueAnggota_KK->nama_lengkap;?>
+
+															<br>
+
+															<b>Tempat, TTL:</b> <?= $valueAnggota_KK->tmpt_lahir.', '.convert_tgl_dMY($valueAnggota_KK->tgl_lahir) ;?>
+
+															<br>
+
+															<b>Telp/HP:</b> <?= $valueAnggota_KK->telepon;?>
+
+															<br>
+
+															<!-- <b>Baptis:</b> <?= $baptis;?>
+
+															<br>
+
+															<b>Sidi:</b> <?=$sidi;?>
+
+															<br>
+
+															<b>Nikah:</b> <?= $nikah;?> -->
+
+														</td>
+
+														<td class="text-center" style="width:20%">
+															<div class="form-group">
+																<label for="select_stst_kpkp<?=$valueAnggota_KK->id;?>">KPKP</label>
+																<select class="form-control" id="select_stst_kpkp<?=$valueAnggota_KK->id;?>" name="select_stst_kpkp<?=$valueAnggota_KK->id;?>" recid="<?=$valueAnggota_KK->id;?>">
+																	<option value="0" <?php if($valueAnggota_KK->sts_kpkp==0){echo 'selected="selected"';}; ?>>Tidak Aktif</option>
+																	<option value="1" <?php if($valueAnggota_KK->sts_kpkp==1){echo 'selected="selected"';}; ?> >Aktif</option>
+																</select>
+
+																<select class="form-control" id="select_aturan_kpkp<?=$valueAnggota_KK->id;?>" name="select_aturan_kpkp<?=$valueAnggota_KK->id;?>" recid="<?=$valueAnggota_KK->id;?>">
+																	<option value="-1" <?php if($valueAnggota_KK->aturan_kpkp==-1){echo 'selected="selected"';}; ?>> Pilih Kategori Aturan KPKP</option>
+																	<option value="0" <?php if($valueAnggota_KK->aturan_kpkp==0){echo 'selected="selected"';}; ?>> < 2020 kebawah</option>
+																	<option value="1" <?php if($valueAnggota_KK->aturan_kpkp==1){echo 'selected="selected"';}; ?> > >= 2020 keatas</option>
+																</select>
+															</div>
+															<label class="label label-danger">Anggota KPKP Tambahan!</label>
+
+
+														</td>
+
+														<td class="text-center" style="width:15%">
+
+															<!--<a id="editAnggota" href="<?= base_url().'admin/'.$this->uri->segment(2).'?editAnggota=true&';?>id=<?php echo $valueAnggota_KK->id; ?>" onclick="event.preventDefault();" data-toggle="modal" data-target="#myModal" class="btn btn-warning" style="padding: 2px 12px 2px 2px">
+
+																<span class="fa fa-pencil" style="width:20%"></span>
+
+															</a>
+
+															<a id="delet" href="<?= base_url().'admin/'.$this->uri->segment(2).'?deleteanggota=true&id='.$valueAnggota_KK->id.'&kode='.md5(base64_encode($valueAnggota_KK->id.'delete')); ?>" class="confirm btn btn-danger" msg="Yakin ingin menghapus data ini?"  style="padding: 2px 12px 2px 2px">
+
+																<span class="fa fa-trash" style="width:20%"></span>
+
+															</a>
+															<input type="text" name="no_urut" value="<?=$valueAnggota_KK->no_urut;?>" class="form-control text-center" recid="<?php echo $valueAnggota_KK->id; ?>">-->
+														</td>
+
+													</tr>
+
+											<?php 
+												}
+											?>
 
 
 
@@ -499,6 +599,7 @@ $this->load->view('layout/header');
 								if(count($dompet_kpkp)==0){
 							?>
 									<span class="text-danger">Belum memiliki Data Pembayaran KPKP, Silahkan Hubungi Administrator/Pnt/Pengurus KPKP Terkait</span>
+									<div class="btn btn-success" data-toggle="modal" data-target=".modal-dompetKPKP">Buat Dompet KPKP</div>
 							<?php
 								}
 								else{
@@ -516,7 +617,7 @@ $this->load->view('layout/header');
                 <div class="x_panel">
                 	<ul class="nav navbar-right panel_toolbox">
 
-                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Tambah Pembayaran </button>
+                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".modal-pembayaranKPKP">Tambah Pembayaran </button>
 
                    <a class="btn btn-warning" href="<?=base_url();?>pemakaman/transaksi_mutasi/print?id=<?=$dataKK[0]->id;?>" target="_BLANK">
                    	<i class="fa fa-print"></i> Cetak Rekap
@@ -541,58 +642,103 @@ $this->load->view('layout/header');
 
 
 <!--modal nekat -->
-	        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
-                  </button>
-                  <h4 class="modal-title" id="myModalLabel">Pembayaran Iuran KPKP (Bulanan)</h4>
-                </div>
-                <div class="modal-body">
-                	<div class="row">
-	                	<form id="form_pembayaran" action="<?=base_url();?>/pemakaman/simpan_pembayaran" method="POST">
-	                    <div class="item form-group col-xs-12">
-	                      <label class="text-right control-label col-md-3 col-sm-6 col-xs-6" for="tgl_bayar">Tanggal Pembayaran <span class="required text-right"></span>
-	                      </label>
-	                      <div class="col-md-6 col-sm-6 col-xs-6">
-	                        <input type="hidden" id="keluarga_jemaat_id_pembayaran" name="keluarga_jemaat_id" value="<?=$id;?>">
-	                        <input type="hidden" id="num_anggota_kpkp" name="num_anggota_kpkp" value="<?=$num_anggotaKPKP;?>">
-	                        <input type="date" id="tgl_bayar" name="tgl_bayar" required="required" class="form-control col-md-6 col-xs-6">
-	                      </div>
-	                    </div>
-	                    <div class="item form-group col-xs-12">
-	                      <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="nominal">Nominal <span class="required text-right">*</span>
-	                      </label>
-	                      <div class="col-md-6 col-sm-6 col-xs-6">
-	                        <input type="text" id="nominal" name="nominal" required="required" class="form-control" placeholder="Contoh: <?=number_format($total_biayaKPKP,0,",",".");?>">
-	                      </div>
-		                	</div>
-		                	<div class="item form-group col-xs-12">
-	                      <label class="control-label col-md-3 col-sm-6 col-xs-6 text-right" for="nominal">Iuran Sukarela <span class="required"></span><br>
-	                      	<span style="font-weight: 400;">Jika "<b class="text-danger text-sm">Ya</b>" akan memotong dari nilai <b class="text-danger text-sm">Nominal</b></span>
-	                      </label>
-	                      <div class="col-md-4 col-sm-6 col-xs-6">
-	                        <select class="form-control" id="option_sukarela" name="option_sukarela">
-	                        	<option value="0">Tidak, Terimakasih!</option>
-	                        	<option value="1">Ya, dengan nominal tertentu!</option>
-	                        	<option value="2">Ya, dipotong otomatis dari sistem!</option>
-	                        </select>
-	                      </div>
-	                      <div class="col-md-2 col-sm-6 col-xs-6">
-	                        <input type="text" name="nominal_sukarela" id="nominal_sukarela" class="form-control" style="display: none;" placeholder="Contoh: 10.000">
-	                      </div>
-		                	</div>
-	                	</form>
-	                </div>
-              	</div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-                  <button type="button" class="btn btn-primary" id="btn_simpan_bayar">Simpan</button>
-                </div>
-              </div>
-            </div>
+    <div class="modal-pembayaranKPKP modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">Pembayaran Iuran KPKP (Bulanan)</h4>
           </div>
+          <div class="modal-body">
+          	<div class="row">
+            	<form id="form_pembayaran" action="<?=base_url();?>/pemakaman/simpan_pembayaran" method="POST">
+                <div class="item form-group col-xs-12">
+                  <label class="text-right control-label col-md-3 col-sm-6 col-xs-6" for="tgl_bayar">Tanggal Pembayaran <span class="required text-right"></span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <input type="hidden" id="keluarga_jemaat_id_pembayaran" name="keluarga_jemaat_id" value="<?=$id;?>">
+                    <input type="hidden" id="num_anggota_kpkp" name="num_anggota_kpkp" value="<?=$num_anggotaKPKP;?>">
+                    <input type="date" id="tgl_bayar" name="tgl_bayar" required="required" class="form-control col-md-6 col-xs-6">
+                  </div>
+                </div>
+                <div class="item form-group col-xs-12">
+                  <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="nominal">Nominal <span class="required text-right">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <input type="text" id="nominal" name="nominal" required="required" class="form-control" placeholder="Contoh: <?=number_format($total_biayaKPKP,0,",",".");?>">
+                  </div>
+              	</div>
+              	<div class="item form-group col-xs-12">
+                  <label class="control-label col-md-3 col-sm-6 col-xs-6 text-right" for="nominal">Iuran Sukarela <span class="required"></span><br>
+                  	<span style="font-weight: 400;">Jika "<b class="text-danger text-sm">Ya</b>" akan memotong dari nilai <b class="text-danger text-sm">Nominal</b></span>
+                  </label>
+                  <div class="col-md-4 col-sm-6 col-xs-6">
+                    <select class="form-control" id="option_sukarela" name="option_sukarela">
+                    	<option value="0">Tidak, Terimakasih!</option>
+                    	<option value="1">Ya, dengan nominal tertentu!</option>
+                    	<option value="2">Ya, dipotong otomatis dari sistem!</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2 col-sm-6 col-xs-6">
+                    <input type="text" name="nominal_sukarela" id="nominal_sukarela" class="form-control" style="display: none;" placeholder="Contoh: 10.000">
+                  </div>
+              	</div>
+              	<div class="item form-group col-xs-12">
+                  <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="note">Catatan Pembayaran <span class="required text-right">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <input type="text" id="note" name="note" class="form-control" placeholder="ex:Ada kurang pembayaran">
+                  </div>
+              	</div>
+            	</form>
+            </div>
+        	</div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-primary" id="btn_simpan_bayar">Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+     <div class="modal-dompetKPKP modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">Pembukaan Dompet KPKP</h4>
+          </div>
+          <div class="modal-body">
+          	<div class="row">
+            	<form id="form_bukadompetkpkp" action="<?=base_url();?>/pemakaman/bukadompetkpkp" method="POST">
+                <div class="item form-group col-xs-12">
+                  <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="nominal">Jumlah Jiwa <span class="required text-right">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <input type="hidden" id="keluarga_jemaat_id_pembayaran" name="recid" value="<?=$id;?>">
+                    <input readonly type="text" id="num_anggota_kpkp" name="num_anggota_kpkp" class="form-control" value="<?=$num_anggotaKPKP;?>">
+                  </div>
+              	</div>
+              	<div class="item form-group col-xs-9">
+                  <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="nominal">Saldo Awal <span class="required text-right">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <input type="text" id="nominal" name="nominal" required="required" class="form-control" placeholder="Contoh: <?=number_format($total_biayaKPKP,0,",",".");?>">
+                  </div>
+              	</div>
+            	</form>
+            </div>
+        	</div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-primary" id="btn_buat_dompetkppk">Buat</button>
+          </div>
+        </div>
+      </div>
+    </div>
 	<?php
 
 		}
@@ -622,6 +768,10 @@ $this->load->view('layout/header');
 
 	?>
 		<script type="text/javascript">
+			$(document).on('click touchstart', '[id=btn_buat_dompetkppk]', function(e){
+				$('#form_bukadompetkpkp').submit();
+			})
+
 			$(document).on('click touchstart', '[id=btn_simpan_bayar]', function(e){
 				$('#form_pembayaran').submit();
 				//dataMap={}
@@ -633,27 +783,15 @@ $this->load->view('layout/header');
 				//})
 			})
 
-
-			$(document).on('click', '[id=btn_search]', function(e){
-				$('#div_datakeluarga').html('<i class="fa fa-circle-o-notch fa-spin fa-2x"></i> Memuat Data ...');
-				e.preventDefault();
-				dataMap={}
-				dataMap=$('#form_search_kwg').serialize();
-				url=$('#form_search_kwg').attr('action')
-				$.post(url, dataMap, function(data){
-					$('#div_datakeluarga').html(data);
-				})
-			})
-
 			$(document).on('click', '[id=btn_choose_kwg]', function(e){
 				e.preventDefault();
 
 				recid=$(this).attr('kwg_id');
 				dataMap={}
 				dataMap=$('#form_kwg'+recid).serialize();
-				url='<?=base_url();?>admin/mutasi_keluarga/add_anggota_to_keluarga?kwg_new=<?=$dataKK[0]->id;?>';
+				url='<?=base_url();?>pemakaman/mutasi_keluarga/tautkanangjemKPKP?kwg_new=<?=$dataKK[0]->id;?>';
 				jemaat_name=$(this).attr('jemaat_name');
-				var r = confirm("Apa yakin ingin menambahkan "+jemaat_name+" ke dalam keluarga <?=$dataKK[0]->kwg_nama;?>");
+				var r = confirm("Apa yakin ingin menambahkan "+jemaat_name+" ke dalam anggota KPKP Keluarga <?=$dataKK[0]->kwg_nama;?>");
 				if (r == false) {
 				  return false;
 				}
@@ -671,7 +809,7 @@ $this->load->view('layout/header');
 					else if(json.status==0){
 						iziToast.error({
 				            title: json.msg,
-				            message: 'Lakukan pengecekan pada Daftar Keluarga terlebih dulu!',
+				            message: 'Lakukan pengecekan pada Daftar Keluarga KPKP terlebih dulu!',
 				            position: "topRight",
 				            class: "iziToast-danger",
 
@@ -1152,6 +1290,19 @@ $this->load->view('layout/footer');
 
 	})
 
+	$(document).on('click', '[id=btn_form_tautanangjem]', function(e){
+		e.preventDefault()
+
+		url=$(this).attr('href');
+
+		$.get(url, function(data){
+
+			$('#modal-content').html(data)
+
+		})
+
+	})
+
 
 
 	$(document).on('click', '[id=addAnggota]', function(e){
@@ -1238,6 +1389,7 @@ $this->load->view('layout/footer');
 
 	})
 
+
 	$(document).on('change', '[id=option_sukarela]', function(e){
 		dataMap={}
 		dataMap['option']=$(this).val() //1:tidak dipotong; 2:dipotong nominal tertentu; 3:dipotong oleh sisfo dari sisa yg dibayarkan.
@@ -1262,5 +1414,16 @@ $this->load->view('layout/footer');
 			}
 		}
 		
+	})
+
+	$(document).on('click', '[id=btn_search]', function(e){
+		$('#div_datakeluarga').html('<i class="fa fa-circle-o-notch fa-spin fa-2x"></i> Memuat Data ...');
+		e.preventDefault();
+		dataMap={}
+		dataMap=$('#form_search_kwg').serialize();
+		url=$('#form_search_kwg').attr('action')
+		$.post(url, dataMap, function(data){
+			$('#div_datakeluarga').html(data);
+		})
 	})
 </script>

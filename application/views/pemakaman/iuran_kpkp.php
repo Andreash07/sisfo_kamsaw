@@ -13,7 +13,7 @@
       foreach ($data as $key => $value) {
         // code...
         if($value->note!=''){
-          $value->note="<br><label style='font-size:9pt;'>".$value->note."</label>";
+          $value->note="<br><label style='font-size:9pt;'><i>Catatan:</i> ".$value->note."</label>";
         }
         switch ($value->type) {
           case '0':
@@ -22,7 +22,7 @@
             break;
           case '1':
             // code...
-              $name="Setor Iuran";
+              $name="Setor Iuran ".$value->note;
             break;
           case '2':
             // code...
@@ -45,11 +45,14 @@
         else if($value->nominal<0){
           $nominal='<span class="text-danger">'.number_format($value->nominal,0,",",".")."</span>";
         }
+        if($value->note!=null){
+          //$value->note='<br><i>Catatan</i>: '.$value->note;
+        }
     ?>
         <tr>
           <th class="text-center" scope="row"><?=$key+1;?></th>
           <td class="text-center" style="width: 150px;"><?=convert_tgl_dMY($value->tgl_bayar);?></td>
-          <td><?=$name;?></td>
+          <td style="line-height: unset;"><?=$name;?></td>
           <td class="text-center"><?=$nominal;?></td>
         </tr>
     <?php

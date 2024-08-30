@@ -317,33 +317,34 @@ $this->load->view('layout/header');
       </div>
       <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="tile-stats">
-          <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
-          <div class="count">179</div>
-          <h3>3 Bulan</h3>
-          <p></p>
+          <div class="icon" ><i class="fa fa-caret-square-o-right"></i></div>
+          <div class="count"><?=$kpkpbulan3;?> KK</div>
+          <h3> < 3 Bulan</h3>
+          <span title="Tunggakan kurang dari sama dengan 3 Bulan" id="detail_tunggakan" class="count_bottom pull-right" style="margin-right: 17px; cursor: pointer;" ls_kk="<?= implode(',', $kpkpbulan3_ls);?>"><i class="green">selengkapnya</i></span>
         </div>
       </div>
       <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="tile-stats">
           <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
-          <div class="count">179</div>
-          <h3>6 Bulan</h3>
-          <p></p>
+          <div class="count"><?=$kpkpbulan6;?> KK</div>
+          <h3> < 12 Bulan</h3>
+          <p title="Tunggakan kurang dari 12 Bulan" id="detail_tunggakan" class="count_bottom pull-right" style="margin-right: 17px;  cursor: pointer;" ls_kk="<?= implode(',', $kpkpbulan6_ls);?>"><i class="green">selengkapnya</i> </p>
         </div>
       </div>
       <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="tile-stats">
           <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
-          <div class="count">179</div>
+          <div class="count"><?=$kpkpbulan12;?> KK</div>
           <h3>>1 Tahun</h3>
-          <p></p>
+          <p title="Tunggakan lebih  dari sama dengan 12 Bulan" id="detail_tunggakan" class="count_bottom pull-right" style="margin-right: 17px;  cursor: pointer;" ls_kk="<?= implode(',', $kpkpbulan12_ls);?>"><i class="green">selengkapnya</i> </p>
         </div>
       </div>
       <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="tile-stats">
           <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
-          <div class="count">179</div>
+          <div class="count"><?=$kpkpbulan36;?> KK</div>
           <h3>>3 Tahun</h3>
+          <p title="Tunggakan lebih dari sama dengan 36 Bulan" id="detail_tunggakan" class="count_bottom pull-right" style="margin-right: 17px;  cursor: pointer;" ls_kk="<?= implode(',', $kpkpbulan36_ls);?>"><i class="green">selengkapnya</i> </p>
           <p></p>
         </div>
       </div>
@@ -379,6 +380,18 @@ $this->load->view('layout/footer');
       e.preventDefault();
       url=$(this).attr('url')
       dataMap={}
+      $.post(url, dataMap, function(data){
+        $('#modal-content').html(data)
+      })
+    })
+
+    $(document).on('click', '[id=detail_tunggakan]', function(e){
+      e.preventDefault();
+      url='<?=base_url();?>ajax/detail_keluarga_kpkp'
+      $('#myModal').modal('show')
+      dataMap={}
+      dataMap['ls_kk_id']=$(this).attr('ls_kk')
+      dataMap['title']=$(this).attr('title')
       $.post(url, dataMap, function(data){
         $('#modal-content').html(data)
       })
