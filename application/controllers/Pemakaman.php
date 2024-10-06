@@ -1297,5 +1297,36 @@ class pemakaman extends CI_Controller {
     	$this->load->view('pemakaman/form_tautaangjem', $data);
 
     }
+
+    function form_perbaikan(){
+    	$data=array();
+    	$param=array();
+
+    	$recid=$this->input->get('id');
+    	$s="select * from kpkp_bayar_bulanan where id='".$recid."'";
+    	$q=$this->m_model->selectcustom($s);
+    	$data['recid']=$recid;
+    	$data['data']=$q;
+    	$this->load->view('pemakaman/form_perbaikan', $data);
+    }
+
+    function submit_perbaikan(){
+    	$data=array();
+    	$param=array();
+    	$recid=$this->input->get('id');
+    	foreach ($this->input->post() as $key => $value) {
+    		// code...
+    		$param[$key]=$value;
+    	}
+    	$u=$this->m_model->updateas('id', $recid, $param, 'kpkp_bayar_bulanan');
+    }
+    function approve(){
+    	$data=array();
+    	$recid=$this->input->post('kk_id');
+    	$param['saldo_akhir']=$this->input->post('nominal_baru');
+    	//$param['keluarga_jemaat_id']=$this->input->post('kk_id');
+    	$u=$this->m_model->updateas('keluarga_jemaat_id', $recid, $param, 'kpkp_keluarga_jemaat');
+
+    }
 }
 

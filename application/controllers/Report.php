@@ -43,10 +43,25 @@ class Report extends CI_Controller {
 	function anggota_jemaat($type_report='reguler'){
 
 		$data=array();
+		$data['sts_angjem']='1';
 
 		$where="";
 
 		$param_active="?";
+
+		if($this->input->get('sts_angjem') || $this->input->get('sts_angjem') =='0'){
+
+			$param_active.="sts_anggota=".$this->input->get('sts_angjem')."&";
+
+			$where.=" && A.sts_anggota = '".$this->input->get('sts_angjem')."'";
+			$data['sts_angjem']=$this->input->get('sts_angjem');
+
+		}else{
+			//$param_active.="sts_anggota=1&";
+
+			$where.=" && A.sts_anggota = '1'";
+			//$data['sts_angjem']=$this->input->get('sts_angjem');
+		}
 
 		if($this->input->get('no_anggota')){
 
@@ -198,6 +213,15 @@ class Report extends CI_Controller {
 
 
 
+		if(!isset($_GET['sts_anggota'])) {
+			$sts_anggota=1;
+		}
+		else if($this->input->get('sts_anggota') || $this->input->get('sts_anggota')==0 ){
+			$sts_anggota=$this->input->get('sts_anggota');
+			$param_active.="sts_anggota=".$this->input->get('sts_anggota')."&";
+		}
+		//die($sts_anggota);
+
 		if($this->input->get('tgl_sidi')){
 
 			$param_active.="tgl_sidi=".$this->input->get('tgl_sidi')."&";
@@ -215,7 +239,7 @@ class Report extends CI_Controller {
 				break;
 			case 'baptis_sidi':
 				// code...
-				$where.=" && A.sts_anggota ='1'";
+				//$where.=" && A.sts_anggota ='1'";
 				break;
 			default:
 				// code...
@@ -254,7 +278,7 @@ class Report extends CI_Controller {
 
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
 
-				where A.id >0 && A.status=1 && A.sts_anggota=1 ".$where.""; //A.status=1 bearti tidak pernah di delete
+				where A.id >0 && A.status=1 ".$where.""; //A.status=1 bearti tidak pernah di delete //&& A.sts_anggota='".$sts_anggota."' 
 
 
 		$group_by="  ";
@@ -296,6 +320,7 @@ class Report extends CI_Controller {
 
         }
 
+        $data['sts_anggota']=$sts_anggota;
         $data['page']=$page;
 
         $data['numStart']=$numStart;
@@ -304,7 +329,8 @@ class Report extends CI_Controller {
 
         
 
-        $data_jemaat=$this->m_model->selectcustom($sql." ".$group_by." ".$field_order." ".$order_by);
+        $data_jemaat=$this->m_model->selectcustom($sql." ".$group_by." ".$field_order." ".$order_by); 
+        //die($sql." ".$group_by." ".$field_order." ".$order_by);
 
 
 
@@ -323,7 +349,7 @@ class Report extends CI_Controller {
             $page_active=$this->input->get('page');
 
         }
-
+        //die($param_active);
         $data['pagingnation']=pagingnation($data['TotalOfData'], $numLimit, $page_active, $param_active, $links=2);
 
 

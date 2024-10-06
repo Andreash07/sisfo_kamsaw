@@ -5,8 +5,8 @@
 
   $saldo_akhir=number_format($data->saldo_akhir,0,",",".");
   if($data->saldo_akhir<0){
-    $data->saldo_akhir=$data->saldo_akhir*-1;
-    $saldo_akhir="(".number_format($data->saldo_akhir,0,",",".").")";
+    $New_saldo_akhir=$data->saldo_akhir*-1;
+    $saldo_akhir="(".number_format($New_saldo_akhir,0,",",".").")";
   }
   ?>
 

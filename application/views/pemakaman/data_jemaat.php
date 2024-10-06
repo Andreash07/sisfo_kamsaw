@@ -398,6 +398,7 @@ $this->load->view('layout/header');
 
 											foreach ($anggota_KK as $keyAnggota_KK => $valueAnggota_KK) {
 												# code...
+												//print_r($valueAnggota_KK);
 
 												if($valueAnggota_KK->telepon == ''){
 
@@ -414,7 +415,9 @@ $this->load->view('layout/header');
 					            		$sts='<i class="fa fa-times text-danger" title="Tidak Aktif"></i> Tidak Aktif';
 						            }
 
-						            if($valueAnggota_KK->sts_kpkp==1){
+						            //echo ($valueAnggota_KK->kwg_no);
+						            //die($dataKK[0]->id);
+						            if($valueAnggota_KK->sts_kpkp==1 && ($valueAnggota_KK->kwg_no_kpkp==0 || $dataKK[0]->id == $valueAnggota_KK->kwg_no_kpkp) ){
 						            	$total_biayaKPKP=$total_biayaKPKP+$iuranKpkpp;
 
 						            	$num_anggotaKPKP++;
@@ -596,6 +599,9 @@ $this->load->view('layout/header');
           <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
 						<div class="x_content">
 							<?php 
+								$dataKpkp['data']=array();
+								$dataKpkp2=array();
+								$dataKpkp['total_biayaKPKP']='0';
 								if(count($dompet_kpkp)==0){
 							?>
 									<span class="text-danger">Belum memiliki Data Pembayaran KPKP, Silahkan Hubungi Administrator/Pnt/Pengurus KPKP Terkait</span>
@@ -605,6 +611,8 @@ $this->load->view('layout/header');
 								else{
 									$dataKpkp['data']=$dompet_kpkp[0];
 									$dataKpkp['total_biayaKPKP']=$total_biayaKPKP;
+
+									$dataKpkp2=$dompet_kpkp[0]; 
 									$this->load->view('pemakaman/rincian_kpkp', $dataKpkp);
 								}
 							?>
@@ -627,6 +635,8 @@ $this->load->view('layout/header');
                   <div class="x_content">
 									<?php
 										$mutasiiuran_kpkp['data']=$mutasiiuran_kpkp;
+										$mutasiiuran_kpkp['dataKpkp2']=$dataKpkp2;
+										$mutasiiuran_kpkp['total_biayaKPKP']=$dataKpkp['total_biayaKPKP'];
 										$this->load->view('pemakaman/iuran_kpkp.php', $mutasiiuran_kpkp);
 									?>
                   </div>
@@ -739,6 +749,25 @@ $this->load->view('layout/header');
         </div>
       </div>
     </div>
+
+
+    <div class="modal-perbaikanMutasi modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+		  <div class="modal-dialog modal-lg">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+		        </button>
+		        <h4 class="modal-title" id="myModalLabel">Form Perbaikan Mutasi</h4>
+		      </div>
+		      <div class="modal-body" id="div_form_perbaikan">
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+		        <button type="button" class="btn btn-warning" id="btn_save_perbaikan" form="form_perbaikan">Simpan</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 	<?php
 
 		}
@@ -781,6 +810,47 @@ $this->load->view('layout/header');
 				//$.post(url, dataMap, function(data){
 
 				//})
+			})
+
+			$(document).on('click', '[id=btn_save_perbaikan]', function(e){
+				e.preventDefault()
+				dataMap={}
+				dataMap=$('#form_perbaikan').serialize()
+				url=$('#form_perbaikan').attr('action')
+				$.post(url, dataMap, function(data){
+					$('.modal-perbaikanMutasi').modal('hide')	
+					alert('Perbaikan transaksi berhasil!')
+					location.reload();
+				})
+
+
+			})
+
+			$(document).on('click', '[id=btn_approve_perbaikan]', function(e){
+				e.preventDefault()
+				conf=confirm('Apakah anda yakin melakukan perbaikan Saldo KPKP keluarga ini?')
+				if(conf==false){
+					return;
+				}
+				dataMap={}
+				dataMap['kk_id']=$(this).attr('kk_id')
+				dataMap['nominal_baru']=$(this).attr('total_mutasi')
+				url=$(this).attr('href')
+				$.post(url, dataMap,function(data){
+					alert('Perbaikan saldo KPKP Keluarga berhasil!')
+					location.reload();
+				})
+			})
+
+
+			$(document).on('click', '[id^=btn_edit-Mutasi]', function(e){
+				e.preventDefault()
+				$('.modal-perbaikanMutasi').modal('show')
+				dataMap={}
+				url=$(this).attr('form')
+				$.get(url, dataMap,function(data){
+					$('#div_form_perbaikan').html(data)
+				})
 			})
 
 			$(document).on('click', '[id=btn_choose_kwg]', function(e){
