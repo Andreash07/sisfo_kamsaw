@@ -26,7 +26,7 @@ table{
     border: 1px #000 solid;
     border-collapse: collapse
   }
-  th{
+  th{ 
     border: 1px #000 solid;
   }
   td{

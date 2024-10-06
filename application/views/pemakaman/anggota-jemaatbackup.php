@@ -16,7 +16,7 @@ $this->load->view('layout/header');
 
 				<?php
 
-				$this->load->view('report/searchbox');
+				$this->load->view('report/searchbox'); 
 
 				?>
 

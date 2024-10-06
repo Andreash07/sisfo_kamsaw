@@ -14,7 +14,7 @@ $this->load->view('layout/header');
       <div class="x_panel">
         <div class="x_title">
 
-            <h4>Data Makam</h4>
+            <h4>Data Makam</h4> 
 
             </div>
         <ul class="nav navbar-right panel_toolbox">

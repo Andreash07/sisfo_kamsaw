@@ -28,7 +28,7 @@
     	<label class="control-label col-md-3 col-sm-3 col-xs-12">Wilayah<span class="required">*</span></label>
     	<div class="col-md-9 col-sm-9 col-xs-12">
           <select class="form-control" id="kwg_wil" name="kwg_wil" >
-            <option value='' >Semua</option>
+            <option value='' >Semua</option> 
             <option value='0'>Belum Diketahui</option>
             <?php
               foreach (lsWil() as $lsWil => $valueWil) {

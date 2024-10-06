@@ -29,7 +29,7 @@
 			<th>Tempat</th>
 			<th>Tanggal</th>
 		</tr>
-	</thead>
+	</thead> 
 	<tbody>
 <?php
 foreach ($data_jemaat as $key => $value) {

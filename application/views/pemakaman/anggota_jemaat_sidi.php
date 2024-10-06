@@ -15,7 +15,7 @@ $this->load->view('layout/header');
 			<div class="x_panel">
 				<span>Menampilakn <b><?=count($data_jemaat);?></b> dari <b><?=$TotalOfData;?></b></span>
 				<table class='table table-striped'>
-					<thead>
+					<thead> 
 						<tr>
 							<th class='text-center'>#</th>
 							<th class='text-center'>Nama</th>

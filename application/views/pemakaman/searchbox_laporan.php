@@ -19,4 +19,4 @@
       <a class="btn btn-warning pull-left" href="<?=base_url();?>pemakaman/laporan_iuran_anggota/?<?=$_SERVER['QUERY_STRING'];?>&export=print" target="_BLANK"><i class="fa fa-print"></i> Print</a>
       <input type="submit" class="btn btn-primary pull-right" value="Cari" name="search">
     </div>
-</form>
+</form> 

@@ -15,7 +15,7 @@
           case '0':
             // code...
               $name="Saldo Awal";
-            break;
+            break; 
           case '1':
             // code...
               $name="Setor Iuran";

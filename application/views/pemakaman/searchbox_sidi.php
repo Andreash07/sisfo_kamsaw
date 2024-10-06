@@ -24,7 +24,7 @@
             <option value='0'>Belum Diketahui</option>
             <?php
               foreach (lsWil() as $lsWil => $valueWil) {
-                # code...
+                # code... 
             ?>
               <option value='<?=$valueWil->id;?>' <?php if($this->input->get('kwg_wil')==$valueWil->id){echo 'selected';}?>>Wilayah <?=$valueWil->wilayah;?></option>
             <?php

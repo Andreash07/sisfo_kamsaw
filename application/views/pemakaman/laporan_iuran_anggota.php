@@ -20,7 +20,7 @@ $this->load->view('layout/header');
 
         ?>
 
-      </div>
+      </div> 
 
     </div>
 

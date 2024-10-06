@@ -26,7 +26,7 @@ foreach ($KK as $key => $value) {
     <th style="text-align: left;">Rp. <?=number_format($value->saldo_akhir_sukarela,0,",",".") ?></th>
   </tr>
 <?php 
-}
+} 
 ?>
 </table>
 

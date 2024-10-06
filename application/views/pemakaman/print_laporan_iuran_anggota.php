@@ -30,7 +30,7 @@ table{
     border: 1px #000 solid;
   }
   td{
-    border: 1px #000 solid;
+    border: 1px #000 solid; 
   }
 </style>
 <button onclick="window.print();" style="width:100px; display:block;">Print</button>
