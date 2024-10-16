@@ -89,6 +89,15 @@
         <input class="form-control" id="tahun_sampai" name="tahun_sampai"  placeholder="sampai (1990)" value="<?=$this->input->get('tahun_sampai');?>">
       </div>
     </div>
+    <div class="form-group col-md-6 col-xs-12">
+      <label class="control-label col-md-3 col-sm-3 col-xs-12">Status<span class="required">*</span></label>
+      <div class="col-md-9 col-sm-9 col-xs-12">
+          <select class="form-control" id="sts_angjem" name="sts_angjem" >
+            <option value='1' <?php if($sts_angjem=='1'){echo 'selected';}?> >Aktif</option>
+            <option value='0' <?php if($sts_angjem=='0'){echo 'selected';}?> >Tidak Aktif</option>
+          </select>
+      </div>
+    </div>
     <div class="form-group col-xs-12">
     	<a class="btn btn-warning pull-left" href="<?=base_url();?>report/anggota_jemaat/baptis_sidi?<?=$_SERVER['QUERY_STRING'];?>&export=print" target="_BLANK"><i class="fa fa-print"></i> Print</a>
       <input type="submit" class="btn btn-primary pull-right" value="Cari" name="search">
