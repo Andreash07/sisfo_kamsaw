@@ -27,7 +27,7 @@ $this->load->view('layout/header');
           	</div>
 		</div>
 		<div class="col-md-6 col-xs-12">
-			<div class="x_panel tile" style="max-height: 550px; height: 550px;">
+			<div class="x_panel tile" style="max-height: 550px; height: 550px; overflow: auto;">
                 <div class="x_title">
                   	<h2 style="display: flex;">Form Keluarga Baru</h2>
                   	<button id="btn_add_mutasi" class="btn btn-success pull-right" onclick="event.preventDefault();"><i class="fa fa-save"></i> Simpan</button>
