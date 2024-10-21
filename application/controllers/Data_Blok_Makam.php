@@ -78,7 +78,7 @@ class Data_Blok_Makam extends CI_Controller
       ->set_output(json_encode($response));
   }
 
-  public function edit()
+  private function edit()
   {
     $id = $this->input->input_stream('id');
     $lokasi = $this->input->input_stream('lokasi');
