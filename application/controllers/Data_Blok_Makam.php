@@ -99,4 +99,9 @@ class Data_Blok_Makam extends CI_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($response));
   }
+
+  public function detail()
+  {
+    $this->load->view('kpkp/blok_detail');
+  }
 }
