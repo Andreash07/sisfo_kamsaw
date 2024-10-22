@@ -48,6 +48,7 @@ table{
       <th cellpadding="0">Hub. Kel</th>
       <th cellpadding="0">Alamat</th>
       <th cellpadding="0">Gol. Darah</th>
+      <th cellpadding="0">Umur</th>
       <th cellpadding="0">Tgl Lahir</th>
       <th cellpadding="0">Telepon</th>
       <th cellpadding="0">Status Baptis</th>
@@ -57,6 +58,11 @@ table{
       <th cellpadding="0">Tgl Sidi</th>
       <th cellpadding="0">Tempat Sidi</th>
       <th cellpadding="0">Pendidikan Akhir</th>
+      <th cellpadding="0">Tgl Att. Masuk</th>
+      <th cellpadding="0">Tgl Att. Keluar/ Meninggal</th>
+      <th cellpadding="0">Status KPKP</th>
+      <th cellpadding="0">Aturan KPKP</th>
+      <th cellpadding="0">Catatan</th>
     </tr>
   </thead>
   <tbody>
@@ -122,6 +128,19 @@ table{
       if($value->status_sidi==1){
         $status_sidi="Sudah";
       }
+
+      $status_kpkp="<i style='color:red;'>Tidak Aktif</i>";
+      if($value->sts_kpkp==1){
+        $status_kpkp="Aktif";
+      }
+
+      $aturan_kpkp="";
+      if($value->aturan_kpkp==1){
+        $aturan_kpkp="<i style='color:red;'>> 2020 keatas</i>";
+      }
+      else if($value->aturan_kpkp==0){
+        $aturan_kpkp="<i style='color:green;'>< 2020 kebawah</i>";
+      }
     ?>
     <tr>
       <td cellpadding="0"><?=++$i;?></td>
@@ -138,8 +157,9 @@ table{
         <?=$value->kwg_alamat;?>
       </td>
       <td cellpadding="0" style="text-align: center;"><?=$value->golongandarah;?> </td>
+      <td cellpadding="0" style="text-align: center;"><?=getUmur(date('Y-m-d'), $value->tgl_lahir);?> Th</td>
       <td cellpadding="0" style="text-align: center;"><?=convert_tgl_dMY($value->tgl_lahir);?> </td>
-      <td cellpadding="0"><?=$value->kwg_telepon;?></td>
+      <td cellpadding="0">'<?=$value->kwg_telepon;?></td>
       <td cellpadding="0" style="text-align: center;"><?= $status_baptis;?> </td>
       <td cellpadding="0" style="text-align: center;"><?=convert_tgl_dMY($value->tgl_baptis);?> </td>
       <td cellpadding="0" style="text-align: center;"><?= $value->tmpt_baptis;?> </td>
@@ -147,6 +167,11 @@ table{
       <td cellpadding="0" style="text-align: center;"><?=convert_tgl_dMY($value->tgl_sidi);?> </td>
       <td cellpadding="0" style="text-align: center;"><?= $value->tmpt_sidi;?> </td>
       <td cellpadding="0" style="text-align: center;"><?= $value->pndk_akhir;?> </td>
+      <td cellpadding="0" style="text-align: center;"><?=convert_tgl_dMY($value->tgl_attestasi_masuk);?> </td>
+      <td cellpadding="0" style="text-align: center;"><?=convert_tgl_dMY($value->tgl_meninggal);?> </td>
+      <td cellpadding="0" style="text-align: center;"><?= $status_kpkp;?> </td>
+      <td cellpadding="0" style="text-align: center;"><?= $aturan_kpkp;?> </td>
+      <td cellpadding="0" style="text-align: center;"><?= $value->remarks;?> </td>
     </tr>
     <?php
     }

@@ -26,7 +26,7 @@
     </div>
     <div class="form-group col-md-6 col-xs-12">
     	<label class="control-label col-md-3 col-sm-3 col-xs-12">Wilayah<span class="required">*</span></label>
-    	<div class="col-md-9 col-sm-9 col-xs-12">
+    	<div class="col-md-3 col-sm-3 col-xs-12">
           <select class="form-control" id="kwg_wil" name="kwg_wil" >
             <option value='' >Semua</option>
             <option value='0'>Belum Diketahui</option>
@@ -40,6 +40,13 @@
             ?>
           </select>
     	</div>
+      <label class="control-label col-md-3 col-sm-3 col-xs-12">Status<span class="required">*</span></label>
+      <div class="col-md-3 col-sm-3 col-xs-12">
+          <select class="form-control" id="sts_angjem" name="sts_angjem" >
+            <option value='1' <?php if($sts_angjem=='1'){echo 'selected';}?> >Aktif</option>
+            <option value='0' <?php if($sts_angjem=='0'){echo 'selected';}?> >Tidak Aktif</option>
+          </select>
+      </div>
     </div>
     <div class="form-group col-md-6 col-xs-12">
       <label class="control-label col-md-3 col-sm-3 col-xs-12">

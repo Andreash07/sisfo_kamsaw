@@ -51,7 +51,7 @@ class Report extends CI_Controller {
 
 		if($this->input->get('sts_angjem') || $this->input->get('sts_angjem') =='0'){
 
-			$param_active.="sts_anggota=".$this->input->get('sts_angjem')."&";
+			$param_active.="sts_angjem=".$this->input->get('sts_angjem')."&";
 
 			$where.=" && A.sts_anggota = '".$this->input->get('sts_angjem')."'";
 			$data['sts_angjem']=$this->input->get('sts_angjem');

@@ -24,8 +24,10 @@
 			<th class='text-center' style="width: 35%; border: 1px #000 solid !important;" colspan="3">Sidi</th>
 		</tr>
 		<tr>
+			<th>Status</th>
 			<th>Tempat</th>
 			<th>Tanggal</th>
+			<th>Status</th>
 			<th>Tempat</th>
 			<th>Tanggal</th>
 		</tr>

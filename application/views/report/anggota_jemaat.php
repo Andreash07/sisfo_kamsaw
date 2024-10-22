@@ -29,6 +29,7 @@ $this->load->view('layout/header');
 			<div class="x_panel">
 
 				<span>Menampilakn <b><?=count($data_jemaat);?></b> dari <b><?=$TotalOfData;?></b></span>
+				<?= $pagingnation; ?>
 
 				<table class='table table-striped'>
 
