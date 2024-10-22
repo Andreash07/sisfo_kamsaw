@@ -134,7 +134,7 @@
 </div>
 
 <!-- Modal: edit data blok makam -->
-<div id="modal-edit-blok-makam" class="modal">
+<div id="modal-edit-blok-makam" class="modal fade">
   <div class="modal-dialog" style="width:32rem;">
     <div class="modal-content">
       <div class="modal-header">
@@ -181,7 +181,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-danger">Batal</button>
+        <button class="btn btn-danger" data-dismiss="modal">Batal</button>
         <button
           id="edit-blok-makam-submit"
           data-id=""
