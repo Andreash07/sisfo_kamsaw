@@ -64,12 +64,61 @@
 
         <!-- Tab panes -->
         <div class="tab-content">
+          <!-- tab daftar dimakamkan -->
           <div role="tabpanel" class="tab-pane fade active in" id="daftar-dimakamkan-tab-pane">
-            <h1>Daftar Dimakamkan</h1>
+            <table class="table table-striped">
+              <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">Nama</th>
+                <th class="text-center">Tanggal Lahir</th>
+                <th class="text-center">Tanggal Meninggal</th>
+                <th class="text-center">Penanggung Jawab</th>
+                <th class="text-center">No Telepon</th>
+                <th class="text-center">Alamat</th>
+              </tr>
+              <tr class="text-center">
+                <td>1</td>
+                <td>Bpk. V</td>
+                <td>10 Januari 1938</td>
+                <td>9 Juni 2010</td>
+                <td>Bpk. A</td>
+                <td>0812313423</td>
+                <td>Kampung Sawah No.81 Rt02/04</td>
+              </tr>
+            </table>
           </div>
+
+          <!-- tab rincian biaya -->
           <div role="tabpanel" class="tab-pane fade" id="rincian-biaya-tab-pane">
-            <h1>Rincian Biaya</h1>
+            <table class="table table-bordered">
+              <tr>
+                <td style="width:24rem;">
+                  <strong>Tahun Terbayarkan</strong>
+                </td>
+                <td>2027 (+3 Tahun)</td>
+              </tr>
+              <tr>
+                <td style="width:24rem;">
+                  <strong>Nominal Biaya Tahunan</strong>
+                </td>
+                <td>Rp. 150.000</td>
+              </tr>
+              <tr>
+                <td style="width:24rem;">
+                  <strong>Kategori Anggota</strong>
+                </td>
+                <td>Non GKP Kampung Sawah</td>
+              </tr>
+              <tr>
+                <td style="width:24rem;">
+                  <strong>Tanggal masuk pembayaran</strong>
+                </td>
+                <td>31 Desember 2020</td>
+              </tr>
+            </table>
           </div>
+
+          <!-- tab mutasi pembayaran -->
           <div role="tabpanel" class="tab-pane fade" id="mutasi-pembayaran-tab-pane">
             <h1>Mutasi Pembayaran</h1>
           </div>
