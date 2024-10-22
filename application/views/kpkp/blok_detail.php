@@ -120,7 +120,33 @@
 
           <!-- tab mutasi pembayaran -->
           <div role="tabpanel" class="tab-pane fade" id="mutasi-pembayaran-tab-pane">
-            <h1>Mutasi Pembayaran</h1>
+            <table class="table">
+              <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">Tanggal</th>
+                <th style="width:40rem;">Transaksi</th>
+                <th class="text-center">Nominal</th>
+                <th class="text-center">Action</th>
+              </tr>
+              <tr>
+                <td class="text-center">1</td>
+                <td class="text-center">31 Desember 2024</td>
+                <td style="width:40rem;">Saldo Awal</td>
+                <td class="text-center">450.000</td>
+                <td class="text-center">tombol edit</td>
+              </tr>
+              <tr>
+                <td class="text-center">2</td>
+                <td class="text-center">01 Januari 2025</td>
+                <td style="width:40rem;">
+                  Pembayaran Iuran
+                  <br>
+                  Catatan: Tahun 2025 (Non GKP Kampung Sawah @150.000)
+                </td>
+                <td class="text-center">-150.000</td>
+                <td class="text-center">tombol edit</td>
+              </tr>
+            </table>
           </div>
         </div>
       </div>
