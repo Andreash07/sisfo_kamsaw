@@ -27,19 +27,29 @@
           </thead>
           <tbody>
             <?php foreach ($data as $key => $d): ?>
-              <tr>
-                <td class="text-center"><?= $key+1; ?></td>
-                <td class="text-center"><?= $d->lokasi ?></td>
-                <td class="text-center"><?= $d->blok . $d->kavling ?></td>
-                <td class="text-center"><?= $d->jumlah_makam ?></td>
-                <td class="text-center">
+              <tr class="text-center">
+                <td><?= $key+1; ?></td>
+                <td><?= $d->lokasi ?></td>
+                <td>
+                  <a href="<?= base_url(); ?>data_blok_makam/detail">
+                    <button
+                      class="btn btn-default btn-sm"
+                      data-toggle="tooltip"
+                      data-placement="bottom"
+                      title="detail blok">
+                      <?= $d->blok . $d->kavling ?>
+                    </button>
+                  </a>
+                </td>
+                <td><?= $d->jumlah_makam ?></td>
+                <td>
                   <?php if ($d->status == 1): ?>
                     Aktif
                   <?php else: ?>
                     Non Aktif
                   <?php endif; ?>
                 </td>
-                <td class="text-center" class="text-center">
+                <td>
                   <!-- button: edit data blok makam -->
                   <button
                     class="btn btn-warning btn-edit-blok-makam"
@@ -71,7 +81,7 @@
   tabindex="-1"
   role="dialog"
   aria-hidden="true">
-  <div class="modal-dialog modal-md">
+  <div class="modal-dialog" style="width:32rem;">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">
@@ -79,17 +89,16 @@
         </button>
         <h4 class="modal-title">Tambah Data</h4>
       </div>
-      <div class="modal-body" style="display:flex; flex-direction:column; gap:1rem;">
-        <form style="display:flex; gap:1rem; align-items:center; margin-left:1rem;">
+      <div class="modal-body" style="display:flex; gap:1rem;">
+        <div>
           <label class="control-label">Lokasi:</label>
           <select id="add-data-lokasi" class="form-control">
             <option value="TPK Jamblang">TPK Jamblang</option>
           </select>
+        </div>
+        <div>
           <label class="control-label">Blok:</label>
-          <select
-            id="add-data-blok"
-            class="form-control"
-            style="width:8rem;">
+          <select id="add-data-blok" class="form-control">
             <option value="A">A</option>
             <option value="B">B</option>
             <option value="C">C</option>
@@ -106,28 +115,29 @@
             <option value="N">N</option>
             <option value="O">O</option>
           </select>
+        </div>
+        <div>
           <label class="control-label">Kavling:</label>
           <input
             type="number"
             id="add-data-kavling"
             class="form-control"
-            style="width:6rem;" required />
-        </form>
-        <div style="display:flex; justify-content:flex-end;">
-          <button
-            class="btn btn-danger"
-            style="width: 12rem;"
-            data-dismiss="modal">
-            Batal
-          </button>
-          <button
-            id="tambah-data-blok-makam"
-            class="btn btn-primary"
-            style="width: 12rem;"
-            data-dismiss="modal">
-            Tambah
-          </button>
+            style="width:6rem;" 
+            required />
         </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          class="btn btn-danger"
+          data-dismiss="modal">
+          Batal
+        </button>
+        <button
+          id="tambah-data-blok-makam"
+          class="btn btn-success"
+          data-dismiss="modal">
+          Tambah
+        </button>
       </div>
     </div>
   </div>
@@ -138,8 +148,8 @@
   <div class="modal-dialog" style="width:32rem;">
     <div class="modal-content">
       <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal">
-        <span aria-hidden="true">×</span>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
         </button>
         <h4 class="modal-title">Edit Data</h4>
       </div>
