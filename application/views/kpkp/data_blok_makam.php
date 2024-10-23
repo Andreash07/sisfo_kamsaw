@@ -31,7 +31,7 @@
                 <td><?= $key+1; ?></td>
                 <td><?= $d->lokasi ?></td>
                 <td>
-                  <a href="<?= base_url(); ?>data_blok_makam/detail">
+                  <a href="<?= base_url(); ?>data_blok_makam/detail?id=<?= $d->id ?>">
                     <button
                       class="btn btn-default btn-sm"
                       data-toggle="tooltip"
