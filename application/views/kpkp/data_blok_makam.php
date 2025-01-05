@@ -27,18 +27,10 @@
           </thead>
           <tbody>
             <?php foreach ($data as $key => $d): ?>
-<<<<<<< Updated upstream
               <tr>
                 <td class="text-center"><?= $key+1; ?></td>
                 <td class="text-center"><?= $d->lokasi ?></td>
-                <td class="text-center"><?= $d->blok . $d->kavling ?></td>
-                <td class="text-center"><?= $d->jumlah_makam ?></td>
                 <td class="text-center">
-=======
-              <tr class="text-center">
-                <td><?= $key+1; ?></td>
-                <td><?= $d->lokasi ?></td>
-                <td>
                   <a href="<?= base_url(); ?>Data_Blok_Makam/detail?id=<?= $d->id ?>">
                     <button
                       class="btn btn-default btn-sm"
@@ -49,16 +41,15 @@
                     </button>
                   </a>
                 </td>
-                <td><?= $d->jumlah_makam ?></td>
-                <td>
->>>>>>> Stashed changes
+                <td class="text-center"><?= $d->jumlah_makam ?></td>
+                <td class="text-center">
                   <?php if ($d->status == 1): ?>
                     Aktif
                   <?php else: ?>
                     Non Aktif
                   <?php endif; ?>
                 </td>
-                <td class="text-center" class="text-center">
+                <td class="text-center">
                   <!-- button: edit data blok makam -->
                   <button
                     class="btn btn-warning btn-edit-blok-makam"
