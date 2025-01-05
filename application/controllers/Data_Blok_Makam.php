@@ -99,9 +99,6 @@ class Data_Blok_Makam extends CI_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($response));
   }
-<<<<<<< Updated upstream
-=======
-
   public function detail()
   {
     $data=array();
@@ -113,5 +110,4 @@ class Data_Blok_Makam extends CI_Controller
     }
     $this->load->view('kpkp/blok_detail', $data);
   }
->>>>>>> Stashed changes
 }
