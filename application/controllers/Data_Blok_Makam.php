@@ -99,4 +99,19 @@ class Data_Blok_Makam extends CI_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($response));
   }
+<<<<<<< Updated upstream
+=======
+
+  public function detail()
+  {
+    $data=array();
+    $recid=$this->input->get('id');
+    $makam=$this->m_model->selectas('id', $recid, 'kpkp_blok_makam');
+    $data['makam']=array('lokasi'=>'Tidak diketahui!', 'blok'=>'0', 'kavling'=>'0');
+    if(count($makam)>0){
+      $data['makam']=$makam[0];
+    }
+    $this->load->view('kpkp/blok_detail', $data);
+  }
+>>>>>>> Stashed changes
 }

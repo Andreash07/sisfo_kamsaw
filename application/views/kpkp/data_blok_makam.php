@@ -27,12 +27,31 @@
           </thead>
           <tbody>
             <?php foreach ($data as $key => $d): ?>
+<<<<<<< Updated upstream
               <tr>
                 <td class="text-center"><?= $key+1; ?></td>
                 <td class="text-center"><?= $d->lokasi ?></td>
                 <td class="text-center"><?= $d->blok . $d->kavling ?></td>
                 <td class="text-center"><?= $d->jumlah_makam ?></td>
                 <td class="text-center">
+=======
+              <tr class="text-center">
+                <td><?= $key+1; ?></td>
+                <td><?= $d->lokasi ?></td>
+                <td>
+                  <a href="<?= base_url(); ?>Data_Blok_Makam/detail?id=<?= $d->id ?>">
+                    <button
+                      class="btn btn-default btn-sm"
+                      data-toggle="tooltip"
+                      data-placement="bottom"
+                      title="detail blok">
+                      <?= $d->blok . $d->kavling ?>
+                    </button>
+                  </a>
+                </td>
+                <td><?= $d->jumlah_makam ?></td>
+                <td>
+>>>>>>> Stashed changes
                   <?php if ($d->status == 1): ?>
                     Aktif
                   <?php else: ?>
