@@ -1269,6 +1269,8 @@ class Admin extends CI_Controller {
 			$success=0;
 
 			$no_urut=0;
+			$id_kpkp_keluarga=0;
+			$tot_saldoKPKP_new=0;
 
 			foreach ( $ls_jemaat_id as $key => $value) {
 
@@ -1316,6 +1318,65 @@ class Admin extends CI_Controller {
 
 				}
 
+
+				//lanjut proses KPKP kalau status aktif
+				if($this->input->post('sts_kpkp'.$value)==1){
+					if($id_kpkp_keluarga==0){
+						//ini bikin dompet KPKP nya dulu bearti
+						$param2=array();
+						$param2['keluarga_jemaat_id']=$insert_id;
+						$param2['saldo_akhir']=0;
+						$param2['num_kpkp']=0;
+						$param2['last_pembayaran']='0000-00-00';
+						$param2['last_update']=NULL;
+						$param2['created_at']=date("Y-m-d H:i:s");
+						$param2['created_by']=$this->session->userdata('userdata')->id;
+						$ikpkp_keluarga=$this->m_model->insertgetid($param2, 'kpkp_keluarga_jemaat');
+						$id_kpkp_keluarga=$ikpkp_keluarga;
+					}
+
+					//proses saldo
+					//untuk insert ke kpkp_bayar_bulanan
+					$param3=array();
+					$note="Mutasi Saldo ".$this->input->post('namaangjem'.$value)." dari keluarga sebelumnya.";
+					$param3['keluarga_jemaat_id']=$insert_id;;
+					$param3['tgl_bayar']=date("Y-m-d");
+					$param3['note']=$note;
+					$param3['created_at']=date('Y-m-d H:i:s');
+					$param3['nominal']=$this->input->post('saldo_KPKP_angjem'.$value);
+					$param3['created_by']=$this->session->userdata('userdata')->id;
+					$param3['type']='5'; //ini sebagai mutasi dana dari keluarga sebelumnya
+					$i3=$this->m_model->insertgetid($param3, 'kpkp_bayar_bulanan');
+					if($i3>0){
+						//update saldo KPKP keluarga yg baru dibuat
+						$update4="update kpkp_keluarga_jemaat set saldo_akhir = saldo_akhir + ".$param3['nominal']." where id='".$id_kpkp_keluarga."'";
+						$qupdate4=$this->m_model->querycustom($update4);
+						if($qupdate4){
+
+							//kalau sudah berhasil update saldo di KPKP keluarga baru dan lakukan pencatatan mutasi transaksi, lakukan pengurangan di KPKP keluarga lama
+							$note6="Mutasi Saldo ".$this->input->post('namaangjem'.$value)." ke keluarga barunya.";
+							$param6=array();
+							$param6['keluarga_jemaat_id']=$this->input->post('kwg_id'.$value);
+							$param6['tgl_bayar']=date("Y-m-d");
+							$param6['note']=$note6;
+							$param6['created_at']=date('Y-m-d H:i:s');
+							$param6['nominal']=$this->input->post('saldo_KPKP_angjem'.$value);
+							if($this->input->post('saldo_KPKP_angjem'.$value) <0){
+								//$param6['nominal']=$this->input->post('saldo_KPKP_angjem'.$value)*-1;
+								//ini supaya di tetap plus di pembukaannya dan proses pengurangan di mutasinya tetap benar
+							}
+							$param6['created_by']=$this->session->userdata('userdata')->id;
+							$param6['type']='4'; //ini type transaksi untuk pengurangan dari keluarga lama ke keluarga baru
+							$u6=$this->m_model->insertgetid($param6, 'kpkp_bayar_bulanan');
+
+
+							$update5="update kpkp_keluarga_jemaat set saldo_akhir = saldo_akhir - ".$param3['nominal']." where id='".$this->input->post('kpkp_keluarga_jemaat_id'.$value)."'";
+							$qupdate5=$this->m_model->querycustom($update5);
+						}
+					}
+
+				}
+
 			}
 
 
@@ -1348,6 +1409,77 @@ class Admin extends CI_Controller {
 			$kwg_new=$this->input->get('kwg_new');
 
 			$updateAngjem=$this->m_model->updateas('id', $ls_jemaat_id, array('kwg_no'=>$kwg_new, 'last_modified'=> date('Y-m-d H:i:s')), 'anggota_jemaat');
+
+
+			//lanjut proses KPKP kalau status aktif
+			if($this->input->post('sts_kpkp')==1){
+				$id_kpkp_keluarga=0;
+
+				//check keluarga tujuan dah ada dompet KPKP apa belum
+				$scek="select * from kpkp_keluarga_jemaat where keluarga_jemaat_id='".$kwg_new."'";
+				$qcek=$this->m_model->selectcustom($scek);
+				foreach ($qcek as $key => $value) {
+					// code...
+					$id_kpkp_keluarga=$value->id;
+				}
+
+				if($id_kpkp_keluarga==0){
+					//ini bikin dompet KPKP nya dulu bearti
+					$param2=array();
+					$param2['keluarga_jemaat_id']=$kwg_new;
+					$param2['saldo_akhir']=0;
+					$param2['num_kpkp']=0;
+					$param2['last_pembayaran']='0000-00-00';
+					$param2['last_update']=NULL;
+					$param2['created_at']=date("Y-m-d H:i:s");
+					$param2['created_by']=$this->session->userdata('userdata')->id;
+					$ikpkp_keluarga=$this->m_model->insertgetid($param2, 'kpkp_keluarga_jemaat');
+					$id_kpkp_keluarga=$ikpkp_keluarga;
+				}
+
+				//proses saldo
+				//untuk insert ke kpkp_bayar_bulanan
+				$param3=array();
+				$note="Mutasi Saldo ".$this->input->post('jemaat_name')." dari keluarga sebelumnya.";
+				$param3['keluarga_jemaat_id']=$kwg_new;;
+				$param3['tgl_bayar']=date("Y-m-d");
+				$param3['note']=$note;
+				$param3['created_at']=date('Y-m-d H:i:s');
+				$param3['nominal']=$this->input->post('saldo_KPKP_angjem');
+				$param3['created_by']=$this->session->userdata('userdata')->id;
+				$param3['type']='5'; //ini sebagai mutasi dana dari keluarga sebelumnya
+				$i3=$this->m_model->insertgetid($param3, 'kpkp_bayar_bulanan');
+				if($i3>0){
+					//update saldo KPKP keluarga yg baru dibuat
+					$update4="update kpkp_keluarga_jemaat set saldo_akhir = saldo_akhir + ".$param3['nominal']." where id='".$id_kpkp_keluarga."'";
+					$qupdate4=$this->m_model->querycustom($update4);
+					if($qupdate4){
+
+						//kalau sudah berhasil update saldo di KPKP keluarga baru dan lakukan pencatatan mutasi transaksi, lakukan pengurangan di KPKP keluarga lama
+						$note6="Mutasi Saldo ".$this->input->post('jemaat_name')." ke keluarga barunya.";
+						$param6=array();
+						$param6['keluarga_jemaat_id']=$this->input->post('kwg_id');
+						$param6['tgl_bayar']=date("Y-m-d");
+						$param6['note']=$note6;
+						$param6['created_at']=date('Y-m-d H:i:s');
+						$param6['nominal']=$this->input->post('saldo_KPKP_angjem');
+						if($this->input->post('saldo_KPKP_angjem') <0){
+							//$param6['nominal']=$this->input->post('saldo_KPKP_angjem')*-1;
+							//ini supaya di tetap plus di pembukaannya dan proses pengurangan di mutasinya tetap benar
+						}
+						$param6['created_by']=$this->session->userdata('userdata')->id;
+						$param6['type']='4'; //ini type transaksi untuk pengurangan dari keluarga lama ke keluarga baru
+						$u6=$this->m_model->insertgetid($param6, 'kpkp_bayar_bulanan');
+
+
+						$update5="update kpkp_keluarga_jemaat set saldo_akhir = saldo_akhir - ".$param3['nominal']." where id='".$this->input->post('id_KPKP_kelangjem')."'";
+						$qupdate5=$this->m_model->querycustom($update5);
+					}
+				}
+
+			}
+
+
 
 			if($updateAngjem){
 				$sql="update keluarga_jemaat set num_anggota=num_anggota+1 where id='".$kwg_new."'";

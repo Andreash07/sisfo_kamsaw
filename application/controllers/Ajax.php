@@ -68,7 +68,7 @@ class Ajax extends CI_Controller {
 
 
 
-		$q="select A.id, A.kwg_nama, B.nama_lengkap, B.hub_kwg, C.hub_keluarga, COUNT(B.id) as num_anggota, A.kwg_wil, D.wilayah, B.id as jemaat_id, B.tgl_lahir
+		$q="select A.id, A.kwg_nama, B.nama_lengkap, B.hub_kwg, C.hub_keluarga, COUNT(B.id) as num_anggota, A.kwg_wil, D.wilayah, B.id as jemaat_id, B.tgl_lahir, B.sts_kpkp
 
 				from keluarga_jemaat A 
 

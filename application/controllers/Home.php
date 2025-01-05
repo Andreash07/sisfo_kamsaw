@@ -61,19 +61,25 @@ class Home extends CI_Controller {
 
 			// dapetin tanggal dalam seminggu
 			$get_dateInWeek=get_dateInWeek(date('N'));
-			if($get_dateInWeek['date_to'] == '01-01'){
-				$get_dateInWeek['date_to']='12-31';
+			$where4=" && DATE_FORMAT(A.tgl_lahir, '%m-%d') >='".$get_dateInWeek['date_from']."'  && DATE_FORMAT(A.tgl_lahir, '%m-%d') <='".$get_dateInWeek['date_to']."' ";
+
+			if($get_dateInWeek['year_from'] != $get_dateInWeek['year_to'] ){
+				//$get_dateInWeek['date_to']='12-31';
+
+				$where4=" && ( (DATE_FORMAT(A.tgl_lahir, '%m-%d') >='".$get_dateInWeek['date_from']."'  && DATE_FORMAT(A.tgl_lahir, '%m-%d') <='12-31') || (DATE_FORMAT(A.tgl_lahir, '%m-%d') >='01-01'  && DATE_FORMAT(A.tgl_lahir, '%m-%d') <='".$get_dateInWeek['date_to']."') ) ";
 			}
 
 			$query4="select A.id, A.kwg_wil, A.nama_lengkap, A.sts_kawin, A.jns_kelamin, A.tgl_lahir,  DATE_FORMAT(A.tgl_lahir, '%d %b') as tgl_ulang_tahun,  DATE_FORMAT(A.tgl_lahir, '%m-%d') as date_lahir
 					from anggota_jemaat A 
-					where DATE_FORMAT(A.tgl_lahir, '%m-%d') >='".$get_dateInWeek['date_from']."'  && DATE_FORMAT(A.tgl_lahir, '%m-%d') <='".$get_dateInWeek['date_to']."' && A.status =1 && A.sts_anggota =1 
+					where A.status =1 && A.sts_anggota =1 ".$where4."
 					order by DATE_FORMAT(A.tgl_lahir, '%m-%d') ASC, A.nama_lengkap ASC";
 					//die($query4 ."asjdaksd");
 
 			$dataUlangTahun=$this->m_model->selectcustom($query4);
 			$data['date_name_from']=$get_dateInWeek['date_name_from'];
 			$data['date_name_to']=$get_dateInWeek['date_name_to'];
+			$data['year_from']=$get_dateInWeek['year_from'];
+			$data['year_to']=$get_dateInWeek['year_to'];
 
 			$data['ls_date']=array();
 			$data['ls_hbd']=array();
@@ -93,19 +99,25 @@ class Home extends CI_Controller {
 
 			// dapetin tanggal dalam seminggu
 			$get_dateInWeek=get_dateInWeek(date('N'),2);
-			if($get_dateInWeek['date_to'] == '01-01'){
-				$get_dateInWeek['date_to']='12-31';
+			//if($get_dateInWeek['date_to'] == '01-05'){
+			$where41=" && DATE_FORMAT(A.tgl_lahir, '%m-%d') >='".$get_dateInWeek['date_from']."'  && DATE_FORMAT(A.tgl_lahir, '%m-%d') <='".$get_dateInWeek['date_to']."' ";
+
+			if($get_dateInWeek['year_from'] != $get_dateInWeek['year_to'] ){
+				$where41=" && ( (DATE_FORMAT(A.tgl_lahir, '%m-%d') >='".$get_dateInWeek['date_from']."'  && DATE_FORMAT(A.tgl_lahir, '%m-%d') <='12-31') || (DATE_FORMAT(A.tgl_lahir, '%m-%d') >='01-01'  && DATE_FORMAT(A.tgl_lahir, '%m-%d') <='".$get_dateInWeek['date_to']."') ) ";
 			}
 
 			$query41="select A.id, A.kwg_wil, A.nama_lengkap, A.sts_kawin, A.jns_kelamin, A.tgl_lahir,  DATE_FORMAT(A.tgl_lahir, '%d %b') as tgl_ulang_tahun,  DATE_FORMAT(A.tgl_lahir, '%m-%d') as date_lahir
 					from anggota_jemaat A 
-					where DATE_FORMAT(A.tgl_lahir, '%m-%d') >='".$get_dateInWeek['date_from']."'  && DATE_FORMAT(A.tgl_lahir, '%m-%d') <='".$get_dateInWeek['date_to']."' && A.status =1 && A.sts_anggota =1 
+					where A.sts_anggota =1 && A.status =1 ".$where41."
 					order by DATE_FORMAT(A.tgl_lahir, '%m-%d') ASC, A.nama_lengkap ASC";
 					//die($query41);
 
 			$dataUlangTahun1=$this->m_model->selectcustom($query41);
 			$data['date_name_from1']=$get_dateInWeek['date_name_from'];
 			$data['date_name_to1']=$get_dateInWeek['date_name_to'];
+
+			$data['year_from1']=$get_dateInWeek['year_from'];
+			$data['year_to1']=$get_dateInWeek['year_to'];
 
 			$data['ls_date1']=array();
 			$data['ls_hbd1']=array();

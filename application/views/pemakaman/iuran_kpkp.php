@@ -34,13 +34,24 @@
             // code...
               $name="Setor Sukarela".$value->note;
             break;
+          case '4':
+            // code...
+              $name="Saldo KPKP (Keluar <i class='fa fa-minus text-danger'></i>)".$value->note;
+            break;
+          case '5':
+            // code...
+              $name="Saldo KPKP (Masuk <i class='fa fa-plus text-success'></i>)".$value->note;
+            break;
           default:
             // code...
               $name="<i class='text-danger'>Tidak diketahui</i>";
             break;
         }
-        if(in_array($value->type, array(0,1,2)) ) {
+        if(in_array($value->type, array(0,1,2,5)) ) {
           $total_mutasi=$total_mutasi+$value->nominal;
+        }
+        else if(in_array($value->type, array(4)) ) {
+          $total_mutasi=$total_mutasi-$value->nominal;
         }
 
         $nominal=number_format($value->nominal,0,",",".");
@@ -49,6 +60,9 @@
         }
         else if($value->nominal<0){
           $nominal='<span class="text-danger">'.number_format($value->nominal,0,",",".")."</span>";
+          if(in_array($value->type, array(4)) ) {
+            $nominal='(-) '.$nominal;
+          }
         }
         if($value->note!=null){
           //$value->note='<br><i>Catatan</i>: '.$value->note;
@@ -71,7 +85,7 @@
           <th class="text-right"><?=$total_mutasi;?></th>
           <th class="text-right">
             <?php 
-              if($total_mutasi!=$dataKpkp2->saldo_akhir){
+              if(isset($dataKpkp2->saldo_akhir) && $total_mutasi!=$dataKpkp2->saldo_akhir){
                 //print_r($dataKpkp2);
 
             ?>

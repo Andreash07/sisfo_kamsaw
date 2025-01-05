@@ -107,6 +107,15 @@ $this->load->view('layout/footer');
 		})
 	})
 
+	$(document).on('click', '[id=btn_cancle_addlist_angjem]', function(e){
+		e.preventDefault();
+		row_id=$(this).attr('rowid')
+		$('#'+row_id).remove()
+
+
+	})
+
+
 	$(document).on('click', '[id=btn_add_mutasi]', function(e){
 		e.preventDefault()
 		$('#loading').show();

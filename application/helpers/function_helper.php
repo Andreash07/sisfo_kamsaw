@@ -1122,12 +1122,18 @@ function get_dateInWeek($numberDay, $type=1){
 
         $data['date_from']=date('m-d', strtotime(' +'.$numberDaynewWeek.' day'));
         $data['date_to']=date('m-d', strtotime(' +'.$numberDaynewWeek2.' day'));
+
+        $data['year_from']=date('Y', strtotime(' +'.$numberDaynewWeek.' day'));
+        $data['year_to']=date('Y', strtotime(' +'.$numberDaynewWeek2.' day'));
     }else{
         $data['date_name_from']=date('d F Y', strtotime(' +'.$startDay.' day'));
         $data['date_name_to']=date('d F Y', strtotime(' +'.$endDay.' day'));
 
         $data['date_from']=date('m-d', strtotime(' +'.$startDay.' day'));
         $data['date_to']=date('m-d', strtotime(' +'.$endDay.' day'));
+        
+        $data['year_from']=date('Y', strtotime(' +'.$startDay.' day'));
+        $data['year_to']=date('Y', strtotime(' +'.$endDay.' day'));
     }
 
     $arrDateFrom=explode('-', $data['date_from']);

@@ -1,0 +1,46 @@
+[26-Feb-2021 19:26:11 Asia/Jakarta] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'root'@'localhost' (using password: NO) in /home/sisd1326/public_html/production/pdf/html2pdf/konek.php on line 8
+[26-Feb-2021 19:26:11 Asia/Jakarta] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/sisd1326/public_html/production/pdf/kkwithbarcode.php on line 24
+[26-Feb-2021 19:26:11 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to a member function fetch_all() on null in /home/sisd1326/public_html/production/pdf/kkwithbarcode.php:25
+Stack trace:
+#0 {main}
+  thrown in /home/sisd1326/public_html/production/pdf/kkwithbarcode.php on line 25
+[15-Mar-2021 09:10:41 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[03-Apr-2021 15:50:57 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[21-Apr-2021 15:52:11 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[22-Apr-2021 09:47:21 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[01-May-2021 10:51:25 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[01-May-2021 14:41:54 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[02-May-2021 07:43:34 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[04-May-2021 11:26:54 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[04-May-2021 11:27:04 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[04-May-2021 11:27:35 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[04-May-2021 11:27:35 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[04-May-2021 11:27:35 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[04-May-2021 11:27:36 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[04-May-2021 11:27:36 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[04-May-2021 11:27:36 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[04-May-2021 20:41:30 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[04-May-2021 20:41:35 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[10-May-2021 11:09:42 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[10-May-2021 11:23:58 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[11-May-2021 19:18:53 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[22-Jun-2021 21:32:30 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[22-Jun-2021 21:44:53 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[23-Jun-2021 09:13:00 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[24-Jun-2021 08:31:55 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[26-Jun-2021 14:00:54 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[05-Jul-2021 10:41:31 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[05-Jul-2021 10:41:35 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[05-Jul-2021 10:41:42 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[05-Jul-2021 10:42:04 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[09-Jul-2021 22:09:29 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[10-Jul-2021 08:26:56 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[15-Jul-2021 14:45:16 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[15-Jul-2021 14:45:19 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[20-Jul-2021 19:08:28 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[20-Jul-2021 19:08:30 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[20-Jul-2021 19:08:34 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[27-Jul-2021 13:57:58 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[27-Jul-2021 13:58:01 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[02-Aug-2021 11:12:20 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316
+[02-Aug-2021 11:12:22 Asia/Jakarta] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /home/sisd1326/public_html/production/pdf/html2pdf/html2pdf.class.php on line 1316

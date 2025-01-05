@@ -609,6 +609,7 @@ $this->load->view('layout/header');
 											<div class="form-group">
 												<div class="col-sm-10 col-xs-8">
 												  <input type="hidden" id="view" name="view" class="form-control" value="ajax/ls_keluarga">
+												  <input type="hidden" id="add_mutasi_keluarga" name="add_mutasi_keluarga" class="form-control" value='1'>
 												  <input type="text" id="keyword_keluarga" name="keyword_keluarga" class="form-control" placeholder="Ketik Nama Keluarga/Anggota Jemaat ...">
 												</div>
 												<div class="col-sm-2 col-xs-4">

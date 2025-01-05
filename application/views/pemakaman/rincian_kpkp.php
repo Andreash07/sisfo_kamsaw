@@ -57,3 +57,8 @@
     </div>
   </div>
 </form>
+
+<script type="text/javascript">
+  $('[id=btn_copot_tautan]').attr('bulan_tercover', '<?=$est_bulanTercover['num_month'];?>')
+  $('[id=btn_copot_tautan]').attr('dana_kpkp', '<?=$data->saldo_akhir / $num_anggotaKPKP;?>')
+</script>

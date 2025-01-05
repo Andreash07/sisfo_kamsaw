@@ -214,7 +214,7 @@
 
                     <li>
 
-                      <a href="<?=base_url();?>pemakaman/data_blok_makam" >
+                      <a href="<?=base_url();?>Data_Blok_Makam/" >
 
                         Data Blok Makam
 

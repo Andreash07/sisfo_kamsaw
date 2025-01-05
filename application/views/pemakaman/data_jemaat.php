@@ -330,7 +330,7 @@ $this->load->view('layout/header');
 						where A.kwg_no_kpkp='".$dataKK[0]->id."') Z
 						where Z.delete_user IS NULL && Z.status
 						order by Z.keluarga_inti DESC, Z.no_urut ASC";
-			//die($s10);
+			//die(nl2br($s10));
 			$anggota_KK=$this->m_model->selectcustom($s10); 
 
 
@@ -556,6 +556,7 @@ $this->load->view('layout/header');
 																</select>
 															</div>
 															<label class="label label-danger">Anggota KPKP Tambahan!</label>
+															<div id="btn_copot_tautan" href="<?=base_url();?>pemakaman/copot_tautan" kwg_no_kpkp="<?=$valueAnggota_KK->kwg_no_kpkp;?>" kwg_no="<?=$valueAnggota_KK->kwg_no;?>" jemaat_name="<?=$valueAnggota_KK->nama_lengkap;?>" keluarga_tautan="<?=$dataKK[0]->kwg_nama;?>" angjem_id="<?=$valueAnggota_KK->id;?>"  bulan_tercover="0" dana_kpkp="0" class="btn btn-danger btn-sm" style="margin-top: 5px;"> <i class="fa  fa-unlink"></i> Copot Tautan </div>
 
 
 														</td>
@@ -611,6 +612,7 @@ $this->load->view('layout/header');
 								else{
 									$dataKpkp['data']=$dompet_kpkp[0];
 									$dataKpkp['total_biayaKPKP']=$total_biayaKPKP;
+									$dataKpkp['num_anggotaKPKP']=$num_anggotaKPKP;
 
 									$dataKpkp2=$dompet_kpkp[0]; 
 									$this->load->view('pemakaman/rincian_kpkp', $dataKpkp);
@@ -1494,6 +1496,35 @@ $this->load->view('layout/footer');
 		url=$('#form_search_kwg').attr('action')
 		$.post(url, dataMap, function(data){
 			$('#div_datakeluarga').html(data);
+		})
+	})
+
+	$(document).on('click', '[id=btn_copot_tautan]', function(e){
+		nama_angjem=$(this).attr('jemaat_name')
+		keluarga_tautan=$(this).attr('keluarga_tautan')
+		confirm1=confirm("Apakah anda yakin akan melepaskan tautan "+nama_angjem+" dari "+keluarga_tautan+" ?")
+		if(confirm1==false){
+			return;
+		}
+		confirm2=confirm("Apakah anda ingin memutasikan dana KPKP "+nama_angjem+" ke Keluarga barunya ?")
+
+		dana_pindah=1
+		if(confirm2==false){
+			dana_pindah=0
+		}
+
+		dataMap={}
+		dataMap['angjem_id']=$(this).attr('angjem_id');
+		dataMap['kwg_no']=$(this).attr('kwg_no');
+		dataMap['kwg_no_kpkp']=$(this).attr('kwg_no_kpkp');
+		dataMap['bulan_tercover']=$(this).attr('bulan_tercover');
+		dataMap['dana_kpkp']=$(this).attr('dana_kpkp');
+		dataMap['jemaat_name']=$(this).attr('jemaat_name');
+		dataMap['dana_pindah']=dana_pindah;
+
+		url=$(this).attr('href')
+		$.post(url, dataMap, function(data){
+			//$('#div_datakeluarga').html(data);
 		})
 	})
 </script>
