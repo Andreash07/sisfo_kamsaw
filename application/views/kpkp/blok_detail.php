@@ -71,21 +71,54 @@
               <tr>
                 <th class="text-center">#</th>
                 <th class="text-center">Nama</th>
-                <th class="text-center">Tanggal Lahir</th>
-                <th class="text-center">Tanggal Meninggal</th>
-                <th class="text-center">Penanggung Jawab</th>
-                <th class="text-center">No Telepon</th>
-                <th class="text-center">Alamat</th>
+                <th class="text-center">Rincian</th>
+                <th class="text-center">Penanggung Jawab/Ahli Waris</th>
+                <th class="text-center">Rincian Ahli Waris</th>
+                <th class="text-center">Action</th>
               </tr>
-              <tr class="text-center">
-                <td>1</td>
-                <td>Bpk. V</td>
-                <td>10 Januari 1938</td>
-                <td>9 Juni 2010</td>
-                <td>Bpk. A</td>
-                <td>0812313423</td>
-                <td>Kampung Sawah No.81 Rt02/04</td>
-              </tr>
+              <?php 
+                if(count($penghuni_makam)==0){
+              ?>
+                <tr>
+                  <th colspan="5" class="text-center">Tidak ada Penghuni Makam</td>
+                </tr>
+              <?php
+                }
+
+                foreach($penghuni_makam as $key => $value){
+              ?>
+                  <tr>
+                    <th><?= $key+1;?></th>
+                    <th><?= $value->nama;?></th>
+                    <td>
+                      <b>Status Anggota:</b> <?= $value->asal_gereja;?>
+                      <br>
+                      <b>Tgl Lahir:</b> <?= convert_tgl_dMY($value->tgl_lahir);?>
+                      <br>
+                      <b>Tgl Meninggal:</b> <?= convert_tgl_dMY($value->tgl_meninggal);?>
+                      <br>
+                      <b>Tgl Dimakamkan:</b> <?= convert_tgl_dMY($value->tgl_dimakamkan);?>
+                    </td>
+                    <td class="text-center"><?= $value->nama_ahli_waris;?></td>
+                    <td>
+                      <b>Status Anggota:</b> <?= $value->gereja_asal_ahli_waris;?>
+                      <br>
+                      <b>No. Telp.:</b> <?= $value->no_telp_ahli_waris;?>
+                      <br>
+                      <b>Alamat:</b> <?= $value->alamat_ahli_waris;?>
+                    </td>
+                    <td class="text-center">
+                      <div class="btn btn-warning btn-sm" title="Ubah">
+                        <i class="fa fa-pencil"></i>
+                      </div>
+                      <div id="delete_penghuni_makam" nama_penghuni="<?=$value->nama;?>" class="btn btn-danger btn-sm" title="Hapus" href="<?=base_url();?>Data_Blok_Makam/delete_penghuni_makam?auth=<?=md5($value->kpkp_blok_makam_id);?>&token=<?=md5($value->id);?>">
+                        <i class="fa fa-trash"></i>
+                      </div>
+                    </td>
+                  </tr>
+              <?php
+                }
+              ?>
             </table>
           </div>
 
@@ -165,7 +198,7 @@
         <h4 class="modal-title">Tambah Data Dimakamkan</h4>
       </div>
       <div class="modal-body">
-        <form action="<?=base_url();?>data_blok_makam/add_dimakamkan">
+        <form method="POST" action="<?=base_url();?>data_blok_makam/save_penghuni_makam" target="_BLANK" id="form_tambah_penghuni_makam">
           <div class="col-xs-12">
             <div class="col-xs-3">
               <input type="hidden" value="<?=$makam->id;?>" name="kpkp_blok_makam_id" id="kpkp_blok_makam_id">
@@ -178,9 +211,16 @@
           <div class="col-xs-6">
             <h4>Data yang dimakamkan</h4>
             <div class="divider" style="margin-left:unset; margin-right:unset;"></div>
-            <div class="form-group">
+            <div class="form-group col-xs-3">
+              <label for="gender">L/P</label>
+              <select class="form-control" id="gender" name="gender">
+                <option value='1'>Laki-laki</option>
+                <option value='2'>Perempuan</option>
+              </select>
+            </div>
+            <div class="form-group col-xs-9">
               <label for="nama_jenazah">Nama (Alm./Almh.)</label>
-              <input class="form-control" type="text" name="nama_jenazah" id="nama_jenazah">
+              <input class="form-control" type="text" name="nama_jenazah" id="nama_jenazah" placeholder="Sugeng Sumenep">
             </div>
 
             <div class="form-group">
@@ -210,35 +250,43 @@
                 </button>
               </span>
             </div>
+            <div class="form-group">
+              <label for="tgl_meninggal">Tanggal Dimakamkan</label>
+              <input type="text" class="form-control datepicker" id="tgl_dimakamkan" name="tgl_dimakamkan" placeholder="Tanggal-Bulan-Tahun" aria-describedby="inputSuccess2Status" value="<?=date('d-m-Y');?>">
+              <span class="input-group-btn">
+                <button type="button" class="reset btn btn-warning" title="Reset Tanggal" msg="Yakin ingin mengreset data tanggal meninggal?" what="date">
+                  <i class="fa fa-undo"></i>
+                </button>
+              </span>
+            </div>
           </div>
           <div class="col-xs-6">
             <h4>Data Penanggung Jawab (Ahli Waris)</h4>
             <div class="divider" style="margin-left:unset; margin-right:unset;"></div>
             <div class="form-group">
-              <label for="ahliwaris">Nama (Ahli Waris)</label>
-              <input class="form-control" type="text" name="ahliwaris" id="ahliwaris">
+              <label for="nama_ahli_waris">Nama (Ahli Waris)</label>
+              <input class="form-control" type="text" name="nama_ahli_waris" id="nama_ahli_waris">
             </div>
             <div class="form-group">
-              <label for="ahliwaris">Nomor Telp./HP</label>
-              <input class="form-control" type="text" name="ahliwaris" id="ahliwaris">
+              <label for="no_telp_ahli_waris">Nomor Telp./HP</label>
+              <input class="form-control" type="text" name="no_telp_ahli_waris" id="no_telp_ahli_waris">
             </div>
             <div class="form-group">
-              <label for="ahliwaris">Alamat (Ahli Waris)</label>
-              <input class="form-control" type="text" name="ahliwaris" id="ahliwaris">
+              <label for="alamat_ahli_waris">Alamat (Ahli Waris)</label>
+              <textarea row="3" class="form-control" type="text" name="alamat_ahli_waris" id="alamat_ahli_waris"></textarea>
             </div>
             <div class="form-group">
-              <label for="keanggotaan_ahliwaris">Gereja Asal (Ahli Waris)</label>
-              <input class="form-control" type="text" name="keanggotaan_ahliwaris" id="keanggotaan_ahliwaris">
+              <label for="gereja_asal_ahli_waris">Gereja Asal (Ahli Waris)</label>
+              <input class="form-control" type="text" name="gereja_asal_ahli_waris" id="gereja_asal_ahli_waris">
             </div>
           </div>
-          
         </form>
       </div>
       <div class="modal-footer">
         <button class="btn btn-danger" data-dismiss="modal">
           Batal
         </button>
-        <button id="tambah-data-blok-makam" class="btn btn-success" data-dismiss="modal">
+        <button id="tambah-data-blok-makam" class="btn btn-success" data-dismiss="modal" onclick="$('#form_tambah_penghuni_makam').submit()">
           Tambah
         </button>
       </div>
@@ -251,6 +299,21 @@
         format: 'dd-mm-yyyy',
       });
     })
+    $(document).on('click touchstart', '[id=delete_penghuni_makam]', function(){
+      konfirm=confirm("Apakah Anda yakin ingin menghapus "+$(this).attr('nama_penghuni')+' dari makam ini?')
+      if(konfirm==false){
+        iziToast.error({
+          title: 'Proses Dibatalkan!',
+          message: 'Data '+$(this).attr('nama_penghuni')+' tidak dihapus',
+          position: "topRight",
+          class: "",
+
+        });
+        return false;
+      }
+      window.location.href = $(this).attr('href');
+    })
+    
     $(document).on('change', '[id=sts_keanggotaan_jenazah]', function(){
       value=$(this).val()
       if(value==1){
@@ -261,4 +324,32 @@
     })
 
 </script>
+<?php
+if($this->session->flashdata('sts_add')==1){
+?>
+  <script type="text/javascript">
+    iziToast.success({
+      title: '<?=$this->session->flashdata('Title_add');?>',
+      message: '<?=$this->session->flashdata('msg_add');?>',
+      position: "topRight",
+      class: "<?=$this->session->flashdata('class');?>",
+
+    });
+  </script>
+<?php
+}
+else if($this->session->flashdata('sts_add')==-1){
+?>
+  <script type="text/javascript">
+    iziToast.error({
+      title: '<?=$this->session->flashdata('Title_add');?>',
+      message: '<?=$this->session->flashdata('msg_add');?>',
+      position: "topRight",
+      class: "<?=$this->session->flashdata('class');?>",
+
+    });
+  </script>
+<?php
+} 
+?>
 <?php $this->load->view('layout/footer'); ?>
