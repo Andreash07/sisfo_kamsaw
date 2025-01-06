@@ -197,4 +197,14 @@ class Data_Blok_Makam extends CI_Controller
     redirect(base_url().'Data_Blok_Makam/detail?id='.$param['kpkp_blok_makam_id']);
     //$this->load->view('kpkp/blok_detail', $data);
   }
+
+
+  public function view_penghuni_makam(){
+    $data=array();
+    $param=array();
+    $recid=$this->input->get('auth');
+    $penghuni_makam=$this->m_model->selectas("MD5(CONCAT('JHk1812#',id))", $recid, "kpkp_penghuni_makam");
+    $data['penghuni_makam']=$penghuni_makam;
+    $this->load->view('kpkp/form_ubah_penghuni_makam', $data);
+  }
 }

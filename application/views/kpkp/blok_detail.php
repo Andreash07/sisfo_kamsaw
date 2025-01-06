@@ -108,7 +108,7 @@
                       <b>Alamat:</b> <?= $value->alamat_ahli_waris;?>
                     </td>
                     <td class="text-center">
-                      <div class="btn btn-warning btn-sm" title="Ubah">
+                      <div class="btn btn-warning btn-sm" title="Ubah" data-toggle="modal" data-target=".modal-blok-formubahdimakamkan" inhref="<?=base_url();?>Data_Blok_Makam/view_penghuni_makam?auth=<?=md5('JHk1812#'.$value->id);?>" id="btn_ubah_penghuni_makam">
                         <i class="fa fa-pencil"></i>
                       </div>
                       <div id="delete_penghuni_makam" nama_penghuni="<?=$value->nama;?>" class="btn btn-danger btn-sm" title="Hapus" href="<?=base_url();?>Data_Blok_Makam/delete_penghuni_makam?auth=<?=md5($value->kpkp_blok_makam_id);?>&token=<?=md5($value->id);?>">
@@ -293,12 +293,45 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade modal-blok-formubahdimakamkan" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog  modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title">Ubah Data Dimakamkan</h4>
+      </div>
+      <div class="modal-body" id="div_ubah_data_makam">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" data-dismiss="modal">
+          Batal
+        </button>
+        <button id="tambah-data-blok-makam" class="btn btn-success" data-dismiss="modal" onclick="$('#form_ubah_penghuni_makam').submit()">
+          Simpan
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
     $(document).ready(function(){
       $('.datepicker').datepicker({
         format: 'dd-mm-yyyy',
       });
     })
+    $(document).on('click touchstart', '[id=btn_ubah_penghuni_makam]', function(){
+      $('#div_ubah_data_makam').html('')
+      dataMap={}
+      href=$(this).attr('inhref')
+      $.get(href, dataMap, function(data){
+        $('#div_ubah_data_makam').html(data)
+      })
+    })
+
+
     $(document).on('click touchstart', '[id=delete_penghuni_makam]', function(){
       konfirm=confirm("Apakah Anda yakin ingin menghapus "+$(this).attr('nama_penghuni')+' dari makam ini?')
       if(konfirm==false){
