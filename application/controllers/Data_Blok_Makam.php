@@ -207,4 +207,54 @@ class Data_Blok_Makam extends CI_Controller
     $data['penghuni_makam']=$penghuni_makam;
     $this->load->view('kpkp/form_ubah_penghuni_makam', $data);
   }
+
+
+  public function update_penghuni_makam()
+  {
+    $data=array();
+    //print_r($this->input->post()); die();
+    $recid=$this->input->post('recid');
+    $kpkp_blok_makam_id=clearText($this->input->post('kpkp_blok_makam_id'));
+    $param=array();
+    $param['gender']=clearText($this->input->post('gender'));
+    $param['nama']=clearText($this->input->post('nama_jenazah'));
+    $param['tgl_lahir']=date('Y-m-d', strtotime(clearText($this->input->post('tgl_lahir'))));
+    $param['tgl_meninggal']=date('Y-m-d', strtotime(clearText($this->input->post('tgl_meninggal'))));
+    $param['tgl_dimakamkan']=date('Y-m-d', strtotime(clearText($this->input->post('tgl_dimakamkan'))));
+    $param['sts_keanggotaan']=clearText($this->input->post('sts_keanggotaan_jenazah'));
+    $param['asal_gereja']=clearText($this->input->post('asal_gereja_jenazah'));
+    $param['nama_ahli_waris']=clearText($this->input->post('nama_ahli_waris'));
+    $param['no_telp_ahli_waris']=clearText($this->input->post('no_telp_ahli_waris'));
+    $param['alamat_ahli_waris']=clearText($this->input->post('alamat_ahli_waris'));
+    $param['gereja_asal_ahli_waris']=clearText($this->input->post('gereja_asal_ahli_waris'));
+    $param['updated_at']=date('Y-m-d H:i:s');
+    $param['updated_by']=$this->session->userdata('userdata')->id;
+
+    $id_insert=$this->m_model->updateas('id', $recid, $param, 'kpkp_penghuni_makam');
+    if($id_insert>0){
+      //get jumlah makan
+      $count=$this->m_model->selectcustom("select id as num_makam from kpkp_penghuni_makam where kpkp_blok_makam_id='".$param['kpkp_blok_makam_id']."' && deleted_at is NULL order by id ASC");
+      //update data di blok makam
+      $param2=array();
+      $param2['sts_keanggotaan_makam']=$param['sts_keanggotaan'];
+      $param2['keanggotaan_makam']=$param['asal_gereja'];
+      $param2['update_at']=date('Y-m-d H:i:s');
+      $param2['jumlah_makam']=count($count);
+      $u=$this->m_model->updateas('id', $param['kpkp_blok_makam_id'], $param2, 'kpkp_blok_makam');
+
+      $this->session->set_flashdata('sts_add', '1');
+      $this->session->set_flashdata('Title_add', 'Berhasil!');
+      $this->session->set_flashdata('msg_add', 'Data Penghuni Makam Diubah!');
+      $this->session->set_flashdata('class', 'iziToast-success');
+    }else{
+      $this->session->set_flashdata('sts_add', '-1');
+      $this->session->set_flashdata('Title_add', 'Gagal!');
+      $this->session->set_flashdata('msg_add', 'Data Penghuni Makam Diubah!');
+      $this->session->set_flashdata('class', 'iziToast-danger');
+    }
+    redirect(base_url().'Data_Blok_Makam/detail?id='.$kpkp_blok_makam_id);
+    //$this->load->view('kpkp/blok_detail', $data);
+  }
+
+
 }

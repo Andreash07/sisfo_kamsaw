@@ -1,9 +1,10 @@
-<form method="POST" action="<?=base_url();?>data_blok_makam/update_penghuni_makam" target="_BLANK" id="form_ubah_penghuni_makam">
+<form method="POST" action="<?=base_url();?>data_blok_makam/update_penghuni_makam" intarget="_BLANK" id="form_ubah_penghuni_makam">
   <?php 
     foreach ($penghuni_makam as $key => $value) {
       // code...
   ?>
   <input type="hidden" value="<?=$value->id;?>" name="recid" id="recid">
+  <input type="hidden" value="<?=$value->kpkp_blok_makam_id;?>" name="kpkp_blok_makam_id" id="kpkp_blok_makam_id">
   <div class="col-xs-6">
     <h4>Data yang dimakamkan</h4>
     <div class="divider" style="margin-left:unset; margin-right:unset;"></div>
@@ -16,7 +17,7 @@
     </div>
     <div class="form-group col-xs-9">
       <label for="nama_jenazah">Nama (Alm./Almh.)</label>
-      <input class="form-control" type="text" name="nama_jenazah" id="nama_jenazah" placeholder="Sugeng Sumenep" value="<?=$value->nama;?>">
+      <input class="form-control" type="text" name="nama_jenazah" id="nama_jenazah_update" placeholder="Sugeng Sumenep" value="<?=$value->nama;?>">
     </div>
 
     <div class="form-group">
@@ -30,12 +31,12 @@
     </div>
 
     <div class="form-group">
-      <label for="sts_keanggotaan_jenazah">Keanggotaan</label>
-      <select id="sts_keanggotaan_jenazah" name="sts_keanggotaan_jenazah" class="form-control">
+      <label for="sts_keanggotaan_jenazah_edit">Keanggotaan</label>
+      <select id="sts_keanggotaan_jenazah_edit" name="sts_keanggotaan_jenazah" class="form-control">
         <option value="1" <?php if($value->sts_keanggotaan==1) echo "selected"; ?>>GKP Kampung Sawah</option>
-        <option value="2" <?php if($value->sts_keanggotaan==1) echo "selected"; ?>>Non - GKP Kampung Sawah</option>
+        <option value="2" <?php if($value->sts_keanggotaan==2) echo "selected"; ?>>Non - GKP Kampung Sawah</option>
       </select>
-      <input type="text" name="asal_gereja_jenazah" id="asal_gereja_jenazah" value="GKP Kampung Sawah" class="form-control" value="<?=$value->asal_gereja;?>">
+      <input type="text" name="asal_gereja_jenazah" id="asal_gereja_jenazah_edit" class="form-control" value="<?=$value->asal_gereja;?>">
     </div>
     <div class="form-group">
       <label for="tgl_meninggal">Tanggal Meninggal</label>

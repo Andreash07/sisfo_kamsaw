@@ -309,7 +309,7 @@
         <button class="btn btn-danger" data-dismiss="modal">
           Batal
         </button>
-        <button id="tambah-data-blok-makam" class="btn btn-success" data-dismiss="modal" onclick="$('#form_ubah_penghuni_makam').submit()">
+        <button id="tambah-data-blok-makam" class="btn btn-success" data-dismiss="modal" onclick="update_penghuni_makam()">
           Simpan
         </button>
       </div>
@@ -328,9 +328,27 @@
       href=$(this).attr('inhref')
       $.get(href, dataMap, function(data){
         $('#div_ubah_data_makam').html(data)
+        $('.datepicker').datepicker({
+          format: 'dd-mm-yyyy',
+        });
       })
     })
 
+    function update_penghuni_makam(){
+      konfirm=confirm("Apakah Anda yakin ingin mengubah data "+$('#nama_jenazah_update').val()+' dari makam ini?')
+      if(konfirm==false){
+        iziToast.error({
+          title: 'Proses Dibatalkan!',
+          message: 'Data '+$('#nama_jenazah_update').val()+' tidak jadi diubah',
+          position: "topRight",
+          class: "",
+
+        });
+        return false;
+      }
+
+      $('#form_ubah_penghuni_makam').submit()
+    }
 
     $(document).on('click touchstart', '[id=delete_penghuni_makam]', function(){
       konfirm=confirm("Apakah Anda yakin ingin menghapus "+$(this).attr('nama_penghuni')+' dari makam ini?')
@@ -353,6 +371,15 @@
         $('#asal_gereja_jenazah').val('GKP Kampung Sawah')
       }else if(value!=1){
         $('#asal_gereja_jenazah').val('')
+      }
+    })
+
+    $(document).on('change', '[id=sts_keanggotaan_jenazah_edit]', function(){
+      value=$(this).val()
+      if(value==1){
+        $('#asal_gereja_jenazah_edit').val('GKP Kampung Sawah')
+      }else if(value!=1){
+        $('#asal_gereja_jenazah_edit').val('')
       }
     })
 
