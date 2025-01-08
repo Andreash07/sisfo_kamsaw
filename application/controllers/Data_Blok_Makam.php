@@ -240,7 +240,7 @@ class Data_Blok_Makam extends CI_Controller
       $param2['keanggotaan_makam']=$param['asal_gereja'];
       $param2['update_at']=date('Y-m-d H:i:s');
       $param2['jumlah_makam']=count($count);
-      $u=$this->m_model->updateas('id', $param['kpkp_blok_makam_id'], $param2, 'kpkp_blok_makam');
+      $u=$this->m_model->updateas('id', $kpkp_blok_makam_id, $param2, 'kpkp_blok_makam');
 
       $this->session->set_flashdata('sts_add', '1');
       $this->session->set_flashdata('Title_add', 'Berhasil!');
