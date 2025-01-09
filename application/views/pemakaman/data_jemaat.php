@@ -598,7 +598,7 @@ $this->load->view('layout/header');
 						</div>
           </div>
           <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
-						<div class="x_content">
+						<div class="x_content text-center">
 							<?php 
 								$dataKpkp['data']=array();
 								$dataKpkp2=array();

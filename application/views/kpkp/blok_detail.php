@@ -124,32 +124,46 @@
 
           <!-- tab rincian biaya -->
           <div role="tabpanel" class="tab-pane fade" id="rincian-biaya-tab-pane">
-            <table class="table table-bordered">
-              <tr>
-                <td style="width:24rem;">
-                  <strong>Tahun Terbayarkan</strong>
-                </td>
-                <td>2027 (+3 Tahun)</td>
-              </tr>
-              <tr>
-                <td style="width:24rem;">
-                  <strong>Nominal Biaya Tahunan</strong>
-                </td>
-                <td>Rp. 150.000</td>
-              </tr>
-              <tr>
-                <td style="width:24rem;">
-                  <strong>Kategori Anggota</strong>
-                </td>
-                <td>Non GKP Kampung Sawah</td>
-              </tr>
-              <tr>
-                <td style="width:24rem;">
-                  <strong>Tanggal masuk pembayaran</strong>
-                </td>
-                <td>31 Desember 2020</td>
-              </tr>
-            </table>
+            <div class="x_content text-center">
+            <?php 
+              if($makam->sts_dompet_digital == 1){
+            ?>  
+              <table class="table table-bordered">
+                <tr>
+                  <td style="width:24rem;">
+                    <strong>Tahun Terbayarkan</strong>
+                  </td>
+                  <td>2027 (+3 Tahun)</td>
+                </tr>
+                <tr>
+                  <td style="width:24rem;">
+                    <strong>Nominal Biaya Tahunan</strong>
+                  </td>
+                  <td>Rp. 150.000</td>
+                </tr>
+                <tr>
+                  <td style="width:24rem;">
+                    <strong>Kategori Anggota</strong>
+                  </td>
+                  <td>Non GKP Kampung Sawah</td>
+                </tr>
+                <tr>
+                  <td style="width:24rem;">
+                    <strong>Tanggal masuk pembayaran</strong>
+                  </td>
+                  <td>31 Desember 2020</td>
+                </tr>
+              </table>
+            <?php 
+              }
+              else{
+            ?>
+                <span class="text-danger">Dompet Digital Iuran Perawatan Makam KPKP <b>belum Aktif</b>, Silahkan Hubungi Administrator/Pnt/Pengurus KPKP Terkait</span><br>
+                <div class="btn btn-success" data-toggle="modal" data-target=".modal-dompetKPKP"><b>Aktifkan!</b> Dompet Iuran Perawatan Makam KPKP</div>
+            <?php
+              }
+            ?>
+            </div>
           </div>
 
           <!-- tab mutasi pembayaran -->
@@ -316,12 +330,92 @@
     </div>
   </div>
 </div>
+
+<div class="modal-dompetKPKP modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Aktifasi Perawatan Iuran Makam KPKP</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <form id="form_bukadompetkpkp" action="<?=base_url();?>/Data_Blok_Makam/aktifasi_dompet_iuran_makam" method="POST">
+            <input type="hidden" value="<?=$makam->sts_keanggotaan_makam;?>" name="sts_keanggotaan_makam" id="sts_keanggotaan_makam">
+            <input type="hidden" value="<?=$makam->id;?>" name="kpkp_blok_makam_id" id="kpkp_blok_makam_id">
+            <div class="item form-group col-xs-12">
+              <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="nominal">Keanggotaan <span class="required text-right">*</span>
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-6">
+                <input type="text" id="keanggotaan_makam_dompet" name="keanggotaan_makam" required="required" class="form-control" placeholder="GKP Kampung Sawah" value="<?= $makam->keanggotaan_makam; ?>" disabled readonly>
+              </div>
+            </div>
+            <div class="item form-group col-xs-12">
+              <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="nominal">Pokok Iuran (Rp.) <span class="required text-right">*</span>
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-6">
+                <input type="text" id="pokok_iuran" name="pokok_iuran" required="required" class="form-control" value="<?php if($makam->sts_keanggotaan_makam==1){ echo number_format($pokok_iuran->nilai_iuran_angjem,0,",","."); }else{echo number_format($pokok_iuran->nilai_iuran_non,0,",",".");}?>" readonly title="Pokok iuran ini berdasarkan status keanggotaan Penghuni Makam" style="cursor: not-allowed;">
+              </div>
+            </div>
+            <div class="item form-group col-xs-12">
+              <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="pilih_perhitungan_saldo">Perhitungan Saldo Awal<span class="required text-right">*</span></label>
+              <div class="col-md-6 col-sm-6 col-xs-6">
+                <select name="pilih_perhitungan_saldo" id="pilih_perhitungan_saldo" class="form-control">
+                  <option value="1" selected>Tahun Pembayaran Terakhir</option>
+                  <option value="2">Jumlah Saldo Terakhir</option>
+                  
+                </select>
+              </div>
+            </div>
+            <div class="item form-group col-xs-12" id="div_tahun_pembayaran_terakhir">
+              <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="tahun_terakhir">Tahun Pembayaran Terakhir<span class="required text-right">*</span>
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-6">
+                <select name="tahun_terakhir" id="tahun_terakhir" class="form-control">
+                <?php 
+                $maxYear= date('Y')+5;
+                for ($i=2014; $i <= $maxYear; $i++) { 
+                  // code...
+                ?>
+                  <option value="<?=$i;?>" <?php if($i==date('Y')) echo 'selected'; ?>> <?=$i;?></option>
+                <?php
+                }
+                ?>
+                </select>
+              </div>
+            </div>
+            <div class="item form-group col-xs-12" id="div_saldo_terakhir">
+              <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="nominal">Jumlah Saldo (Rp.) <span class="required text-right">*</span>
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-6">
+                <input type="text" id="nominal" name="nominal" required="required" class="form-control" placeholder="Contoh: <?=number_format(0,0,",",".");?>">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" id="btn_buat_dompetkppk">Buat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script type="text/javascript">
     $(document).ready(function(){
       $('.datepicker').datepicker({
         format: 'dd-mm-yyyy',
       });
+
+      //$('#div_saldo_terakhir').hide();
+      $('#nominal').val('Saldo terhitung otomatis!')
+      $('#nominal').attr('disabled', 'disabled')
+      $('#nominal').attr('Title', 'Tidak perlu memasukan Saldo, Saldo terhitung otomatis!')
     })
+
     $(document).on('click touchstart', '[id=btn_ubah_penghuni_makam]', function(){
       $('#div_ubah_data_makam').html('')
       dataMap={}
@@ -382,6 +476,49 @@
         $('#asal_gereja_jenazah_edit').val('')
       }
     })
+
+    $(document).on('change', '[id=pilih_perhitungan_saldo]', function(){
+      value=$(this).val()
+      if(value==1){
+        $('#div_tahun_pembayaran_terakhir').show()
+        //$('#div_saldo_terakhir').hide()
+        $('#nominal').val('Saldo terhitung otomatis!')
+        $('#nominal').attr('disabled', 'disabled')
+        $('#nominal').attr('Title', 'Tidak perlu memasukan Saldo, Saldo terhitung otomatis!')
+      }else if(value==2){
+        $('#div_saldo_terakhir').show()
+        $('#div_tahun_pembayaran_terakhir').hide()
+        $('#nominal').removeAttr('disabled')
+        $('#nominal').val('')
+      }
+    })
+
+
+    var rupiah = document.getElementById("nominal");
+    rupiah.addEventListener("keyup", function(e) {
+      // tambahkan 'Rp.' pada saat form di ketik
+      // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
+      rupiah.value = formatRupiah(this.value, "");
+    });
+
+
+    /* Fungsi formatRupiah */
+    function formatRupiah(angka, prefix){
+      var number_string = angka.replace(/[^,\d]/g, "").toString(),
+      split = number_string.split(","),
+      sisa = split[0].length % 3,
+      rupiah = split[0].substr(0, sisa),
+      ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+      // tambahkan titik jika yang di input sudah menjadi angka ribuan
+      if (ribuan) {
+        separator = sisa ? "." : "";
+        rupiah += separator + ribuan.join(".");
+      }
+
+      rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+      return prefix == undefined ? rupiah : rupiah ? prefix+" " + rupiah : "";
+    }
 
 </script>
 <?php

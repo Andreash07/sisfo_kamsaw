@@ -104,6 +104,8 @@ class Data_Blok_Makam extends CI_Controller
     $data=array();
     $recid=$this->input->get('id');
     $makam=$this->m_model->selectas('id', $recid, 'kpkp_blok_makam');
+    $pokok_iuran=$this->m_model->selectas('status','1','kpkp_pokok_iuran_makam');
+    $data['pokok_iuran']=$pokok_iuran[0];
     $penghuni_makam=$this->m_model->selectas2('kpkp_blok_makam_id', $recid,'deleted_at is NULL',NULL, 'kpkp_penghuni_makam', 'id', 'ASC');
     $data['penghuni_makam']=$penghuni_makam;
     $data['makam']=array('lokasi'=>'Tidak diketahui!', 'blok'=>'0', 'kavling'=>'0');
@@ -233,7 +235,7 @@ class Data_Blok_Makam extends CI_Controller
     $id_insert=$this->m_model->updateas('id', $recid, $param, 'kpkp_penghuni_makam');
     if($id_insert>0){
       //get jumlah makan
-      $count=$this->m_model->selectcustom("select id as num_makam from kpkp_penghuni_makam where kpkp_blok_makam_id='".$param['kpkp_blok_makam_id']."' && deleted_at is NULL order by id ASC");
+      $count=$this->m_model->selectcustom("select id as num_makam from kpkp_penghuni_makam where kpkp_blok_makam_id='".$kpkp_blok_makam_id."' && deleted_at is NULL order by id ASC");
       //update data di blok makam
       $param2=array();
       $param2['sts_keanggotaan_makam']=$param['sts_keanggotaan'];
@@ -254,6 +256,76 @@ class Data_Blok_Makam extends CI_Controller
     }
     redirect(base_url().'Data_Blok_Makam/detail?id='.$kpkp_blok_makam_id);
     //$this->load->view('kpkp/blok_detail', $data);
+  }
+
+  public function aktifasi_dompet_iuran_makam()
+  {
+    $data=array();
+    $param=array();
+    $param['sts_dompet_digital']='1';
+    $param['update_at']=date('Y-m-d H:i:s');
+    $param['update_by']=$this->session->userdata('userdata')->id;
+
+    //get pokok_iuran_makam
+    //$pokok_iuran=$this->m_model->select('kpkp_pokok_iuran_makam');
+    $kpkp_blok_makam_id=$this->input->post('kpkp_blok_makam_id');
+    $pokok_iuran=$this->input->post('pokok_iuran');
+
+    $pilih_perhitungan_saldo=$this->input->post('pilih_perhitungan_saldo');
+    if($pilih_perhitungan_saldo==1){
+      //ini bearti berdasarkan tahun pembayaran terakhir
+      $tahun_pembayaran=$this->input->post('tahun_terakhir');
+      $selisih_tahun_berajalan=$tahun_pembayaran - date('Y');
+      $saldo_awal=$selisih_tahun_berajalan*$pokok_iuran;
+      $param['saldo']=$saldo_awal;
+      $param['tahun_tercover']=$tahun_pembayaran;
+      $param['tgl_terakhir_bayar']='-';
+
+    }
+    else if($pilih_perhitungan_saldo==2){
+      //ini langsung isi nominal yg tertera
+      $param['saldo']=$this->input->post('nominal'); 
+      //cari selisih/lebih tahun dari saldo terakhir
+      $TahunTercover=countTahunTercover($pokok_iuran, $param['saldo'], date('Y'));
+      $param['$tahun_pembayaran']=$TahunTercover['tahun_tercover'];
+      $param['tgl_terakhir_bayar']='-';
+    }
+    $u=$this->m_model->updateas('id',$kpkp_blok_makam_id, $param, 'kpkp_blok_makam');
+
+    if($u){
+      //buat mutasi transksinya
+      $param2=array();
+      $param2['type']=0;//saldo awal
+      $param2['note']='Saldo awal';//saldo awal
+      $param2['kpkp_blok_makam_id']=$kpkp_blok_makam_id;
+      $param2['saldo']=$param['saldo'];//nominal saldo
+      $param2['tgl_bayar']=date('Y-m-d');//tgl input data
+      $param2['created_at']=date('Y-m-d H:i:s');//tgl input data
+      $param2['created_by']=$this->session->userdata('userdata')->id;
+      $imutasi=$this->m_model->insertgetid($param2, 'kpkp_bayar_tahunan');
+
+      $this->session->set_flashdata('sts_add', '1');
+      $this->session->set_flashdata('Title_add', 'Berhasil!');
+      $this->session->set_flashdata('msg_add', 'Aktifasi Dompet Digital Iuran Perawatan Makam!');
+      $this->session->set_flashdata('class', 'iziToast-success');
+
+      if(!$imutasi){
+        $this->session->set_flashdata('sts_add', '-1');
+        $this->session->set_flashdata('Title_add', 'Gagal!');
+        $this->session->set_flashdata('msg_add', 'Memasukan saldo awal pada Mutasi Iuran!');
+        $this->session->set_flashdata('class', 'iziToast-danger');
+      }
+    }
+    else{
+      $this->session->set_flashdata('sts_add', '-1');
+      $this->session->set_flashdata('Title_add', 'Gagal!');
+      $this->session->set_flashdata('msg_add', 'Aktifasi Dompet Digital Iuran Perawatan Makam!');
+      $this->session->set_flashdata('class', 'iziToast-danger');
+    }
+
+    redirect(base_url().'Data_Blok_Makam/detail?id='.$kpkp_blok_makam_id);
+
+
   }
 
 

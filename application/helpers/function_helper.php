@@ -1210,6 +1210,15 @@ function singkat_nama($string=null, $limit=21, $add=''){
 }
 //ANTON MANUNGKU. 
 
+function countTahunTercover($total_biayaKPKP, $saldo_akhir, $current_Year=null){
+    $data=array();
+    $num_tahun_tercover=floor($saldo_akhir/$total_biayaKPKP);
+    $data['tahun_tercover']=date("Y",strtotime($num_tahun_tercover." year"));
+    $data['num_tahun_tercover']=$num_tahun_tercover;
+
+    return $data;
+}
+
 function countBulanTercover($total_biayaKPKP, $saldo_akhir, $current_Month){
     $data=array();
     //hitung jumlah bulan yg dapat tercover karena tagihannya ini perbulan 
