@@ -127,7 +127,24 @@
             <div class="x_content text-center">
             <?php 
               if($makam->sts_dompet_digital == 1){
+                if($makam->sts_keanggotaan_makam==1){ 
+                  $pokok_iuran=$pokok_iuran->nilai_iuran_angjem; 
+                }
+                else{
+                  $pokok_iuran=$pokok_iuran->nilai_iuran_non; 
+                }
+                $num_tahun_tercover=floor($makam->saldo/$pokok_iuran);
+                $tahun_tercover=date('Y', strtotime($num_tahun_tercover.'year'));
             ?>  
+            <form>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_nama">Tahun Terbayarkan<span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input class="form-control col-md-7 col-xs-12" type="text" id="kwg_no" name="kwg_no" required="required" value="<?=$tahun_tercover;?>" disabled>
+                </div>
+              </div>
+            </form>
               <table class="table table-bordered">
                 <tr>
                   <td style="width:24rem;">
@@ -341,7 +358,7 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <form id="form_bukadompetkpkp" action="<?=base_url();?>/Data_Blok_Makam/aktifasi_dompet_iuran_makam" method="POST">
+          <form id="form_bukadompetkpkp" action="<?=base_url();?>/Data_Blok_Makam/aktifasi_dompet_iuran_makam" method="POST" target="_BLANK">
             <input type="hidden" value="<?=$makam->sts_keanggotaan_makam;?>" name="sts_keanggotaan_makam" id="sts_keanggotaan_makam">
             <input type="hidden" value="<?=$makam->id;?>" name="kpkp_blok_makam_id" id="kpkp_blok_makam_id">
             <div class="item form-group col-xs-12">
@@ -397,7 +414,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-        <button type="button" class="btn btn-primary" id="btn_buat_dompetkppk">Buat</button>
+        <button type="button" class="btn btn-primary" id="btn_buat_dompetkppk" onclick="$('#form_bukadompetkpkp').submit()">Aktifasi</button>
       </div>
     </div>
   </div>

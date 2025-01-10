@@ -269,17 +269,18 @@ class Data_Blok_Makam extends CI_Controller
     //get pokok_iuran_makam
     //$pokok_iuran=$this->m_model->select('kpkp_pokok_iuran_makam');
     $kpkp_blok_makam_id=$this->input->post('kpkp_blok_makam_id');
-    $pokok_iuran=$this->input->post('pokok_iuran');
+    $pokok_iuran=str_replace('.', '', $this->input->post('pokok_iuran') ) ;
 
     $pilih_perhitungan_saldo=$this->input->post('pilih_perhitungan_saldo');
     if($pilih_perhitungan_saldo==1){
       //ini bearti berdasarkan tahun pembayaran terakhir
       $tahun_pembayaran=$this->input->post('tahun_terakhir');
       $selisih_tahun_berajalan=$tahun_pembayaran - date('Y');
+      //echo $pokok_iuran." "; echo($selisih_tahun_berajalan); die();
       $saldo_awal=$selisih_tahun_berajalan*$pokok_iuran;
       $param['saldo']=$saldo_awal;
       $param['tahun_tercover']=$tahun_pembayaran;
-      $param['tgl_terakhir_bayar']='-';
+      $param['tgl_terakhir_bayar']=null;
 
     }
     else if($pilih_perhitungan_saldo==2){
@@ -298,7 +299,7 @@ class Data_Blok_Makam extends CI_Controller
       $param2['type']=0;//saldo awal
       $param2['note']='Saldo awal';//saldo awal
       $param2['kpkp_blok_makam_id']=$kpkp_blok_makam_id;
-      $param2['saldo']=$param['saldo'];//nominal saldo
+      $param2['nominal']=$param['saldo'];//nominal saldo
       $param2['tgl_bayar']=date('Y-m-d');//tgl input data
       $param2['created_at']=date('Y-m-d H:i:s');//tgl input data
       $param2['created_by']=$this->session->userdata('userdata')->id;
