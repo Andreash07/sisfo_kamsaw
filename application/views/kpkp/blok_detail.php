@@ -179,6 +179,9 @@
 
           <!-- tab mutasi pembayaran -->
           <div role="tabpanel" class="tab-pane fade" id="mutasi-pembayaran-tab-pane">
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+              <div class="btn btn-primary" data-toggle="modal" data-target=".tambah-pembayaran">Tambah Pembayaran</div>
+            </div>
             <table class="table">
               <tr>
                 <th class="text-center">#</th>
@@ -212,6 +215,44 @@
     </div>
   </div>
 </div>
+
+<!-- modal: Tambah Pembayaran -->
+<div class="modal fade tambah-pembayaran" tabindex="-1" role="dialog">
+  <div class="modal-dialog" style="width:400px;" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Tambah Pembayaran</h4>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; gap:1rem; margin-bottom: 1rem;">
+          <label for="tgl-pembayaran" style="min-width: 150px; white-space: nowrap;">Tanggal pembayaran</label>
+          <input class="form-control" type="date" name="tgl-pembayaran" id="tgl-pembayaran" style="width: 250px;">
+        </div>
+        <div style="display:flex; gap:1rem; margin-bottom: 1rem;">
+          <label for="mutasi-nominal" style="min-width: 150px;">Nominal</label>
+          <input class="form-control" type="number" name="mutasi-nominal" id="mutasi-nominal" style="width: 250px;">
+        </div>
+        <div style="display:flex; gap:1rem; margin-bottom: 1rem;">
+          <label for="ahli-waris" style="min-width: 150px; white-space: nowrap;">Ahli Waris</label>
+          <select name="ahli-waris" id="ahli-waris" class="form-control" style="width: 250px;">
+            <option value="">Bapak A</option>
+            <option value="">Bapak B</option>
+            <option value="">Bapak C</option>
+          </select>
+        </div>
+        <div style="display:flex; gap:1rem;">
+          <label for="catatan" style="min-width: 150px;">Catatan</label>
+          <textarea name="catatan" id="catatan" class="form-control" style="width: 250px;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary">Simpan</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <div class="modal fade modal-blok-formdimakamkan" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
   <div class="modal-dialog  modal-lg">
