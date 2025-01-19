@@ -1,214 +1,295 @@
 <?php $this->load->view('layout/header'); ?>
-<div class="right_col" role="main">
-  <div class="col-xs-12">
-    <div class="x_panel">
-      <div class="x_title">
-        <h4>Detail Blok Makam</h4>
-      </div>
-      <div class="x_content" style="display:flex; flex-direction:column; align-items:center; gap:1rem;">
-        <div style="display:flex; flex-direction:column; gap:1rem;">
-          <div style="display:flex; align-items:center;">
-            <label style="margin-bottom: 0; min-width: 10rem;">Lokasi</label>
-            <input
-              class="form-control"
-              value="<?= $makam->lokasi; ?>"
-              type="text"
-              disabled>
-          </div>
-          <div style="display:flex; align-items:center;">
-            <label style="margin-bottom: 0; min-width: 10rem;">Blok (kavling)</label>
-            <input
-              class="form-control"
-              value="<?= $makam->blok; ?><?= $makam->kavling; ?>"
-              type="text"
-              disabled>
+<?php 
+  if(!isset($makam->lokasi)){
+?>
+  <div class="right_col" role="main">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h4>Detail Blok Makam</h4>
+        </div>
+        <div class="x_content" style="display:flex; flex-direction:column; align-items:center; gap:1rem;">
+          <div class="col-xs-12 text-center" >
+          <?= '<b class="text-danger" >Data tidak ditemukan!</b><br> Silahkan kembali ke Halaman <a href="'.base_url().'Data_Blok_Makam">Blok Makam</a> '; ?>
           </div>
         </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<?php 
+  }
+?>
+<div class="right_col" role="main">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h4>Detail Blok Makam</h4>
+        </div>
+        <div class="x_content" style="display:flex; flex-direction:column; align-items:center; gap:1rem;">
+          <div style="display:flex; flex-direction:column; gap:1rem;">
+            <div style="display:flex; align-items:center;">
+              <label style="margin-bottom: 0; min-width: 10rem;">Lokasi</label>
+              <input
+                class="form-control"
+                value="<?= $makam->lokasi; ?>"
+                type="text"
+                disabled>
+            </div>
+            <div style="display:flex; align-items:center;">
+              <label style="margin-bottom: 0; min-width: 10rem;">Blok (kavling)</label>
+              <input
+                class="form-control"
+                value="<?= $makam->blok; ?><?= $makam->kavling; ?>"
+                type="text"
+                disabled>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-    </div>
+      <div class="x_panel">
+        <div class="x_content">
+          <!-- Nav tabs -->
+          <ul style="padding:0;" class="nav nav-tabs bar_tabs" role="tablist">
+            <li role="presentation" class="active">
+              <a
+                href="#daftar-dimakamkan-tab-pane"
+                role="tab"
+                id="daftar-dimakamkan-nav-tab"
+                data-toggle="tab">
+                Daftar Dimakamkan</a>
+            </li>
+            <li role="presentation">
+              <a
+                href="#rincian-biaya-tab-pane"
+                role="tab"
+                id="rincian-biaya-nav-tab"
+                data-toggle="tab">
+                Rincian Biaya</a>
+            </li>
+            <li role="presentation">
+              <a
+                href="#mutasi-pembayaran-tab-pane"
+                role="tab"
+                id="mutasi-pembayaran-nav-tab"
+                data-toggle="tab">
+                Mutasi Pembayaran</a>
+            </li>
+          </ul>
 
-    <div class="x_panel">
-      <div class="x_content">
-        <!-- Nav tabs -->
-        <ul style="padding:0;" class="nav nav-tabs bar_tabs" role="tablist">
-          <li role="presentation" class="active">
-            <a
-              href="#daftar-dimakamkan-tab-pane"
-              role="tab"
-              id="daftar-dimakamkan-nav-tab"
-              data-toggle="tab">
-              Daftar Dimakamkan</a>
-          </li>
-          <li role="presentation">
-            <a
-              href="#rincian-biaya-tab-pane"
-              role="tab"
-              id="rincian-biaya-nav-tab"
-              data-toggle="tab">
-              Rincian Biaya</a>
-          </li>
-          <li role="presentation">
-            <a
-              href="#mutasi-pembayaran-tab-pane"
-              role="tab"
-              id="mutasi-pembayaran-nav-tab"
-              data-toggle="tab">
-              Mutasi Pembayaran</a>
-          </li>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-          <!-- tab daftar dimakamkan -->
-          <div role="tabpanel" class="tab-pane fade active in" id="daftar-dimakamkan-tab-pane">
-            <div class="btn btn-primary" data-toggle="modal" data-target=".modal-blok-formdimakamkan">Tambah Dimakamkan</div>
-            <table class="table table-striped">
-              <tr>
-                <th class="text-center">#</th>
-                <th class="text-center">Nama</th>
-                <th class="text-center">Rincian</th>
-                <th class="text-center">Penanggung Jawab/Ahli Waris</th>
-                <th class="text-center">Rincian Ahli Waris</th>
-                <th class="text-center">Action</th>
-              </tr>
-              <?php
-              if (count($penghuni_makam) == 0) {
-              ?>
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <!-- tab daftar dimakamkan -->
+            <div role="tabpanel" class="tab-pane fade active in" id="daftar-dimakamkan-tab-pane">
+              <div class="btn btn-primary" data-toggle="modal" data-target=".modal-blok-formdimakamkan">Tambah Dimakamkan</div>
+              <table class="table table-striped">
                 <tr>
-                  <th colspan="5" class="text-center">Tidak ada Penghuni Makam</td>
+                  <th class="text-center">#</th>
+                  <th class="text-center">Nama</th>
+                  <th class="text-center">Rincian</th>
+                  <th class="text-center">Penanggung Jawab/Ahli Waris</th>
+                  <th class="text-center">Rincian Ahli Waris</th>
+                  <th class="text-center">Action</th>
                 </tr>
-              <?php
-              }
-
-              foreach ($penghuni_makam as $key => $value) {
-              ?>
-                <tr>
-                  <th><?= $key + 1; ?></th>
-                  <th><?= $value->nama; ?></th>
-                  <td>
-                    <b>Status Anggota:</b> <?= $value->asal_gereja; ?>
-                    <br>
-                    <b>Tgl Lahir:</b> <?= convert_tgl_dMY($value->tgl_lahir); ?>
-                    <br>
-                    <b>Tgl Meninggal:</b> <?= convert_tgl_dMY($value->tgl_meninggal); ?>
-                    <br>
-                    <b>Tgl Dimakamkan:</b> <?= convert_tgl_dMY($value->tgl_dimakamkan); ?>
-                  </td>
-                  <td class="text-center"><?= $value->nama_ahli_waris; ?></td>
-                  <td>
-                    <b>Status Anggota:</b> <?= $value->gereja_asal_ahli_waris; ?>
-                    <br>
-                    <b>No. Telp.:</b> <?= $value->no_telp_ahli_waris; ?>
-                    <br>
-                    <b>Alamat:</b> <?= $value->alamat_ahli_waris; ?>
-                  </td>
-                  <td class="text-center">
-                    <div class="btn btn-warning btn-sm" title="Ubah" data-toggle="modal" data-target=".modal-blok-formubahdimakamkan" inhref="<?= base_url(); ?>Data_Blok_Makam/view_penghuni_makam?auth=<?= md5('JHk1812#' . $value->id); ?>" id="btn_ubah_penghuni_makam">
-                      <i class="fa fa-pencil"></i>
-                    </div>
-                    <div id="delete_penghuni_makam" nama_penghuni="<?= $value->nama; ?>" class="btn btn-danger btn-sm" title="Hapus" href="<?= base_url(); ?>Data_Blok_Makam/delete_penghuni_makam?auth=<?= md5($value->kpkp_blok_makam_id); ?>&token=<?= md5($value->id); ?>">
-                      <i class="fa fa-trash"></i>
-                    </div>
-                  </td>
-                </tr>
-              <?php
-              }
-              ?>
-            </table>
-          </div>
-
-          <!-- tab rincian biaya -->
-          <div role="tabpanel" class="tab-pane fade" id="rincian-biaya-tab-pane">
-            <div class="x_content text-center">
-              <?php
-              if ($makam->sts_dompet_digital == 1) {
-                if ($makam->sts_keanggotaan_makam == 1) {
-                  $pokok_iuran = $pokok_iuran->nilai_iuran_angjem;
-                } else {
-                  $pokok_iuran = $pokok_iuran->nilai_iuran_non;
+                <?php
+                if (count($penghuni_makam) == 0) {
+                ?>
+                  <tr>
+                    <th colspan="5" class="text-center">Tidak ada Penghuni Makam</td>
+                  </tr>
+                <?php
                 }
-                $num_tahun_tercover = floor($makam->saldo / $pokok_iuran);
-                $tahun_tercover = date('Y', strtotime($num_tahun_tercover . 'year'));
-              ?>
-                <form>
-                  <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_nama">Tahun Terbayarkan<span class="required">*</span>
-                    </label>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                      <input class="form-control col-md-7 col-xs-12" type="text" id="kwg_no" name="kwg_no" required="required" value="<?= $tahun_tercover; ?>" disabled>
-                    </div>
-                  </div>
-                </form>
-                <table class="table table-bordered">
+                $ls_ahli_waris=array();
+                foreach ($penghuni_makam as $key => $value) {
+                  $ls_ahli_waris[$value->nama_ahli_waris]=array('nama_ahli_waris'=>$value->nama_ahli_waris, 'gereja_asal_ahli_waris'=>$value->gereja_asal_ahli_waris);
+                ?>
                   <tr>
-                    <td style="width:24rem;">
-                      <strong>Tahun Terbayarkan</strong>
+                    <th><?= $key + 1; ?></th>
+                    <th><?= $value->nama; ?></th>
+                    <td>
+                      <b>Status Anggota:</b> <?= $value->asal_gereja; ?>
+                      <br>
+                      <b>Tgl Lahir:</b> <?= convert_tgl_dMY($value->tgl_lahir); ?>
+                      <br>
+                      <b>Tgl Meninggal:</b> <?= convert_tgl_dMY($value->tgl_meninggal); ?>
+                      <br>
+                      <b>Tgl Dimakamkan:</b> <?= convert_tgl_dMY($value->tgl_dimakamkan); ?>
                     </td>
-                    <td>2027 (+3 Tahun)</td>
-                  </tr>
-                  <tr>
-                    <td style="width:24rem;">
-                      <strong>Nominal Biaya Tahunan</strong>
+                    <td class="text-center"><?= $value->nama_ahli_waris; ?></td>
+                    <td>
+                      <b>Status Anggota:</b> <?= $value->gereja_asal_ahli_waris; ?>
+                      <br>
+                      <b>No. Telp.:</b> <?= $value->no_telp_ahli_waris; ?>
+                      <br>
+                      <b>Alamat:</b> <?= $value->alamat_ahli_waris; ?>
                     </td>
-                    <td>Rp. 150.000</td>
-                  </tr>
-                  <tr>
-                    <td style="width:24rem;">
-                      <strong>Kategori Anggota</strong>
+                    <td class="text-center">
+                      <div class="btn btn-warning btn-xs" title="Ubah" data-toggle="modal" data-target=".modal-blok-formubahdimakamkan" inhref="<?= base_url(); ?>Data_Blok_Makam/view_penghuni_makam?auth=<?= md5('JHk1812#' . $value->id); ?>" id="btn_ubah_penghuni_makam">
+                        <i class="fa fa-pencil"></i>
+                      </div>
+                      <div id="delete_penghuni_makam" nama_penghuni="<?= $value->nama; ?>" class="btn btn-danger btn-xs" title="Hapus" href="<?= base_url(); ?>Data_Blok_Makam/delete_penghuni_makam?auth=<?= md5($value->kpkp_blok_makam_id); ?>&token=<?= md5($value->id); ?>">
+                        <i class="fa fa-trash"></i>
+                      </div>
                     </td>
-                    <td>Non GKP Kampung Sawah</td>
                   </tr>
-                  <tr>
-                    <td style="width:24rem;">
-                      <strong>Tanggal masuk pembayaran</strong>
-                    </td>
-                    <td>31 Desember 2020</td>
-                  </tr>
-                </table>
-              <?php
-              } else {
-              ?>
-                <span class="text-danger">Dompet Digital Iuran Perawatan Makam KPKP <b>belum Aktif</b>, Silahkan Hubungi Administrator/Pnt/Pengurus KPKP Terkait</span><br>
-                <div class="btn btn-success" data-toggle="modal" data-target=".modal-dompetKPKP"><b>Aktifkan!</b> Dompet Iuran Perawatan Makam KPKP</div>
-              <?php
-              }
-              ?>
+                <?php
+                }
+                ?>
+              </table>
             </div>
-          </div>
 
-          <!-- tab mutasi pembayaran -->
-          <div role="tabpanel" class="tab-pane fade" id="mutasi-pembayaran-tab-pane">
-            <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
-              <div class="btn btn-primary" data-toggle="modal" data-target=".tambah-pembayaran">Tambah Pembayaran</div>
+            <!-- tab rincian biaya -->
+            <div role="tabpanel" class="tab-pane fade" id="rincian-biaya-tab-pane">
+              <div class="x_content text-center">
+                <?php
+                if ($makam->sts_dompet_digital == 1) {
+                  $sts_keanggotaan_penghuni_makam="Non GKP Kampung Sawah";
+                  if ($makam->sts_keanggotaan_makam == 1) {
+                    $pokok_iuran_summary = $pokok_iuran->nilai_iuran_angjem;
+                    $sts_keanggotaan_penghuni_makam="GKP Kampung Sawah";
+                  } else {
+                    $pokok_iuran_summary = $pokok_iuran->nilai_iuran_non;
+                  }
+                  $num_tahun_tercover = floor($makam->saldo / $pokok_iuran_summary);
+                  $tahun_tercover = date('Y', strtotime($num_tahun_tercover . 'year'));
+
+                  if($makam->tgl_terakhir_bayar!=null && $makam->tgl_terakhir_bayar !='0000-00-00'){
+                    $makam->tgl_terakhir_bayar=convert_tgl_dMY($makam->tgl_terakhir_bayar);
+                  }
+                  else{
+                    $makam->tgl_terakhir_bayar='-';
+                  }
+
+                  $saldo_akhir=number_format($makam->saldo,0,",",".");
+                  if($makam->saldo<0){
+                    $New_saldo_akhir=$makam->saldo*-1;
+                    $saldo_akhir="(".number_format($New_saldo_akhir,0,",",".").")";
+                  }
+
+                ?>
+                  <form class="form-horizontal form-label-left">
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="saldo_sisa_dis">Lebih/(Kurang) Bayar<span class="required">*</span>
+                      </label>
+                      <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" type="text" id="saldo_sisa_dis" name="saldo_sisa_dis" required="required" value="<?= $saldo_akhir ; ?>" disabled>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tahun_terbayarkan_dis">Tahun Terbayarkan<span class="required">*</span>
+                      </label>
+                      <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" type="text" id="tahun_terbayarkan_dis" name="tahun_terbayarkan_dis" required="required" value="<?= $tahun_tercover; ?> (<?=$num_tahun_tercover;?> Tahun)" disabled>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nominal_biaya_tahunan_dis">Nominal Biaya Tahunan<span class="required">*</span>
+                      </label>
+                      <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" type="text" id="nominal_biaya_tahunan_dis" name="nominal_biaya_tahunan_dis" required="required" value="<?= number_format($pokok_iuran_summary,0,",","."); ?>" disabled>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kategori_anggota_dis">Kategori Anggota<span class="required">*</span>
+                      </label>
+                      <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" type="text" id="kategori_anggota_dis" name="kategori_anggota_dis" required="required" value="<?= $sts_keanggotaan_penghuni_makam; ?>" disabled>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_terakhir_bayar_dis">Tanggal Pembayaran Terakhir<span class="required">*</span>
+                      </label>
+                      <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" type="text" id="tanggal_terakhir_bayar_dis" name="tanggal_terakhir_bayar_dis" required="required" value="<?= $makam->tgl_terakhir_bayar; ?>" disabled>
+                      </div>
+                    </div>
+                  </form>
+                <?php
+                } else {
+                ?>
+                  <span class="text-danger">Dompet Digital Iuran Perawatan Makam KPKP <b>belum Aktif</b>, Silahkan Hubungi Administrator/Pnt/Pengurus KPKP Terkait</span><br>
+                  <div class="btn btn-success" data-toggle="modal" data-target=".modal-dompetKPKP"><b>Aktifkan!</b> Dompet Iuran Perawatan Makam KPKP</div>
+                <?php
+                }
+                ?>
+              </div>
             </div>
-            <table class="table">
-              <tr>
-                <th class="text-center">#</th>
-                <th class="text-center">Tanggal</th>
-                <th style="width:40rem;">Transaksi</th>
-                <th class="text-center">Nominal</th>
-                <th class="text-center">Action</th>
-              </tr>
-              <tr>
-                <td class="text-center">1</td>
-                <td class="text-center">31 Desember 2024</td>
-                <td style="width:40rem;">Saldo Awal</td>
-                <td class="text-center">450.000</td>
-                <td class="text-center">tombol edit</td>
-              </tr>
-              <tr>
-                <td class="text-center">2</td>
-                <td class="text-center">01 Januari 2025</td>
-                <td style="width:40rem;">
-                  Pembayaran Iuran
-                  <br>
-                  Catatan: Tahun 2025 (Non GKP Kampung Sawah @150.000)
-                </td>
-                <td class="text-center">-150.000</td>
-                <td class="text-center">tombol edit</td>
-              </tr>
-            </table>
+
+            <!-- tab mutasi pembayaran -->
+            <div role="tabpanel" class="tab-pane fade" id="mutasi-pembayaran-tab-pane">
+              <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+                <div class="btn btn-primary" data-toggle="modal" data-target=".tambah-pembayaran">Tambah Pembayaran</div>
+              </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="text-center">#</th>
+                    <th class="text-center">Tanggal</th>
+                    <th style="width:40rem;">Transaksi</th>
+                    <th class="text-center">Nominal</th>
+                    <th class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php 
+                    $total_mutasi=0;
+                    foreach ($kpkp_bayar_tahunan as $key7 => $value7) {
+                      // code...
+                      $tipe_transaksi='Saldo Awal';
+                      $note="";
+                      if($value7->type==1){
+                        $tipe_transaksi='Setor Iuran';
+                        $note='Catatan: '.$value7->note;
+                      }
+                      else if($value7->type==2){
+                        $tipe_transaksi='Pembayaran Iuran';
+                        $note='Catatan: '.$value7->note;
+                      }
+                      else if($value7->type==3){
+                        $tipe_transaksi='Setor Sukarela';
+                        $note='Catatan: '.$value7->note;
+                      }
+                      $total_mutasi=$total_mutasi+$value7->nominal;
+                  ?>  
+                      <tr>
+                        <td class="text-center"><?=$key7+1;?></td>
+                        <td class="text-left"><?=convert_tgl_dMY($value7->tgl_bayar);?></td>
+                        <td style="width:40rem;">
+                          <?=$tipe_transaksi;?><br>
+                          <b><?=$note;?></b>
+                        </td>
+                        <td class="text-right"><?=number_format($value7->nominal,0,",",".");?></td>
+                        <td class="text-center">
+                          <div class="btn btn-warning btn-xs" title="Perbaikan Mutasi" id="btn_edit-Mutasi<?=$value7->id;?>" form="<?=base_url().'pemakaman/form_perbaikan?id='.$value7->id;?>"><i class="fa fa-pencil"></i></div>
+                        </td>
+                      </tr>
+                  <?php 
+                    }
+                  ?>
+                  <tr>
+                    <th colspan="3" class="text-right">Jumlah Mutasi</th>
+                    <th class="text-right"><?=number_format($total_mutasi,0,",",".");?></th>
+                    <th class="text-right">
+                      <?php 
+                        if( $total_mutasi!=$makam->saldo){
+                          //echo ($total_mutasi."<br>".$value7->nominal);
+
+                      ?>
+                          ada perbedaan Total Mutasi Iuran<br>
+                          <div class="btn btn-danger" id="btn_approve_perbaikan" kk_id="<?=$value7->kpkp_blok_makam_id;?>" href="<?=base_url().'Data_Blok_Makam/approve';?>" total_mutasi='<?=$total_mutasi;?>'>Setujui Perbaikan</div>
+                      <?php
+                        }
+                      ?>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -225,30 +306,44 @@
         <h4 class="modal-title">Tambah Pembayaran</h4>
       </div>
       <div class="modal-body">
-        <div style="display:flex; gap:1rem; margin-bottom: 1rem;">
-          <label for="tgl-pembayaran" style="min-width: 150px; white-space: nowrap;">Tanggal pembayaran</label>
-          <input class="form-control" type="date" name="tgl-pembayaran" id="tgl-pembayaran" style="width: 250px;">
-        </div>
-        <div style="display:flex; gap:1rem; margin-bottom: 1rem;">
-          <label for="mutasi-nominal" style="min-width: 150px;">Nominal</label>
-          <input class="form-control" type="number" name="mutasi-nominal" id="mutasi-nominal" style="width: 250px;">
-        </div>
-        <div style="display:flex; gap:1rem; margin-bottom: 1rem;">
-          <label for="ahli-waris" style="min-width: 150px; white-space: nowrap;">Ahli Waris</label>
-          <select name="ahli-waris" id="ahli-waris" class="form-control" style="width: 250px;">
-            <option value="">Bapak A</option>
-            <option value="">Bapak B</option>
-            <option value="">Bapak C</option>
-          </select>
-        </div>
-        <div style="display:flex; gap:1rem;">
-          <label for="catatan" style="min-width: 150px;">Catatan</label>
-          <textarea name="catatan" id="catatan" class="form-control" style="width: 250px;"></textarea>
-        </div>
+        <form id="form_add_pambayaran" method="POST" action="<?=base_url();?>Data_Blok_Makam/add_pembayaran" target="_BLANK">
+          <input type="hidden" value="<?= $makam->id; ?>" name="kpkp_blok_makam_id" id="kpkp_blok_makam_id">
+          <input type="hidden" id="pokok_iuran" name="pokok_iuran" required="required" class="form-control" value="<?php if ($makam->sts_keanggotaan_makam == 1) {echo $pokok_iuran->nilai_iuran_angjem ;} else {echo $pokok_iuran->nilai_iuran_non;} ?>">
+
+          <div class="form-group">
+            <label for="tgl_pembayaran">Tanggal Pembayaran</label>
+            <input type="text" class="form-control datepicker" id="tgl_pembayaran" name="tgl_pembayaran" placeholder="Tanggal-Bulan-Tahun" aria-describedby="inputSuccess2Status" value="<?= date('d-m-Y'); ?>">
+          </div>
+          <div class="form-group">
+            <label for="nominal_pembayaran" >Nominal</label>
+            <input class="form-control" type="text" name="nominal_pembayaran" id="nominal_pembayaran">
+          </div>
+          <div class="form-group">
+            <label for="ls_metode_pembayaran">Metode Pambayaran</label>
+            <select name="ls_metode_pembayaran" id="ls_metode_pembayaran" class="form-control" >
+              <option value='Kartu iuran'>Kartu Iuran</option>
+              <?php 
+                foreach ($ls_ahli_waris as $key1 => $value1) {
+                  // code...
+              ?> 
+                <option value="<?=$value1['nama_ahli_waris'];?>"><?=$value1['nama_ahli_waris'];?> (<?=$value1['gereja_asal_ahli_waris'];?>)</option>
+              <?php
+                }
+              ?>
+            </select>
+          </div>
+          <div class="form-group">
+            <input class="form-control" name="metode_pembayaran" id="metode_pembayaran" value="Pembayaran dengan Kartu iuran">
+          </div>
+          <div class="form-group">
+            <label for="catatan" >Catatan</label>
+            <textarea name="catatan" id="catatan" class="form-control" style="width: 250px;"></textarea>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-        <button type="button" class="btn btn-primary">Simpan</button>
+        <button type="button" class="btn btn-primary" onclick="$('#form_add_pambayaran').submit()" >Simpan</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -293,7 +388,7 @@
               <label for="tgl_lahir">Tanggal Lahir</label>
               <input type="text" class="form-control datepicker" id="tgl_lahir" name="tgl_lahir" placeholder="Tanggal-Bulan-Tahun" aria-describedby="inputSuccess2Status" value="<?= date('d-m-1990'); ?>">
               <span class="input-group-btn">
-                <button type="button" class="reset btn btn-warning" title="Reset Tanggal" msg="Yakin ingin mengreset data tanggal?" what="date">
+                <button type="button" class="reset btn btn-warning btn-xs" title="Reset Tanggal" msg="Yakin ingin mengreset data tanggal?" what="date">
                   <i class="fa fa-undo"></i>
                 </button>
               </span>
@@ -311,7 +406,7 @@
               <label for="tgl_meninggal">Tanggal Meninggal</label>
               <input type="text" class="form-control datepicker" id="tgl_meninggal" name="tgl_meninggal" placeholder="Tanggal-Bulan-Tahun" aria-describedby="inputSuccess2Status" value="<?= date('d-m-Y'); ?>">
               <span class="input-group-btn">
-                <button type="button" class="reset btn btn-warning" title="Reset Tanggal" msg="Yakin ingin mengreset data tanggal meninggal?" what="date">
+                <button type="button" class="btn-xs reset btn btn-warning" title="Reset Tanggal" msg="Yakin ingin mengreset data tanggal meninggal?" what="date">
                   <i class="fa fa-undo"></i>
                 </button>
               </span>
@@ -320,7 +415,7 @@
               <label for="tgl_meninggal">Tanggal Dimakamkan</label>
               <input type="text" class="form-control datepicker" id="tgl_dimakamkan" name="tgl_dimakamkan" placeholder="Tanggal-Bulan-Tahun" aria-describedby="inputSuccess2Status" value="<?= date('d-m-Y'); ?>">
               <span class="input-group-btn">
-                <button type="button" class="reset btn btn-warning" title="Reset Tanggal" msg="Yakin ingin mengreset data tanggal meninggal?" what="date">
+                <button type="button" class="btn-xs reset btn btn-warning" title="Reset Tanggal" msg="Yakin ingin mengreset data tanggal meninggal?" what="date">
                   <i class="fa fa-undo"></i>
                 </button>
               </span>
@@ -407,11 +502,7 @@
               <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="nominal">Pokok Iuran (Rp.) <span class="required text-right">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-6">
-                <input type="text" id="pokok_iuran" name="pokok_iuran" required="required" class="form-control" value="<?php if ($makam->sts_keanggotaan_makam == 1) {
-                                                                                                                          echo number_format($pokok_iuran->nilai_iuran_angjem, 0, ",", ".");
-                                                                                                                        } else {
-                                                                                                                          echo number_format($pokok_iuran->nilai_iuran_non, 0, ",", ".");
-                                                                                                                        } ?>" readonly title="Pokok iuran ini berdasarkan status keanggotaan Penghuni Makam" style="cursor: not-allowed;">
+                <input type="text" id="pokok_iuran" name="pokok_iuran" required="required" class="form-control" value="<?php if ($makam->sts_keanggotaan_makam == 1) {echo number_format($pokok_iuran->nilai_iuran_angjem, 0, ",", ".");} else {echo number_format($pokok_iuran->nilai_iuran_non, 0, ",", ".");} ?>" readonly title="Pokok iuran ini berdasarkan status keanggotaan Penghuni Makam" style="cursor: not-allowed;">
               </div>
             </div>
             <div class="item form-group col-xs-12">
@@ -515,6 +606,15 @@
     window.location.href = $(this).attr('href');
   })
 
+  $(document).on('change', '[id=ls_metode_pembayaran]', function() {
+    value = $(this).val()
+    if (value == 'Kartu iuran') {
+      $('#metode_pembayaran').val('Pembayaran dengan '+value)
+    } else if (value != 1) {
+      $('#metode_pembayaran').val('Pembayaran ditransfer oleh '+value)
+    }
+  })
+
   $(document).on('change', '[id=sts_keanggotaan_jenazah]', function() {
     value = $(this).val()
     if (value == 1) {
@@ -557,6 +657,13 @@
     rupiah.value = formatRupiah(this.value, "");
   });
 
+  var rupiah1 = document.getElementById("nominal_pembayaran");
+  rupiah1.addEventListener("keyup", function(e) {
+    // tambahkan 'Rp.' pada saat form di ketik
+    // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
+    rupiah1.value = formatRupiah1(this.value, "");
+  });
+
 
   /* Fungsi formatRupiah */
   function formatRupiah(angka, prefix) {
@@ -574,6 +681,23 @@
 
     rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
     return prefix == undefined ? rupiah : rupiah ? prefix + " " + rupiah : "";
+  }
+
+  function formatRupiah1(angka1, prefix1) {
+    var number_string = angka1.replace(/[^,\d]/g, "").toString(),
+      split = number_string.split(","),
+      sisa = split[0].length % 3,
+      rupiah1 = split[0].substr(0, sisa),
+      ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    // tambahkan titik jika yang di input sudah menjadi angka ribuan
+    if (ribuan) {
+      separator = sisa ? "." : "";
+      rupiah1 += separator + ribuan.join(".");
+    }
+
+    rupiah1 = split[1] != undefined ? rupiah1 + "," + split[1] : rupiah1;
+    return prefix1 == undefined ? rupiah1 : rupiah1 ? prefix1 + " " + rupiah1 : "";
   }
 </script>
 <?php

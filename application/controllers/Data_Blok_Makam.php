@@ -104,10 +104,14 @@ class Data_Blok_Makam extends CI_Controller
     $data=array();
     $recid=$this->input->get('id');
     $makam=$this->m_model->selectas('id', $recid, 'kpkp_blok_makam');
+
+    $kpkp_bayar_tahunan=$this->m_model->selectas('kpkp_blok_makam_id', $recid, 'kpkp_bayar_tahunan');
+    
     $pokok_iuran=$this->m_model->selectas('status','1','kpkp_pokok_iuran_makam');
     $data['pokok_iuran']=$pokok_iuran[0];
     $penghuni_makam=$this->m_model->selectas2('kpkp_blok_makam_id', $recid,'deleted_at is NULL',NULL, 'kpkp_penghuni_makam', 'id', 'ASC');
     $data['penghuni_makam']=$penghuni_makam;
+    $data['kpkp_bayar_tahunan']=$kpkp_bayar_tahunan;
     $data['makam']=array('lokasi'=>'Tidak diketahui!', 'blok'=>'0', 'kavling'=>'0');
     if(count($makam)>0){
       $data['makam']=$makam[0];
@@ -288,7 +292,7 @@ class Data_Blok_Makam extends CI_Controller
       $param['saldo']=$this->input->post('nominal'); 
       //cari selisih/lebih tahun dari saldo terakhir
       $TahunTercover=countTahunTercover($pokok_iuran, $param['saldo'], date('Y'));
-      $param['$tahun_pembayaran']=$TahunTercover['tahun_tercover'];
+      $param['tahun_pembayaran']=$TahunTercover['tahun_tercover'];
       $param['tgl_terakhir_bayar']='-';
     }
     $u=$this->m_model->updateas('id',$kpkp_blok_makam_id, $param, 'kpkp_blok_makam');
@@ -327,6 +331,43 @@ class Data_Blok_Makam extends CI_Controller
     redirect(base_url().'Data_Blok_Makam/detail?id='.$kpkp_blok_makam_id);
 
 
+  }
+
+  public function add_pembayaran(){
+    $data=array();
+    $param=array();
+    $tgl_pembayaran=explode('-', clearText($this->input->post('tgl_pembayaran'))) ;
+    $param['tgl_bayar']=$tgl_pembayaran[2].'-'.$tgl_pembayaran[1].'-'.$tgl_pembayaran[0];
+    $param['nominal']=str_replace('.', '', clearText($this->input->post('nominal_pembayaran'))) ;
+    $param['note']=clearText($this->input->post('metode_pembayaran'));
+    $param['kpkp_blok_makam_id']=clearText($this->input->post('kpkp_blok_makam_id'));
+    $param['created_at']=date('Y-m-d H:i:s');
+    $param['created_by']=$this->session->userdata('userdata')->id;
+    $param['type']=1;
+    if($this->input->post('catatan') !='' && $this->input->post('catatan') !=NULL){
+      $param['note']=clearText($this->input->post('catatan')).'('.$param['note'].')';
+    }
+    $i=$this->m_model->insertgetid($param, 'kpkp_bayar_tahunan');
+    if($i){
+      $this->session->set_flashdata('sts_add', '1');
+      $this->session->set_flashdata('Title_add', 'Berhasil!');
+      $this->session->set_flashdata('msg_add', 'Setor Iuran Makam!');
+      $this->session->set_flashdata('class', 'iziToast-success');
+
+      //lakukan update saldo akhir
+      $saldo=$param['nominal'];
+      $tahun_tercover= floor($param['nominal']/$this->input->post('pokok_iuran'));
+      $tgl_terakhir_bayar= $param['tgl_bayar'];
+      $u1="update kpkp_blok_makam set saldo = saldo+".$saldo.", tahun_tercover=tahun_tercover+".$tahun_tercover.", tgl_terakhir_bayar='".$tgl_terakhir_bayar."' where id='".$param['kpkp_blok_makam_id']."'";
+      $qu1=$this->m_model->querycustom($u1);
+    }
+    else{
+      $this->session->set_flashdata('sts_add', '0');
+      $this->session->set_flashdata('Title_add', 'Gagal!');
+      $this->session->set_flashdata('msg_add', 'Setor Iuran Makam!');
+      $this->session->set_flashdata('class', 'iziToast-danger');
+    }
+    redirect(base_url().'Data_Blok_Makam/detail?id='.$param['kpkp_blok_makam_id']);
   }
 
 

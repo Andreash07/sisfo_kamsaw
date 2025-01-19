@@ -208,7 +208,7 @@
 <script type="text/javascript">
   $('#tambah-data-blok-makam').click(function() {
     $.ajax({
-      url: '<?= base_url(); ?>data_blok_makam',
+      url: '<?= base_url(); ?>Data_Blok_Makam',
       type: 'POST',
       data: {
         lokasi: $('#add-data-lokasi').val(),
@@ -223,7 +223,7 @@
 
   $('button[delete-data-id]').click(function() {
     $.ajax({
-      url: '<?= base_url(); ?>data_blok_makam',
+      url: '<?= base_url(); ?>Data_Blok_Makam',
       type: 'DELETE',
       data: {
         id: $(this).attr('delete-data-id'),
@@ -237,7 +237,7 @@
   $('#cari-data-makam').click(function() {
     const blok = $('#cari-data-makam-blok').val();
     const kavling = $('#cari-data-makam-kavling').val();
-    const url = `<?= base_url(); ?>data_blok_makam?blok=${blok}&kavling=${kavling}`;
+    const url = `<?= base_url(); ?>Data_Blok_Makam?blok=${blok}&kavling=${kavling}`;
     $.ajax({
       url,
       type: 'GET',
@@ -256,7 +256,7 @@
 
   $('#edit-blok-makam-submit').click(function() {
     $.ajax({
-      url: '<?= base_url(); ?>data_blok_makam',
+      url: '<?= base_url(); ?>Data_Blok_Makam',
       type: 'PATCH',
       data: {
         id: $(this).attr('data-id'),

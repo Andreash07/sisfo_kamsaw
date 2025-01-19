@@ -74,7 +74,7 @@
           <td style="line-height: unset;"><?=$name;?></td>
           <td class="text-right"><?=$nominal;?></td>
           <td class="text-center">
-            <div class="btn btn-warning btn-sm" title="Perbaikan Mutasi" id="btn_edit-Mutasi<?=$value->id;?>" form="<?=base_url().'pemakaman/form_perbaikan?id='.$value->id;?>"><i class="fa fa-pencil"></i></div>
+            <div class="btn btn-warning btn-xs" title="Perbaikan Mutasi" id="btn_edit-Mutasi<?=$value->id;?>" form="<?=base_url().'pemakaman/form_perbaikan?id='.$value->id;?>"><i class="fa fa-pencil"></i></div>
           </td>
         </tr>
     <?php
@@ -82,7 +82,7 @@
     ?>
         <tr>
           <th colspan="3" class="text-right">Jumlah Mutasi</th>
-          <th class="text-right"><?=$total_mutasi;?></th>
+          <th class="text-right"><?=number_format($total_mutasi,0,",",".");?></th>
           <th class="text-right">
             <?php 
               if(isset($dataKpkp2->saldo_akhir) && $total_mutasi!=$dataKpkp2->saldo_akhir){
