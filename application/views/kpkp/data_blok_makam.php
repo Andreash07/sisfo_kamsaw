@@ -121,7 +121,7 @@
             type="number"
             id="add-data-kavling"
             class="form-control"
-            style="width:6rem;" required />
+            style="width:15rem;" required />
         </form>
         <div style="display:flex; justify-content:flex-end;">
           <button

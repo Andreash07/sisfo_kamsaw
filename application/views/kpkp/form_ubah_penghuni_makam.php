@@ -1,4 +1,4 @@
-<form method="POST" action="<?=base_url();?>data_blok_makam/update_penghuni_makam" intarget="_BLANK" id="form_ubah_penghuni_makam">
+<form method="POST" action="<?=base_url();?>Data_Blok_Makam/update_penghuni_makam" intarget="_BLANK" id="form_ubah_penghuni_makam">
   <?php 
     foreach ($penghuni_makam as $key => $value) {
       // code...

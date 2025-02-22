@@ -306,7 +306,7 @@
         <h4 class="modal-title">Tambah Pembayaran</h4>
       </div>
       <div class="modal-body">
-        <form id="form_add_pambayaran" method="POST" action="<?=base_url();?>Data_Blok_Makam/add_pembayaran" target="_BLANK">
+        <form id="form_add_pambayaran" method="POST" action="<?=base_url();?>Data_Blok_Makam/add_pembayaran" intarget="_BLANK">
           <input type="hidden" value="<?= $makam->id; ?>" name="kpkp_blok_makam_id" id="kpkp_blok_makam_id">
           <input type="hidden" id="pokok_iuran" name="pokok_iuran" required="required" class="form-control" value="<?php if ($makam->sts_keanggotaan_makam == 1) {echo $pokok_iuran->nilai_iuran_angjem ;} else {echo $pokok_iuran->nilai_iuran_non;} ?>">
 
@@ -359,7 +359,7 @@
         <h4 class="modal-title">Tambah Data Dimakamkan</h4>
       </div>
       <div class="modal-body">
-        <form method="POST" action="<?= base_url(); ?>data_blok_makam/save_penghuni_makam" target="_BLANK" id="form_tambah_penghuni_makam">
+        <form method="POST" action="<?= base_url(); ?>Data_Blok_Makam/save_penghuni_makam" intarget="_BLANK" id="form_tambah_penghuni_makam">
           <div class="col-xs-12">
             <div class="col-xs-3">
               <input type="hidden" value="<?= $makam->id; ?>" name="kpkp_blok_makam_id" id="kpkp_blok_makam_id">
@@ -488,7 +488,7 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <form id="form_bukadompetkpkp" action="<?= base_url(); ?>/Data_Blok_Makam/aktifasi_dompet_iuran_makam" method="POST" target="_BLANK">
+          <form id="form_bukadompetkpkp" action="<?= base_url(); ?>/Data_Blok_Makam/aktifasi_dompet_iuran_makam" method="POST" intarget="_BLANK">
             <input type="hidden" value="<?= $makam->sts_keanggotaan_makam; ?>" name="sts_keanggotaan_makam" id="sts_keanggotaan_makam">
             <input type="hidden" value="<?= $makam->id; ?>" name="kpkp_blok_makam_id" id="kpkp_blok_makam_id">
             <div class="item form-group col-xs-12">
@@ -521,7 +521,7 @@
               <div class="col-md-6 col-sm-6 col-xs-6">
                 <select name="tahun_terakhir" id="tahun_terakhir" class="form-control">
                   <?php
-                  $maxYear = date('Y') + 5;
+                  $maxYear = date('Y') + 30;
                   for ($i = 2014; $i <= $maxYear; $i++) {
                     // code...
                   ?>

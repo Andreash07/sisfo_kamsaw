@@ -167,8 +167,17 @@ class Data_Blok_Makam extends CI_Controller
     $param['gender']=clearText($this->input->post('gender'));
     $param['nama']=clearText($this->input->post('nama_jenazah'));
     $param['tgl_lahir']=date('Y-m-d', strtotime(clearText($this->input->post('tgl_lahir'))));
+    if($this->input->post('tgl_lahir') == '30-11-0' || $this->input->post('tgl_lahir') == '00-00-0000'){
+      $param['tgl_lahir']='00-00-0000';
+    }
     $param['tgl_meninggal']=date('Y-m-d', strtotime(clearText($this->input->post('tgl_meninggal'))));
+    if($this->input->post('tgl_meninggal') == '30-11-0' || $this->input->post('tgl_meninggal') == '00-00-0000'){
+      $param['tgl_meninggal']='00-00-0000';
+    }
     $param['tgl_dimakamkan']=date('Y-m-d', strtotime(clearText($this->input->post('tgl_dimakamkan'))));
+    if($this->input->post('tgl_dimakamkan') == '30-11-0' || $this->input->post('tgl_dimakamkan') == '00-00-0000'){
+      $param['tgl_dimakamkan']='00-00-0000';
+    }
     $param['sts_keanggotaan']=clearText($this->input->post('sts_keanggotaan_jenazah'));
     $param['asal_gereja']=clearText($this->input->post('asal_gereja_jenazah'));
     $param['nama_ahli_waris']=clearText($this->input->post('nama_ahli_waris'));
@@ -225,8 +234,18 @@ class Data_Blok_Makam extends CI_Controller
     $param['gender']=clearText($this->input->post('gender'));
     $param['nama']=clearText($this->input->post('nama_jenazah'));
     $param['tgl_lahir']=date('Y-m-d', strtotime(clearText($this->input->post('tgl_lahir'))));
+    if($this->input->post('tgl_lahir') == '30-11-0' || $this->input->post('tgl_lahir') == '00-00-0000'){
+      $param['tgl_lahir']='00-00-0000';
+    }
     $param['tgl_meninggal']=date('Y-m-d', strtotime(clearText($this->input->post('tgl_meninggal'))));
+    if($this->input->post('tgl_meninggal') == '30-11-0' || $this->input->post('tgl_meninggal') == '00-00-0000'){
+      $param['tgl_meninggal']='00-00-0000';
+    }
     $param['tgl_dimakamkan']=date('Y-m-d', strtotime(clearText($this->input->post('tgl_dimakamkan'))));
+    if($this->input->post('tgl_dimakamkan') == '30-11-0' || $this->input->post('tgl_dimakamkan') == '00-00-0000'){
+      $param['tgl_dimakamkan']='00-00-0000';
+    }
+
     $param['sts_keanggotaan']=clearText($this->input->post('sts_keanggotaan_jenazah'));
     $param['asal_gereja']=clearText($this->input->post('asal_gereja_jenazah'));
     $param['nama_ahli_waris']=clearText($this->input->post('nama_ahli_waris'));
