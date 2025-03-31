@@ -75,6 +75,8 @@
           <td class="text-right"><?=$nominal;?></td>
           <td class="text-center">
             <div class="btn btn-warning btn-xs" title="Perbaikan Mutasi" id="btn_edit-Mutasi<?=$value->id;?>" form="<?=base_url().'pemakaman/form_perbaikan?id='.$value->id;?>"><i class="fa fa-pencil"></i></div>
+            
+            <div class="btn btn-danger btn-xs" title="Hapus Mutasi" id="btn_hapus-Mutasi<?=$value->id;?>" href="<?=base_url().'pemakaman/cancel_mutasi?id='.$value->id;?>"><i class="fa fa-trash"></i></div>
           </td>
         </tr>
     <?php

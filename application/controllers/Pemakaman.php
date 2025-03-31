@@ -893,11 +893,12 @@ class pemakaman extends CI_Controller {
 		$param=array();
 		$keluarga_jemaat_id=$this->input->post('keluarga_jemaat_id');
 		$num_anggota_kpkp=$this->input->post('num_anggota_kpkp');
-		$nominal=$this->input->post('nominal');
-		$nominal_sukarela=$this->input->post('nominal_sukarela');
+		$nominal=str_replace('.', '', $this->input->post('nominal'));
+		$nominal_sukarela=str_replace('.', '',$this->input->post('nominal_sukarela'));
 		$tgl_bayar=$this->input->post('tgl_bayar');
 		$option_sukarela=$this->input->post('option_sukarela');
 		$note=$this->input->post('note');
+		#print_r($this->input->post());die();
 
 		//untuk insert ke kpkp_bayar_bulanan
 		$param['keluarga_jemaat_id']=$keluarga_jemaat_id;;
@@ -989,8 +990,8 @@ class pemakaman extends CI_Controller {
 				break;
 		}
 
-
 		if($i){
+		#die($i."asdasd");
 			//ini jika berhasil update saldo pada akun kpkp anggota jemaat
 			//pakai $param['nominal'] karena ada kemungkinan nominal yg dibayakan berubah karena ada potongan sukarela, jadi gunakan yg netto
 			$param2=array();
@@ -1319,6 +1320,14 @@ class pemakaman extends CI_Controller {
     		$param[$key]=$value;
     	}
     	$u=$this->m_model->updateas('id', $recid, $param, 'kpkp_bayar_bulanan');
+    }
+    function cancel_mutasi(){
+    	$data=array();
+    	$param=array();
+    	$recid=$this->input->get('id');
+
+    	#$u=$this->m_model->updateas('id', $recid, $param, 'kpkp_bayar_bulanan');
+    	$d=$this->m_model->deleteas('id', $recid, 'kpkp_bayar_bulanan');
     }
     function approve(){
     	$data=array();

@@ -291,9 +291,9 @@ $this->load->view('layout/header');
 
 				<div class="form-group">
 
-					<!--<a class="btn btn-warning pull-left" href="<?=base_url();?>admin/<?=$this->uri->segment(2);?>	">Cancle</a>
+					<a class="btn btn-warning pull-left" href="<?=base_url();?>Pemakaman/anggota_jemaat">Keluar</a>
 
-					<input type="submit" class="btn btn-default pull-right" id="SaveEditKeluarga" name="SaveEditKeluarga" value="Update">
+					<!--<input type="submit" class="btn btn-default pull-right" id="SaveEditKeluarga" name="SaveEditKeluarga" value="Update">
 
 					<a class="btn btn-success pull-right" href="<?=base_url();?>pdf/kkwithbarcode.php?id=<?=$this->input->get('id');?>" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Cetak</a> -->
 					<?php 
@@ -852,6 +852,20 @@ $this->load->view('layout/header');
 				url=$(this).attr('form')
 				$.get(url, dataMap,function(data){
 					$('#div_form_perbaikan').html(data)
+				})
+			})
+
+			$(document).on('click', '[id^=btn_hapus-Mutasi]', function(e){
+				e.preventDefault()
+				conf=confirm('Apakah anda yakin melakukan Pembatalan Mutasi ini?')
+				if(conf==false){
+					return;
+				}
+				dataMap={}
+				url=$(this).attr('href')
+				$.get(url, dataMap,function(data){
+					alert('Pembatalan Mutasi KPKP Keluarga berhasil!');
+					location.reload();
 				})
 			})
 
@@ -1452,8 +1466,10 @@ $this->load->view('layout/footer');
 
 	$(document).on('keyup', '[id=nominal_sukarela]', function(e){
 		dataMap={}
-		value=parseFloat($(this).val())
-		max=parseFloat($(this).attr('max'))
+		value=parseFloat($(this).val().replace('.',''))
+		max=parseFloat($(this).attr('max').replace('.',''))
+		console.log(value);
+		console.log(max);
 		if(value>=max){
 			alert("Peringatan: \nNominal Sukarela lebih besar dari Nominal Setoran!");
 			$(this).val(max-1)
@@ -1466,7 +1482,7 @@ $this->load->view('layout/footer');
 		dataMap={}
 		dataMap['option']=$(this).val() //1:tidak dipotong; 2:dipotong nominal tertentu; 3:dipotong oleh sisfo dari sisa yg dibayarkan.
 		dataMap['recid']=$(this).attr('recid')
-		nominal_setor=$('#nominal').val()
+		nominal_setor=$('#nominal').val().replace('.','')
 		console.log('option '+dataMap['option']+' | '+nominal_setor)
 
 		if(dataMap['option']=='0'){
@@ -1527,4 +1543,54 @@ $this->load->view('layout/footer');
 			//$('#div_datakeluarga').html(data);
 		})
 	})
+
+	var rupiah = document.getElementById("nominal");
+  rupiah.addEventListener("keyup", function(e) {
+    // tambahkan 'Rp.' pada saat form di ketik
+    // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
+    rupiah.value = formatRupiah(this.value, "");
+  });
+
+  var rupiah1 = document.getElementById("nominal_sukarela");
+  rupiah1.addEventListener("keyup", function(e) {
+    // tambahkan 'Rp.' pada saat form di ketik
+    // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
+    rupiah1.value = formatRupiah1(this.value, "");
+  });
+
+
+  /* Fungsi formatRupiah */
+  function formatRupiah(angka, prefix) {
+    var number_string = angka.replace(/[^,\d]/g, "").toString(),
+      split = number_string.split(","),
+      sisa = split[0].length % 3,
+      rupiah = split[0].substr(0, sisa),
+      ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    // tambahkan titik jika yang di input sudah menjadi angka ribuan
+    if (ribuan) {
+      separator = sisa ? "." : "";
+      rupiah += separator + ribuan.join(".");
+    }
+
+    rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+    return prefix == undefined ? rupiah : rupiah ? prefix + " " + rupiah : "";
+  }
+
+  function formatRupiah1(angka1, prefix1) {
+    var number_string = angka1.replace(/[^,\d]/g, "").toString(),
+      split = number_string.split(","),
+      sisa = split[0].length % 3,
+      rupiah1 = split[0].substr(0, sisa),
+      ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    // tambahkan titik jika yang di input sudah menjadi angka ribuan
+    if (ribuan) {
+      separator = sisa ? "." : "";
+      rupiah1 += separator + ribuan.join(".");
+    }
+
+    rupiah1 = split[1] != undefined ? rupiah1 + "," + split[1] : rupiah1;
+    return prefix1 == undefined ? rupiah1 : rupiah1 ? prefix1 + " " + rupiah1 : "";
+  }
 </script>

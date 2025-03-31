@@ -1,5 +1,11 @@
 <?php $this->load->view('layout/header'); ?>
+      <?php #print_r($_SERVER); die($_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/".$_SERVER['REQUEST_URI']);?>
 <?php 
+$backurl=base_url().'Data_Blok_Makam';
+if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERVER['HTTP_REFERER'] != $_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] ){
+  $backurl=$_SERVER['HTTP_REFERER'];
+}
+  
   if(!isset($makam->lokasi)){
 ?>
   <div class="right_col" role="main">
@@ -48,6 +54,9 @@
                 disabled>
             </div>
           </div>
+          <div class="col-xs-12">
+            <a href="<?=$backurl;?>" class="btn btn-default">Keluar</a>
+          </div>
         </div>
 
       </div>
@@ -87,6 +96,7 @@
             <!-- tab daftar dimakamkan -->
             <div role="tabpanel" class="tab-pane fade active in" id="daftar-dimakamkan-tab-pane">
               <div class="btn btn-primary" data-toggle="modal" data-target=".modal-blok-formdimakamkan">Tambah Dimakamkan</div>
+              <span class="text-danger">Catatan: <b>Hanya diperbolehkan 1 Penghuni makan yg Aktif!</b></span> 
               <table class="table table-striped">
                 <tr>
                   <th class="text-center">#</th>
@@ -105,6 +115,7 @@
                 <?php
                 }
                 $ls_ahli_waris=array();
+                $num_penghuni_aktif=0;
                 foreach ($penghuni_makam as $key => $value) {
                   $ls_ahli_waris[$value->nama_ahli_waris]=array('nama_ahli_waris'=>$value->nama_ahli_waris, 'gereja_asal_ahli_waris'=>$value->gereja_asal_ahli_waris);
                 ?>
@@ -135,6 +146,23 @@
                       <div id="delete_penghuni_makam" nama_penghuni="<?= $value->nama; ?>" class="btn btn-danger btn-xs" title="Hapus" href="<?= base_url(); ?>Data_Blok_Makam/delete_penghuni_makam?auth=<?= md5($value->kpkp_blok_makam_id); ?>&token=<?= md5($value->id); ?>">
                         <i class="fa fa-trash"></i>
                       </div>
+                      <div class="divider"></div>
+                      <?php 
+                        if($num_penghuni_aktif==0){
+                          if($value->sts==1){
+                            $num_penghuni_aktif++;
+                          }
+                      ?>  
+                        <select class="form-control" name="sts_penghuniMakan<?=$value->id;?>" id="sts_penghuniMakan<?=$value->id;?>" inhref="<?=base_url();?>Data_Blok_Makam/update_sts" recid="<?=$value->id;?>">
+                          <option value="0" <?php if($value->sts==0){echo "selected";}?>>Tidak Aktif</option>
+                          <option value="1" <?php if($value->sts==1){echo "selected";}?>>Aktif</option>
+                        </select>
+                      <?php 
+                        }else{
+                      ?>
+                      <?php 
+                        }
+                      ?>
                     </td>
                   </tr>
                 <?php
@@ -522,7 +550,7 @@
                 <select name="tahun_terakhir" id="tahun_terakhir" class="form-control">
                   <?php
                   $maxYear = date('Y') + 30;
-                  for ($i = 2014; $i <= $maxYear; $i++) {
+                  for ($i = 2000; $i <= $maxYear; $i++) {
                     // code...
                   ?>
                     <option value="<?= $i; ?>" <?php if ($i == date('Y')) echo 'selected'; ?>> <?= $i; ?></option>
@@ -561,6 +589,40 @@
     $('#nominal').val('Saldo terhitung otomatis!')
     $('#nominal').attr('disabled', 'disabled')
     $('#nominal').attr('Title', 'Tidak perlu memasukan Saldo, Saldo terhitung otomatis!')
+  })
+
+  $(document).on('change', '[id^=sts_penghuniMakan]', function() {
+    sts=$(this).val();
+    recid=$(this).attr('recid');
+    dataMap = {}
+    dataMap['sts'] = sts
+    dataMap['recid'] = recid
+    href = $(this).attr('inhref')
+    $.post(href, dataMap, function(data) {
+      json=$.parseJSON(data)
+      if(json.sts=='1'){
+        iziToast.success({
+          title: json.title,
+          message: json.msg,
+          position: "topRight",
+          class: "",
+
+        });
+      }
+      else {
+        iziToast.error({
+          title: json.title,
+          message: json.msg,
+          position: "topRight",
+          class: "",
+
+        });
+      }
+      setTimeout(function(){
+        window.location.reload()
+      }, 500)
+
+    })
   })
 
   $(document).on('click touchstart', '[id=btn_ubah_penghuni_makam]', function() {

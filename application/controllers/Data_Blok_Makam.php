@@ -109,7 +109,8 @@ class Data_Blok_Makam extends CI_Controller
     
     $pokok_iuran=$this->m_model->selectas('status','1','kpkp_pokok_iuran_makam');
     $data['pokok_iuran']=$pokok_iuran[0];
-    $penghuni_makam=$this->m_model->selectas2('kpkp_blok_makam_id', $recid,'deleted_at is NULL',NULL, 'kpkp_penghuni_makam', 'id', 'ASC');
+    //$penghuni_makam=$this->m_model->selectas2('kpkp_blok_makam_id', $recid,'deleted_at is NULL',NULL, 'kpkp_penghuni_makam', 'id', 'ASC');
+    $penghuni_makam=$this->m_model->selectcustom("select * from kpkp_penghuni_makam where kpkp_blok_makam_id='".$recid."' && deleted_at is NULL order by sts DESC, id ASC");
     $data['penghuni_makam']=$penghuni_makam;
     $data['kpkp_bayar_tahunan']=$kpkp_bayar_tahunan;
     $data['makam']=array('lokasi'=>'Tidak diketahui!', 'blok'=>'0', 'kavling'=>'0');
@@ -390,4 +391,22 @@ class Data_Blok_Makam extends CI_Controller
   }
 
 
+  public function update_sts(){
+    $data=array();
+    $param=array();
+    $param['sts']=$this->input->post('sts');
+    $param['updated_at']=date('Y-m-d H:i:s');
+    $param['updated_by']=$this->session->userdata('userdata')->id;
+    $recid=$this->input->post('recid');
+
+    $u=$this->m_model->updateas('id', $recid, $param, 'kpkp_penghuni_makam');
+    $json=array('sts'=>0, 'title'=>'Oopps Maaf.. ','msg'=>"Status Makan Gagal diupdate" , 'class'=>"iziToast-danger");
+    if($u){
+      $json=array('sts'=>1, 'title'=>'Wow.. ','msg'=>"Status Makam Berhasil di perbarui!", 'class'=>"iziToast-success");
+    }
+    echo json_encode($json);
+
+
+
+  }
 }

@@ -8,7 +8,7 @@
         <div class="form-group">
           <label class="control-label col-md-3 col-sm-3 col-xs-12">Tanggal</label>
           <div class="col-md-9 col-sm-9 col-xs-12">
-            <input type="text" class="form-control" placeholder="Tanggal" name="tanggal" id="tanggal" disabled value="<?= date('d M Y', strtotime($value->tgl_bayar)) ;?>">
+            <input type="date" class="form-control" placeholder="Tanggal" name="tgl_bayar" id="tanggal_edit" value="<?= date('d M Y', strtotime($value->tgl_bayar)) ;?>">
           </div>
         </div>
         <div class="form-group">
