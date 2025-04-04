@@ -312,14 +312,86 @@ $this->load->view('layout/header');
 
 
     <div class="row top_tiles">
+      <div class="col-md-4 col-sm-4 ">
+        <div class="x_panel tile fixed_height_320 overflow_hidden">
+          <div class="x_title">
+            <h2>Iuran Bulanan KPKP</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Settings 1</a>
+                    <a class="dropdown-item" href="#">Settings 2</a>
+                  </div>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <table class="" style="width:100%">
+              <tr>
+                <th style="width:37%;">
+                  <p></p>
+                </th>
+                <th>
+                  <div class="col-lg-7 col-md-7 col-sm-7 ">
+                    <p class="">Data Tunggakan</p>
+                  </div>
+                  <div class="col-lg-5 col-md-5 col-sm-5 ">
+                    <p class="">Persentasi</p>
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <td>
+                  <canvas class="canvasIuranBulanan" height="140" width="140" style="margin: 15px 10px 10px 0"></canvas>
+                </td>
+                <td>
+                  <table class="tile_info">
+                    <tr>
+                      <td>
+                        <p><i class="fa fa-square blue"></i><= 3 Bulan </p>
+                      </td>
+                      <td>3%</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p><i class="fa fa-square green"></i><= 3 Bulan </p>
+                      </td>
+                      <td>40%</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p><i class="fa fa-square purple"></i>> 1 Tahun </p>
+                      </td>
+                      <td>20%</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p><i class="fa fa-square aero"></i>> 3 Tahun </p>
+                      </td>
+                      <td>15%</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <div class="col-xs-12">
-        <h3>Data Tunggakan KPKP</h3>
+        <h3>Data Tunggakan Iuran Bulanan KPKP</h3>
       </div>
       <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="tile-stats">
           <div class="icon" ><i class="fa fa-caret-square-o-right"></i></div>
           <div class="count"><?=$kpkpbulan3;?> KK</div>
-          <h3> < 3 Bulan</h3>
+          <h3> <= 3 Bulan</h3>
           <span title="Tunggakan kurang dari sama dengan 3 Bulan" id="detail_tunggakan" class="count_bottom pull-right" style="margin-right: 17px; cursor: pointer;" ls_kk="<?= implode(',', $kpkpbulan3_ls);?>"><i class="green">selengkapnya</i></span>
         </div>
       </div>
@@ -327,7 +399,7 @@ $this->load->view('layout/header');
         <div class="tile-stats">
           <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
           <div class="count"><?=$kpkpbulan6;?> KK</div>
-          <h3> < 12 Bulan</h3>
+          <h3> <= 12 Bulan</h3>
           <p title="Tunggakan kurang dari 12 Bulan" id="detail_tunggakan" class="count_bottom pull-right" style="margin-right: 17px;  cursor: pointer;" ls_kk="<?= implode(',', $kpkpbulan6_ls);?>"><i class="green">selengkapnya</i> </p>
         </div>
       </div>
@@ -348,6 +420,14 @@ $this->load->view('layout/header');
           <p></p>
         </div>
       </div>
+    </div>
+
+    <div class="row top_tiles">
+      <div class="col-xs-12">
+        <h3>Data Tunggakan Iuran Perawatan Makam</h3>
+      </div>      
+      <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+      <span class="sr-only">Loading...</span><br><br><br>
     </div>
 
   </div>
@@ -374,6 +454,7 @@ $this->load->view('layout/footer');
     $(document).ready(function(){
       get_pertumbuhanJemaat();
       get_pertumbuhanJemaat_perTahun();
+      init_chart_iuranBulanan();
     })
 
     $(document).on('click', '[id=btn_detail_get_pertumbuhanJemaat]', function(e){
@@ -396,4 +477,55 @@ $this->load->view('layout/footer');
         $('#modal-content').html(data)
       })
     })
+
+    function init_chart_iuranBulanan(){
+        
+      if( typeof (Chart) === 'undefined'){ return; }
+      
+      console.log('init_chart_iuranBulanan');
+     
+      if ($('.canvasIuranBulanan').length){
+        
+      var chart_doughnut_settings = {
+          type: 'doughnut',
+          tooltipFillColor: "rgba(51, 51, 51, 0.55)",
+          data: {
+            labels: [
+              "<= 3 Bulan",
+              "<= 12 Bulan",
+              "> 1 Tahun",
+              "> 3 Tahun"
+            ],
+            datasets: [{
+              data: [15, 20, 30, 10],
+              backgroundColor: [
+                "#BDC3C7",
+                "#9B59B6",
+                "#E74C3C",
+                "#3498DB"
+              ],
+              hoverBackgroundColor: [
+                "#CFD4D8",
+                "#B370CF",
+                "#E95E4F",
+                "#49A9EA"
+              ]
+            }]
+          },
+          options: { 
+            legend: false, 
+            responsive: false 
+          }
+        }
+      
+        $('.canvasIuranBulanan').each(function(){
+          
+          var chart_element = $(this);
+          var chart_doughnut = new Chart( chart_element, chart_doughnut_settings);
+          
+        });     
+      
+      }  
+       
+    }
   </script>

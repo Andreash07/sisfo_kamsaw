@@ -18,6 +18,53 @@ class Home extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
+	public function get_kpkp_blok_makam()
+	{
+		$data=array();
+		//KPKP Blok Makam
+		$s1="select A.*, C.gender, C.nama, C.sts_keanggotaan as sts_keanggotaan_penghuni, C.asal_gereja as asal_gereja_penghuni, COUNT(B.id) as total_penghuni
+				from kpkp_blok_makam A 
+				join kpkp_penghuni_makam B on B.kpkp_blok_makam_id && A.id 
+				join (select * from kpkp_penghuni_makam where sts=1 group by kpkp_blok_makam_id) C on C.kpkp_blok_makam_id && A.id 
+				group by A.id";
+		$q1=$this->m_model->selectcustom($s1);
+		$tunggakan_blok_makam=array();
+		$tunggakan_blok_makam['lunas']=array('ls_blok_id'=>array(0), 'num_blok'=>0, 'title'=>'Lunas', 'description'=>'Tidak memiliki tunggakan');
+		$tunggakan_blok_makam['2tahun']=array('ls_blok_id'=>array(0), 'num_blok'=>0, 'title'=>'<= 2 Tahun', 'description'=>'Tunggakan kurang dari sama dengan 2 Tahun');
+		$tunggakan_blok_makam['5tahun']=array('ls_blok_id'=>array(0), 'num_blok'=>0, 'title'=>'<= 5 Tahun', 'description'=>'Tunggakan kurang dari sama dengan 5 Tahun');
+		$tunggakan_blok_makam['8tahun']=array('ls_blok_id'=>array(0), 'num_blok'=>0, 'title'=>'<= 8 Tahun', 'description'=>'Tunggakan kurang dari sama dengan 8 Tahun');
+		$tunggakan_blok_makam['9tahun']=array('ls_blok_id'=>array(0), 'num_blok'=>0, 'title'=>'> 8 Tahun', 'description'=>'Tunggakan lebih dari 8 Tahun');
+		$thisYear=date('Y');
+		foreach ($q1 as $key => $value) {
+			// code...
+			//Selisih tahun berjalan dengan tahun terakhir tercover
+			$diff_tahun=$value->tahun_tercover - $thisYear;
+			if($diff_tahun > 0){
+				$tunggakan_blok_makam['lunas']['ls_blok_id'][]=$value->id;
+				$tunggakan_blok_makam['lunas']['num_blok']++;
+			}
+			else if($diff_tahun >= -2 && $diff_tahun <= 0){
+				$tunggakan_blok_makam['2tahun']['ls_blok_id'][]=$value->id;
+				$tunggakan_blok_makam['2tahun']['num_blok']++;
+			}
+			else if($diff_tahun >= -5){
+				$tunggakan_blok_makam['5tahun']['ls_blok_id'][]=$value->id;
+				$tunggakan_blok_makam['5tahun']['num_blok']++;
+			}
+			else if($diff_tahun >= -8){
+				$tunggakan_blok_makam['8tahun']['ls_blok_id'][]=$value->id;
+				$tunggakan_blok_makam['8tahun']['num_blok']++;
+			}
+			else if($diff_tahun < -8){
+				$tunggakan_blok_makam['9tahun']['ls_blok_id'][]=$value->id;
+				$tunggakan_blok_makam['9tahun']['num_blok']++;
+			}
+		}
+
+		$data['blok_makam']=$q1;
+		$data['tunggakan_blok_makam']=$tunggakan_blok_makam;
+		$this->load->view('admin/home/kpkp_blok_makam', $data);
+	}
 	public function index()
 	{
 		$data=array();
@@ -203,7 +250,6 @@ class Home extends CI_Controller {
 			$data['kpkpbulan6_ls']=$bulan6_ls;
 			$data['kpkpbulan12_ls']=$bulan12_ls;
 			$data['kpkpbulan36_ls']=$bulan36_ls;
-
 
 			$this->load->view('admin/home/dashboard', $data);
 		}
