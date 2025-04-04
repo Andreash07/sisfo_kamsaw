@@ -293,6 +293,8 @@ $this->load->view('layout/header');
 
 					<a class="btn btn-warning pull-left" href="<?=base_url();?>Pemakaman/anggota_jemaat">Keluar</a>
 
+					<a class="btn btn-info pull-right" href="<?=base_url();?>admin/DataJemaat?edit=true&id=<?=$this->input->get('id');?>" intarget="_BLANK"><i class="fa fa-users"></i>&nbsp;&nbsp;Kartu Keluarga</a>
+
 					<!--<input type="submit" class="btn btn-default pull-right" id="SaveEditKeluarga" name="SaveEditKeluarga" value="Update">
 
 					<a class="btn btn-success pull-right" href="<?=base_url();?>pdf/kkwithbarcode.php?id=<?=$this->input->get('id');?>" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Cetak</a> -->

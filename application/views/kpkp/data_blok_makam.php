@@ -62,9 +62,15 @@
                     kavling="<?= $d->kavling ?>">
                     <span class="fa fa-pencil" style="width:8.3%"></span>
                   </button>
-                  <button delete-data-id="<?= $d->id ?>" class="btn btn-danger" style="padding: 2px 12px 2px 2px">
-                    <span class="fa fa-trash " style="width:8.3%"></span>
-                  </button>
+                  <?php 
+                  if($d->jumlah_makam==0){
+                  ?>
+                    <button delete-data-id="<?= $d->id ?>" class="btn btn-danger" style="padding: 2px 12px 2px 2px">
+                      <span class="fa fa-trash " style="width:8.3%"></span>
+                    </button>
+                  <?php
+                  }
+                  ?>
                 </td>
               </tr>
             <?php endforeach ?>
@@ -222,6 +228,10 @@
   });
 
   $('button[delete-data-id]').click(function() {
+    conf=confirm('Apakah anda yakin melakukan Penghapusan Blok Makam ini?')
+    if(conf==false){
+      return;
+    }
     $.ajax({
       url: '<?= base_url(); ?>Data_Blok_Makam',
       type: 'DELETE',

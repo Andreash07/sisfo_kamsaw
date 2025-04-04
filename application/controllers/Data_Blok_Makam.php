@@ -35,8 +35,25 @@ class Data_Blok_Makam extends CI_Controller
       $params[] = $kavling;
     }
 
+    $numLimit=50;
+    $numStart=0;
+    if(!$this->input->get('page')){
+      $page=1;
+      $numStart=($numLimit*$page)-$numLimit;
+    }
+    else{
+      $page=$this->input->get('page');
+      $numStart=($numLimit*$page)-$numLimit;
+    }
+
+    $data['page']=$page;
+
+        $data['numStart']=$numStart;
+
+
     $data = array();
     $data['data'] = $this->db->query($query, $params)->result();
+    #print_r($data['data']);die();
     $this->load->view('kpkp/data_blok_makam', $data);
   }
 

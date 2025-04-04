@@ -295,7 +295,11 @@ $this->load->view('layout/header');
 
 					<input type="submit" class="btn btn-default pull-right" id="SaveEditKeluarga" name="SaveEditKeluarga" value="Update">
 
+
+
 					<a class="btn btn-success pull-right" href="<?=base_url();?>pdf/kkwithbarcode.php?id=<?=$this->input->get('id');?>" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Cetak</a>
+
+					<a class="btn btn-info pull-right" href="<?=base_url();?>pemakaman/DataJemaat?edit=true&id=<?=$this->input->get('id');?>" intarget="_BLANK"><i class="fa fa-book"></i>&nbsp;&nbsp;KPKP</a>
 					<?php 
 					if($dataKK[0]->qrcode == null){
 					?>
@@ -455,7 +459,7 @@ $this->load->view('layout/header');
 
 										<br>
 
-										<b>Tempat, TTL:</b> <?= $valueAnggota_KK->tmpt_lahir.', '.convert_tgl_dMY($valueAnggota_KK->tgl_lahir) ;?>
+										<b>Tempat, TTL:</b> <?= $valueAnggota_KK->tmpt_lahir.', '.convert_tgl_dMY($valueAnggota_KK->tgl_lahir) ;?> (<b><?=getUmur(date('Y-m-d'), $valueAnggota_KK->tgl_lahir);?> Th</b>)
 
 										<br>
 
