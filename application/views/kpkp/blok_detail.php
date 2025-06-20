@@ -96,7 +96,7 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
             <!-- tab daftar dimakamkan -->
             <div role="tabpanel" class="tab-pane fade active in" id="daftar-dimakamkan-tab-pane">
               <div class="btn btn-primary" data-toggle="modal" data-target=".modal-blok-formdimakamkan">Tambah Dimakamkan</div>
-              <span class="text-danger">Catatan: <b>Hanya diperbolehkan 1 Penghuni makan yg Aktif!</b></span> 
+              <span class="text-danger">Catatan: <b>Hanya diperbolehkan 1 Penghuni makam yg Aktif!</b></span> 
               <table class="table table-striped">
                 <tr>
                   <th class="text-center">#</th>

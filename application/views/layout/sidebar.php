@@ -10,7 +10,7 @@
 
           <div class="navbar nav_title" style="border: 0;">
 
-            <a href="<?=base_url();?>" class="site_title"><i class="fa fa-coffee"></i> <span><small style="font-size:80%;">SisFo GKP KAMSAW</small></span></a>
+            <a href="<?=base_url();?>" class="site_title"><img src="<?=base_url();?>/assets/images/GKP PNG-35.png" alt="iamges" class="img-circle"> <span><small style="font-size:80%;">SisFo GKP KAMSAW</small></span></a>
 
           </div>
 

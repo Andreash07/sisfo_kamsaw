@@ -298,6 +298,7 @@
           <?php
             $checked1="";
             $checked0="";
+            $checked2="";
           ?>
           <label class="control-label col-md-3 col-sm-3 col-xs-12">Status Keanggotaan<span class="required">*</span>
           </label>
@@ -310,6 +311,11 @@
             <div class="radio">
               <label>
                 <input type="radio" value="1" id="optionsRadios1" name="sts_anggota" <?=$checked1;?>>Aktif
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" value="2" id="optionsRadios3" name="sts_anggota" <?=$checked2;?>>Meninggal Dunia
               </label>
             </div>
           </div>
@@ -703,8 +709,13 @@
           <?php
             $checked1="";
             $checked0="";
+            $checked2="";
             if(strtolower($value->sts_anggota)=='1'){
               $checked1="checked";
+            }
+            if(strtolower($value->sts_anggota)=='2'){
+              //ini untuk yg meninggal per 17 Mei 2025
+              $checked2="checked";
             }
             else{
               $checked0="checked";
@@ -721,6 +732,11 @@
             <div class="radio">
               <label>
                 <input type="radio" value="1" id="optionsRadios1" name="sts_anggota" <?=$checked1;?>>Aktif
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" value="2" id="optionsRadios3" name="sts_anggota" <?=$checked2;?>>Meninggal Dunia
               </label>
             </div>
           </div>

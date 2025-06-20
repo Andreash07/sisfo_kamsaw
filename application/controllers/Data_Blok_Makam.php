@@ -2,6 +2,13 @@
 
 class Data_Blok_Makam extends CI_Controller
 {
+  public function  __construct(){
+    parent::__construct();
+    if(!isset($this->session->userdata('userdata')->id) || $this->session->userdata('userdata')->id ==false ){
+      redirect(base_url());
+    }
+  }
+
   public function index()
   {
     if ($this->input->server('REQUEST_METHOD') === 'POST') {
@@ -18,11 +25,21 @@ class Data_Blok_Makam extends CI_Controller
       $this->edit();
       return;
     }
+    $data = array();
 
     // filter by blok & kavling
     $blok = $this->input->get('blok');
     $kavling= $this->input->get('kavling');
     $query = 'SELECT * FROM kpkp_blok_makam WHERE deleted = 0';
+    //get rincian blok makam
+    $query1 = "SELECT `id`, `kpkp_blok_makam_id`, `gender`, `nama`, `sts_keanggotaan`, `wilayah`, `asal_gereja`,`sts`  FROM kpkp_penghuni_makam WHERE deleted_at is null || deleted_at =''";
+    $rquery1=$this->m_model->selectcustom($query1);
+    $data['penghuni_makam']=array();
+    foreach ($rquery1 as $key => $value) {
+      // code...
+      $data['penghuni_makam'][$value->kpkp_blok_makam_id][]=$value;
+    }
+
     $params = array();
 
     if ($blok) {
@@ -50,8 +67,6 @@ class Data_Blok_Makam extends CI_Controller
 
         $data['numStart']=$numStart;
 
-
-    $data = array();
     $data['data'] = $this->db->query($query, $params)->result();
     #print_r($data['data']);die();
     $this->load->view('kpkp/data_blok_makam', $data);

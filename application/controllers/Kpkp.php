@@ -61,6 +61,76 @@ class Kpkp extends CI_Controller {
 
     }
 
+    public function iuran_tahunan(){
+        $data=array();
+
+        $blok = $this->input->get('blok');
+        $kavling= $this->input->get('kavling');
+        $query = 'SELECT * FROM kpkp_blok_makam WHERE deleted = 0';
+        //get rincian blok makam
+        $query1 = "SELECT `id`, `kpkp_blok_makam_id`, `gender`, `nama`, `sts_keanggotaan`, `wilayah`, `asal_gereja`,`sts`  FROM kpkp_penghuni_makam WHERE deleted_at is null || deleted_at =''";
+        $rquery1=$this->m_model->selectcustom($query1);
+        $data['penghuni_makam']=array();
+        foreach ($rquery1 as $key => $value) {
+          // code...
+          $data['penghuni_makam'][$value->kpkp_blok_makam_id][]=$value;
+        }
+
+        $params = array();
+
+        if ($blok) {
+          $query .= ' AND blok = ?';
+          $params[] = $blok;
+        }
+
+        if ($kavling) {
+          $query .= ' AND kavling = ?';
+          $params[] = $kavling;
+        }
+
+        $numLimit=50;
+        $numStart=0;
+        if(!$this->input->get('page')){
+          $page=1;
+          $numStart=($numLimit*$page)-$numLimit;
+        }
+        else{
+          $page=$this->input->get('page');
+          $numStart=($numLimit*$page)-$numLimit;
+        }
+
+        $data['page']=$page;
+
+            $data['numStart']=$numStart;
+
+        $data['data'] = $this->db->query($query, $params)->result();
+        #print_r($data['data']);die();
+        $this->load->view('kpkp/iuran_tahunan_kpkp', $data);
+
+    }
+
+    public function detail_iuran_tahunan()
+    {
+        $data=array();
+        $recid=$this->input->get('id');
+        $makam=$this->m_model->selectas('id', $recid, 'kpkp_blok_makam');
+
+        $kpkp_bayar_tahunan=$this->m_model->selectas('kpkp_blok_makam_id', $recid, 'kpkp_bayar_tahunan');
+
+        $pokok_iuran=$this->m_model->selectas('status','1','kpkp_pokok_iuran_makam');
+        $data['pokok_iuran']=$pokok_iuran[0];
+        //$penghuni_makam=$this->m_model->selectas2('kpkp_blok_makam_id', $recid,'deleted_at is NULL',NULL, 'kpkp_penghuni_makam', 'id', 'ASC');
+        $penghuni_makam=$this->m_model->selectcustom("select * from kpkp_penghuni_makam where kpkp_blok_makam_id='".$recid."' && deleted_at is NULL order by sts DESC, id ASC");
+        $data['penghuni_makam']=$penghuni_makam;
+        $data['kpkp_bayar_tahunan']=$kpkp_bayar_tahunan;
+        $data['makam']=array('lokasi'=>'Tidak diketahui!', 'blok'=>'0', 'kavling'=>'0');
+        if(count($makam)>0){
+          $data['makam']=$makam[0];
+        }
+        $this->load->view('kpkp/detail_iuran_tahunan', $data);
+    }
+
+
     public function agree_opening(){
         $data=array();
         $opening=$this->input->post('opening');

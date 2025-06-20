@@ -104,7 +104,7 @@ $this->load->view('layout/header');
 
                   $status_seleksi=0;
                   $msg_seleksi='<label class="label label-danger"><i class="fa fa-times"></i> Tidak Termasuk Kriteria Dipilih</label>';
-                  $tglCutoff="2022-04-03";
+                  $tglCutoff="2026-04-03";
             if( $value->tgl_lahir == '0000-00-00'){
               $umurLahir=0;
               $umurLahir_lbl="<i style='color:white; background-color:red;'>-</i>";
