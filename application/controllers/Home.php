@@ -71,8 +71,13 @@ class Home extends CI_Controller {
 		$status_login=$this->session->userdata('status_login');
 		if(($status_login && $status_login=='success') || $this->session->userdata('userdata')){
 			$data['wilayah']=$this->m_model->selectas('id>0',NULL, 'wilayah');
-			$query1="select COUNT(A.id) as NUM_keluarga, sum(A.num_anggota) as NUM_jiwa, A.kwg_wil from keluarga_jemaat A where  A.status =1 group by A.kwg_wil"; //A.status_migration=1 &&
+			#$query1="select COUNT(A.id) as NUM_keluarga, sum(A.num_anggota) as NUM_jiwa, A.kwg_wil from keluarga_jemaat A where  A.status =1 group by A.kwg_wil"; //A.status_migration=1 &&
 			//status migration di hilangkan karena sudah banyak yang di input tidak dari migrasi, yang penting status anggota aktif
+			$query1="SELECT COUNT(A.id) as NUM_keluarga, sum(A.num_anggota) as NUM_jiwa_salah, A.kwg_wil , B.num_angjem as NUM_jiwa 
+						FROM `keluarga_jemaat` A 
+						join (select COUNT(id) num_angjem, B.* from anggota_jemaat B where B.sts_anggota=1 && B.status=1 group by B.kwg_wil) B on B.kwg_wil = A.kwg_wil 
+						WHERE A.status=1 
+						group by A.kwg_wil;"; //A.status_migration=1 &&
 
 			$perwilayah=$this->m_model->selectcustom($query1);
 
