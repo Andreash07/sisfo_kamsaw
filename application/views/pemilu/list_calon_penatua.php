@@ -144,7 +144,7 @@ $this->load->view('layout/header');
 								<?=$msg_seleksi;?>
 							</td>
 							<td style="width: 30%;">
-								<b>Keluarga:</b> <a href="<?=base_url();?>admin/DataJemaat?edit=true&id=<?=$value->kwg_no;?>"><?= $value->kwg_nama;?></a>
+								<b>Keluarga Keluarga:</b> <a href="<?=base_url();?>admin/DataJemaat?edit=true&id=<?=$value->kwg_no;?>"><?= $value->kwg_nama;?></a>
 								<br>
 								<b>Wilayah:</b> <?= $value->kwg_wil;?> 
 								<br>

@@ -2,7 +2,11 @@
 	<thead>
 		<tr>
 			<th class='text-center'>#</th>
-			<th class='text-center'>Calon Penatua</th>
+			<th class='text-center'>Nama Jemaat</th>
+			<th class='text-center'> Jenis Kelamin</th>
+			<th class='text-center'>Umur</th>
+			<th class='text-center'>Umur Sidi</th>
+			<th class='text-center'>Umur Atestasi</th>
 			<!--<th class='text-center' style="width: 30%;">Wilayah</th>-->
 		</tr>
 	</thead>
@@ -91,11 +95,25 @@ foreach ($data_jemaat as $key => $value) {
 		<tr>
 			<td class='text-center'><?=$key+$numStart+1;?></td>
 			<td>
-				<?=singkat_nama($value->nama_lengkap);?> &nbsp;(<b><?=getUmur(date('Y-m-d'), $value->tgl_lahir);?> Th</b>) - <b><?=$jns_kelamin;?></b>
+				<?=singkat_nama($value->nama_lengkap);?>
 			</td>
 			<!--<td style="width: 30%;">
 				Wilayah <?=$value->kwg_wil;?>
 			</td>-->
+			<td style="text-align:center;">
+				<?=$jns_kelamin;?>
+			</td>
+			<td style="text-align:center;">
+				<?=getUmur(date('Y-m-d'), $value->tgl_lahir);?>
+			</td>
+			<td>
+				<?=$umurSidi;?>
+				Tahun
+			</td>
+			<td>
+				<?=$umurAttesasi;?>
+				Tahun
+			</td>
 		</tr>
 <?php
 }

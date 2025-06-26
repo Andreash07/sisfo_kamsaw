@@ -1,0 +1,5 @@
+[19-Feb-2020 23:04:21 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/sisd1326/public_html/dev/application/views/admin/home/dashboard.php on line 708
+[19-Feb-2020 23:20:49 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/sisd1326/public_html/dev/application/views/admin/home/dashboard.php on line 708
+[19-Feb-2020 23:21:39 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/sisd1326/public_html/dev/application/views/admin/home/dashboard.php on line 708
+[19-Feb-2020 23:22:53 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/sisd1326/public_html/dev/application/views/admin/home/dashboard.php on line 708
+[21-Feb-2020 19:07:44 Asia/Jakarta] PHP Parse error:  syntax error, unexpected '$data' (T_VARIABLE) in /home/sisd1326/public_html/dev/application/controllers/Home.php on line 53
