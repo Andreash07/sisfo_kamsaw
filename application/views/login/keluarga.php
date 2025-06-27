@@ -27,9 +27,9 @@
   </div>
   <!-- End Header -->
   <!-- Page content -->
-  <div class="container pt-6 pb-2">
+  <div class="container pt-5 pb-2">
     <div class="row justify-content-center">
-      <div class="col-lg-4">
+      <div class="col-lg-6">
 
         <div class="card bg-secondary">
           <div class="card-body p-lg-5">
@@ -74,6 +74,7 @@
 </div>
 <?php $this->load->view('frontend/layouts/footer'); ?>
 
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/frontend/css/qrCodeScanner.css">
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>/assets/frontend/js/qrCodeScanner.js"></script>
 <script>
