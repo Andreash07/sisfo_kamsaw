@@ -1,14 +1,12 @@
-<?php
-$this->load->view('frontend/layouts/header');
-?>
+<?php $this->load->view('frontend/layouts/header'); ?>
 <!-- Main content -->
 <div class="main-content">
   <!-- Header -->
-  <div class="header bg-gradient-primary py-7 py-lg-8 pt-lg-9">
+  <div class="header bg-gradient-primary">
     <div class="container">
-      <div class="header-body text-center mb-7">
+      <div class="header-body text-center">
         <div class="row justify-content-center">
-          <div class="col-xl-5 col-lg-6 col-md-8 px-5">
+          <div class="col-xl-5 col-lg-6 col-md-8 py-6">
             <h1 class="text-white">Selamat Datang</h1>
             <p class="text-lead text-white">
               Apps Keluarga Jemaat
@@ -17,7 +15,6 @@ $this->load->view('frontend/layouts/header');
               <br>
               <small>Ver. 0.99 Beta</small>
             </p>
-            <!-- <div id="my-qr-reader"></div> -->
           </div>
         </div>
       </div>
@@ -28,12 +25,14 @@ $this->load->view('frontend/layouts/header');
       </svg>
     </div>
   </div>
+  <!-- End Header -->
   <!-- Page content -->
-  <div class="container mt--9 pb-5">
+  <div class="container pt-6 pb-2">
     <div class="row justify-content-center">
-      <div class="col-lg-5 col-md-7">
-        <div class="card bg-secondary border-0 mb-0">
-          <div class="card-body px-lg-5 py-lg-5">
+      <div class="col-lg-4">
+
+        <div class="card bg-secondary">
+          <div class="card-body p-lg-5">
 
             <!-- qr code scanner -->
             <div id="my-qr-reader"></div>
@@ -57,7 +56,7 @@ $this->load->view('frontend/layouts/header');
                 </div>
               </div>
               <div class="text-center">
-                <button type="submit" class="btn btn-primary my-4">Masuk</button>
+                <button type="submit" class="btn btn-primary">Masuk</button>
               </div>
             </form>
 
@@ -65,23 +64,15 @@ $this->load->view('frontend/layouts/header');
               <div class="my-4">
                 <bold">atau masuk dengan...</bold>
               </div>
-              <!-- <button class="btn btn-primary my-4">Scan QR</button> -->
               <button class="btn btn-danger" id="change-login-btn">User ID</button>
             </div>
           </div>
         </div>
-        <!--<div class="row mt-3">
-            <div class="col-6">
-              <a href="#" class="text-light"><small>Forgot password?</small></a>
-            </div>
-            <div class="col-6 text-right">
-              <a href="#" class="text-light"><small>Create new account</small></a>
-            </div>
-          </div>-->
       </div>
     </div>
   </div>
 </div>
+<?php $this->load->view('frontend/layouts/footer'); ?>
 
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>/assets/frontend/js/qrCodeScanner.js"></script>
@@ -102,10 +93,6 @@ $this->load->view('frontend/layouts/header');
     }
   });
 </script>
-
-<?php
-$this->load->view('frontend/layouts/footer');
-?>
 
 <?php
 if ($this->session->userdata('sess_token_valid') == -1) {
