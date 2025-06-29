@@ -32,11 +32,26 @@
           </select>
       </div>
     </div>
+    <div class="form-group col-md-6 col-xs-12">
+      <label class="control-label col-md-3 col-sm-3 col-xs-12">Tahun Pemilihan<span class="required">*</span></label>
+      <div class="col-md-9 col-sm-9 col-xs-12">
+          <select class="form-control" id="tahunpemilihan" name="tahunpemilihan" >
+            <?php 
+            foreach ($tahun_pemilihan_semua as $key => $value) {
+              // code...
+            ?>
+              <option value='<?=$value->tahun;?>' <?php if($value->tahun == $tahunpemilihan){ echo 'selected'; } ?> ><?=$value->tahun;?> (<?=$value->periode;?>)</option>
+            <?php 
+            }
+            ?>
+          </select>
+      </div>
+    </div>
     <div class="form-group col-xs-12">
     	<input type="submit" class="btn btn-primary pull-right" value="Cari" name="search">
-      <a class="btn btn-warning pull-left" href="<?=base_url();?>pdf/suratsuarappj.php" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Cetak Surat Suara PPJ</a>
-      <a class="btn btn-success pull-left" href="<?=base_url();?>pdf/suratsuarapnt1.php" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Cetak Surat Suara PNT-I</a>
-      <a class="btn btn-danger pull-left" href="<?=base_url();?>pdf/suratsuarapnt2.php" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Cetak Surat Suara PNT-II</a>
+      <a class="btn btn-warning pull-left" href="<?=base_url();?>pdf/suratsuarappj.php?tahunpemilihan=<?=$tahunpemilihan;?>" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Cetak Surat Suara PPJ</a>
+      <a class="btn btn-success pull-left" href="<?=base_url();?>pdf/suratsuarapnt1.php?tahunpemilihan=<?=$tahunpemilihan;?>" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Cetak Surat Suara PNT-I</a>
+      <a class="btn btn-danger pull-left" href="<?=base_url();?>pdf/suratsuarapnt2.php?tahunpemilihan=<?=$tahunpemilihan;?>" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Cetak Surat Suara PNT-II</a>
     </div>
 </form>
 <script type="text/javascript">

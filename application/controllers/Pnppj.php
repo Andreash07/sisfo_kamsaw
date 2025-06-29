@@ -2108,7 +2108,22 @@ class Pnppj extends CI_Controller {
 
 		$data=array();
 
+		$data['tahun_pemilihan']=array();
+		$tahun_pemilihan=$this->m_model->selectcustom('SELECT * FROM `tahun_pemilihan` order by tahun ASC');
+		$data['tahun_pemilihan_semua']=$tahun_pemilihan;
+		foreach ($tahun_pemilihan as $key => $value) {
+			// code...
+			#echo $key;
+			$data['tahun_pemilihan']=$value;
+			$data['tahunpemilihan']=$value->tahun;
+			if($value->tahun == $this->input->get('tahunpemilihan')){
+				break;
+			}
+			//ini bearti tahun pemiilhannya ambil yg dilooping terakhir
+		}
+
 		$where="";
+		$where_bakal_calon=" && tahun_pemilihan ='".$data['tahunpemilihan']."' ";
 
 		$param_active="?";
 
@@ -2148,13 +2163,13 @@ class Pnppj extends CI_Controller {
 
 			$param_active.="status_pn1=".$this->input->get('status_pn1')."&";
 
-			$where.=" && A.status_pn1 ='".$this->input->get('status_pn1')."'";
+			$where.=" && D.status_pn1 ='".$this->input->get('status_pn1')."'";
 
 		}
 
 
 
-		$sql="select A.*, B.kwg_nama, B.kwg_alamat, C.hub_keluarga
+		$sql="select A.*, B.kwg_nama, B.kwg_alamat, C.hub_keluarga, D.id as bakal_calon_id, D.tahun_pemilihan, D.status_pn1, D.status_ppj
 
 				from anggota_jemaat A
 
@@ -2162,7 +2177,10 @@ class Pnppj extends CI_Controller {
 
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
 
+				left join  anggota_jemaat_bakal_calon D on D.anggota_jemaat_id = A.id ".$where_bakal_calon."
+
 				where A.id >0 && A.status=1 && A.sts_anggota=1 && B.status=1 && A.status_sidi=1 ".$where.""; //A.status=1 bearti tidak pernah di delete
+				//left join  anggota_jemaat_bakal_calon baru di tambahin 27 Juni 2025 
 
 
 
@@ -2202,6 +2220,8 @@ class Pnppj extends CI_Controller {
 
         $data_jemaat=$this->m_model->selectcustom($sql." ".$group_by." ".$field_order." ".$order_by);
 
+       	#die(nl2br($sql." ".$group_by." ".$field_order." ".$order_by));
+
         $data_jemaat_new=array();
 
         $jemaatDapatDipilih=0;
@@ -2212,7 +2232,9 @@ class Pnppj extends CI_Controller {
 
         	$status_seleksi=0;
 
-        	$tglCutoff="2022-04-03";
+        	#$tglCutoff="2022-04-03";
+        	$tglCutoff=$data['tahun_pemilihan']->tgl_peneguhan; 
+        	#die($tglCutoff);
 
         	if( $value->tgl_lahir == '0000-00-00'){
 
@@ -2258,6 +2280,7 @@ class Pnppj extends CI_Controller {
 
 			if($umurLahir<=65 && $umurLahir>=25){
 
+				#$value->umur_cocok=$umurLahir.'Th <i class="fa fa-check-square text-success"></i>'.$tglCutoff.' '.$value->tgl_lahir;
 				$value->umur_cocok=$umurLahir.'Th <i class="fa fa-check-square text-success"></i>';
 
 				$status_seleksi=$status_seleksi+1;
@@ -2288,6 +2311,36 @@ class Pnppj extends CI_Controller {
 
 				$status_seleksi=$status_seleksi+1;
 
+			}
+
+			$param_sts_bacal=array();
+			if($value->bakal_calon_id==NULL){
+				if($data['tahunpemilihan']==2021){
+					//ini tahun 2021 masih perlu ambil dari data status yg lama di table anggota_jemaat
+					$param_sts_bacal['tahun_pemilihan']=$data['tahunpemilihan'];
+					$param_sts_bacal['status_pn1']=$value->status_pn1_old;
+					$param_sts_bacal['anggota_jemaat_id']=$value->id;
+					$param_sts_bacal['created_at']=date('Y-m-d H:i:s');
+				}
+				else{
+					//ini tahun berjalan sudah bisa otomatis
+					$param_sts_bacal['tahun_pemilihan']=$data['tahunpemilihan'];
+					if($status_seleksi==2){
+						// ini bearti lulus pengecekan umur lahir dan umur sidi/umur attestasi
+						$param_sts_bacal['status_pn1']=1;
+					}
+					else{
+						$param_sts_bacal['status_pn1']=0;
+					}
+					$param_sts_bacal['anggota_jemaat_id']=$value->id;
+					$param_sts_bacal['created_at']=date('Y-m-d H:i:s');
+
+				}
+				//ini bearti bearti perlu di input dulu, karena datanya belum ada di table daftar bakal calon
+				$i_bacal=$this->m_model->insertgetid($param_sts_bacal, 'anggota_jemaat_bakal_calon');
+
+				//ini reinisiasi value
+				$value->status_pn1=$param_sts_bacal['status_pn1'];
 			}
 
 
@@ -2726,7 +2779,9 @@ class Pnppj extends CI_Controller {
 
 		$param['status_pn1']=clearText($this->input->post('locked'));
 
-		$update=$this->m_model->updateas('id', clearText($this->input->post('recid')), $param , 'anggota_jemaat');
+		#$update=$this->m_model->updateas('id', clearText($this->input->post('recid')), $param , 'anggota_jemaat');
+		//per 27 juni 2025 dari table anggota_jemaat_bakal_calon
+		$update=$this->m_model->updateas('id', clearText($this->input->post('recid')), $param , 'anggota_jemaat_bakal_calon');
 
 		$json=array();
 
@@ -2759,6 +2814,20 @@ class Pnppj extends CI_Controller {
 	function list_peserta_pemilhan($type_report='reguler'){
 
 		$data=array();
+
+		$data['tahun_pemilihan']=array();
+		$tahun_pemilihan=$this->m_model->selectcustom('SELECT * FROM `tahun_pemilihan` order by tahun ASC');
+		$data['tahun_pemilihan_semua']=$tahun_pemilihan;
+		foreach ($tahun_pemilihan as $key => $value) {
+			// code...
+			#echo $key;
+			$data['tahun_pemilihan']=$value;
+			$data['tahunpemilihan']=$value->tahun;
+			if($value->tahun == $this->input->get('tahunpemilihan')){
+				break;
+			}
+			//ini bearti tahun pemiilhannya ambil yg dilooping terakhir
+		}
 
 		$where="";
 
@@ -2809,6 +2878,13 @@ $having_count="";
 		}
 
 
+		if($this->input->get('tahunpemilihan')){
+
+			$data['tahunpemilihan']=$this->input->get('tahunpemilihan');
+
+		}
+
+
 
 		$sql="select A.*, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, C.hub_keluarga, COUNT(D.id) as num_pemilih_konvensional
 
@@ -2818,9 +2894,11 @@ $having_count="";
 
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
 
-				left join pemilih_konvensional D on D.anggota_jemaat_id = A.id && A.kwg_no = D.kwg_no
+				left join pemilih_konvensional D on D.anggota_jemaat_id = A.id && A.kwg_no = D.kwg_no && D.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."' 
 
-				where A.id >0 && A.status=1 && A.sts_anggota=1 && B.status=1 && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005 ".$where.""; //A.status=1 bearti tidak pernah di delete
+				where A.id >0 && A.status=1 && A.sts_anggota=1 && B.status=1 && A.status_sidi=1 ".$where.""; //A.status=1 bearti tidak pernah di delete
+				#mengecek sudah sidi apa belum saja tidak perlu tahun kelahiran.
+				#&& YEAR(A.tgl_lahir) < 2005  
 
 
 
@@ -2860,7 +2938,7 @@ $having_count="";
 
         $data_kwg_jemaat=$this->m_model->selectcustom($sql." ".$group_by." ".$field_order." ".$order_by);
 
-        //die($sql." ".$group_by." ".$field_order." ".$order_by);
+        #die(nl2br($sql." ".$group_by." ".$field_order." ".$order_by));
 
         $data_keluarga_jemaat=array();
 
@@ -2914,15 +2992,19 @@ $having_count="";
 
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
 
-				left join pemilih_konvensional D on D.anggota_jemaat_id = A.id && A.kwg_no = D.kwg_no
+				left join pemilih_konvensional D on D.anggota_jemaat_id = A.id && A.kwg_no = D.kwg_no && D.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."'  
 
-				where A.id >0 && A.status=1 && A.sts_anggota=1 && B.status=1 && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005 ".$where."
+				where A.id >0 && A.status=1 && A.sts_anggota=1 && B.status=1 && A.status_sidi=1 ".$where."
 
 				group by A.id
 
 				order by A.no_urut ASC, A.nama_lengkap ASC"; //die($sql_angjem);
+				#mengecek sudah sidi apa belum saja tidak perlu tahun kelahiran.
+				#&& YEAR(A.tgl_lahir) < 2005  
 
 		$data_jemaat=$this->m_model->selectcustom($sql_angjem);
+
+		#die(nl2br($sql_angjem));
 
 
 
@@ -2940,7 +3022,9 @@ $having_count="";
 
         	$status_seleksi=0;
 
-        	$tglCutoff="2022-04-03";
+        	#$tglCutoff="2022-04-03";
+        	#ini sudah dinamis
+        	$tglCutoff=$data['tahun_pemilihan']->tgl_peneguhan;
 
 
 
@@ -4151,6 +4235,20 @@ $having_count="";
     	$wil=lsWil();
 
     	$data['wil']=$wil;
+
+    	$data['tahun_pemilihan']=array();
+		$tahun_pemilihan=$this->m_model->selectcustom('SELECT * FROM `tahun_pemilihan` order by tahun ASC');
+		$data['tahun_pemilihan_semua']=$tahun_pemilihan;
+		foreach ($tahun_pemilihan as $key => $value) {
+			// code...
+			#echo $key;
+			$data['tahun_pemilihan']=$value;
+			$data['tahunpemilihan']=$value->tahun;
+			if($value->tahun == $this->input->get('tahunpemilihan')){
+				break;
+			}
+			//ini bearti tahun pemiilhannya ambil yg dilooping terakhir
+		}
 
 
 

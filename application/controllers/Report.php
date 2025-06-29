@@ -37,8 +37,14 @@ class Report extends CI_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 
 	 */
-
-
+	public function  __construct()
+    {
+        parent::__construct();
+        #print_r($this->session->userdata());die();
+        if(!$this->session->userdata('userdata') ){
+        	redirect(base_url().'login');
+        }
+    }
 
 	function anggota_jemaat($type_report='reguler'){
 
@@ -266,6 +272,17 @@ class Report extends CI_Controller {
 
 		}
 
+
+		if($this->input->get('bulan_lahir') && $this->input->get('bulan_lahir') !=''){
+
+			$param_active.="bulan_lahir=".$this->input->get('bulan_lahir')."&";
+
+			$bulan_lahir=$this->input->get('bulan_lahir');
+
+			$where.=" && MONTH(A.tgl_lahir) = '".clearText($bulan_lahir)."'";
+
+		}
+
 		/*report sidi end*/
 
 
@@ -330,7 +347,7 @@ class Report extends CI_Controller {
         
 
         $data_jemaat=$this->m_model->selectcustom($sql." ".$group_by." ".$field_order." ".$order_by); 
-        //die($sql." ".$group_by." ".$field_order." ".$order_by);
+        #die(nl2br($sql." ".$group_by." ".$field_order." ".$order_by));
 
 
 

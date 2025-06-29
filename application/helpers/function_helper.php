@@ -1219,6 +1219,42 @@ function countTahunTercover($total_biayaKPKP, $saldo_akhir, $current_Year=null){
     return $data;
 }
 
+function countTahunTercover_new($saldo, $pokok_iuran, $sts_keanggotaan, $current_Year){
+    $data=array();
+    $cur_iruran=array();
+    foreach ($pokok_iuran as $key => $value) {
+        // code...
+        $min_tahun_preiode
+        if($value->tahun_iuran > $current_Year){
+            $cur_iruran=$value;
+        }
+
+        //batas bawah tahun
+    }
+    $total_biayaKPKP=0;
+    if($sts_keanggotaan==1){
+        $total_biayaKPKP=$cur_iruran->nilai_iuran_angjem;
+    }else{
+        $total_biayaKPKP=$cur_iruran->nilai_iuran_non;
+    }
+    $num_tahun=floor($saldo_akhir/$total_biayaKPKP);
+
+    foreach ($pokok_iuran as $key => $value) {
+        // code...
+        for ($i=$current_Year; $i >= $value->tahun_iuran ; $i--) { 
+            // code...
+            
+        }
+    }
+
+    $tahun_tercover=floor($saldo_akhir/$total_biayaKPKP);
+
+    $data['tahun_tercover']=date("Y",strtotime($num_tahun_tercover." year"));
+    $data['num_tahun_tercover']=$num_tahun_tercover;
+
+    return $data;
+}
+
 function countBulanTercover($total_biayaKPKP, $saldo_akhir, $current_Month){
     $data=array();
     //hitung jumlah bulan yg dapat tercover karena tagihannya ini perbulan 

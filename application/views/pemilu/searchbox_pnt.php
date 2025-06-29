@@ -72,7 +72,7 @@
 
       <label class="control-label col-md-3 col-sm-3 col-xs-12">Status Bakal Calon<span class="required">*</span></label>
 
-      <div class="col-md-9 col-sm-9 col-xs-12">
+      <div class="col-md-3 col-sm-3 col-xs-12">
 
           <select class="form-control" id="status_pn1" name="status_pn1" >
 
@@ -84,6 +84,20 @@
 
           </select>
 
+      </div>
+
+      <label class="control-label col-md-3 col-sm-3 col-xs-12">Tahun Pemilihan<span class="required">*</span></label>
+      <div class="col-md-3 col-sm-3 col-xs-12">
+          <select class="form-control" id="tahunpemilihan" name="tahunpemilihan" >
+            <?php 
+            foreach ($tahun_pemilihan_semua as $key => $value) {
+              // code...
+            ?>
+              <option value='<?=$value->tahun;?>' <?php if($value->tahun == $tahunpemilihan){ echo 'selected'; } ?> ><?=$value->tahun;?> (<?=$value->periode;?>)</option>
+            <?php 
+            }
+            ?>
+          </select>
       </div>
 
     </div>

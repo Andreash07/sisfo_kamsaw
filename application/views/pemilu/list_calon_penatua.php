@@ -32,7 +32,7 @@ $this->load->view('layout/header');
 		</div>
 		<div class="col-xs-12">
 			<div class="x_panel">
-				<span>Menampilakn <b><?=count($data_jemaat);?></b> dari <b><?=$TotalOfData;?></b></span>
+				<span>Menampilakn <b><?=count($data_jemaat);?></b> dari <b><?=$TotalOfData;?></b> <text class="text-danger">(Pemilihan Periode: <?=$tahun_pemilihan->periode;?>)</text></span>
 				<?= $pagingnation; ?>
 				<table class='table table-striped'>
 					<thead>
@@ -74,6 +74,7 @@ $this->load->view('layout/header');
 		            $status_seleksi=0;
 		            $msg_seleksi='<label class="label label-danger"><i class="fa fa-times"></i> Tidak Termasuk Kriteria Dipilih</label>';
 		            $tglCutoff="2022-04-03";
+		            $tglCutoff=$tahun_pemilihan->tgl_peneguhan;
 					if( $value->tgl_lahir == '0000-00-00'){
 						$umurLahir=0;
 						$umurLahir_lbl="<i style='color:white; background-color:red;'>-</i>";
@@ -147,6 +148,8 @@ $this->load->view('layout/header');
 								<br>
 								<b>Wilayah:</b> <?= $value->kwg_wil;?> 
 								<br>
+								<b>Tempat, Tgl Lahir:</b> <?= $value->tmpt_lahir.', '.convert_tgl_dMY($value->tgl_lahir) ;?>
+								<br>
 								<b>Tempat, Tgl Baptis:</b> <?= $value->tmpt_baptis.', '.convert_tgl_dMY($value->tgl_baptis) ;?>&nbsp;&nbsp;<?=$ico_status_baptis;?>
 								<br>
 								<b>Tempat, Tgl Sidi:</b> <?= $value->tmpt_sidi.', '.convert_tgl_dMY($value->tgl_sidi) ;?>&nbsp;&nbsp;<?=$ico_status_sidi;?>
@@ -163,7 +166,7 @@ $this->load->view('layout/header');
 								<div class="">
 		                            <label>
 		                            	<i class="fa fa-times text-danger"></i>
-		                              	<input type="checkbox" class="js-switch"  <?=$checked;?> recid="<?=$value->id;?>" title="<?=$value->nama_lengkap;?> (<?=getUmur(date('Y-m-d'), $value->tgl_lahir);?> Th)" />
+		                              	<input type="checkbox" class="js-switch"  <?=$checked;?> anggota_jemaat="<?=$value->id;?>" recid="<?=$value->bakal_calon_id;?>" title="<?=$value->nama_lengkap;?> (<?=getUmur(date('Y-m-d'), $value->tgl_lahir);?> Th)" />
 		                            	<i class="fa fa-check-circle text-success"></i>
 		                            </label>
 	                          	</div>
@@ -198,7 +201,7 @@ $this->load->view('layout/footer');
 	$(document).on('click', '[class=js-switch]', function(e){
 		url="<?=base_url();?>pnppj/statuspn";
 		dataMap={}
-      	dataMap['recid']=$(this).attr('recid')
+      	dataMap['recid']=$(this).attr('recid') //per 27 juni 2025 recidnya itu bakal_calon_id dari table anggota_jemaat_bakal_calon
 		if($(this).prop('checked') == true){
 	      //alert("checking");
 	      	dataMap['locked']=1 //1 menerima Bakal Calon

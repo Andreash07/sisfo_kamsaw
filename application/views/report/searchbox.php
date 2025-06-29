@@ -57,11 +57,28 @@
 	    </div>
     </div>
     <div class="form-group col-md-6 col-xs-12">
-      <label class="control-label col-md-3 col-sm-3 col-xs-12">Tahun Lahir<span class="required">*</span></label>
-      <div class="col-md-4 col-sm-4 col-xs-5">
+      <label class="control-label col-md-3 col-sm-3 col-xs-12">Tgl Lahir<span class="required">*</span></label>
+      <div class="col-md-3 col-sm-3 col-xs-4">
+        <select id="bulan_lahir" name="bulan_lahir" class="form-control">
+          <option value=""  >Semua Bulan</option>
+          <?php 
+          foreach (get_month_id() as $key_month => $value_month) {
+            // code...
+            $selected="";
+            if($key_month== $this->input->get('bulan_lahir')){
+              $selected="selected";
+            }
+          ?>
+          <option <?=$selected;?> value="<?=$key_month;?>"  ><?=$value_month;?></option>
+          <?php 
+          }
+          ?>
+        </select>
+      </div>
+      <div class="col-md-3 col-sm-3 col-xs-4">
         <input class="form-control" id="tahun_dari" name="tahun_dari" placeholder="dari (1990)" value="<?=$this->input->get('tahun_dari');?>">
       </div>
-      <div class="col-md-4 col-sm-4 col-xs-5">
+      <div class="col-md-3 col-sm-3 col-xs-4">
         <input class="form-control" id="tahun_sampai" name="tahun_sampai"  placeholder="sampai (1990)" value="<?=$this->input->get('tahun_sampai');?>">
       </div>
     </div>

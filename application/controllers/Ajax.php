@@ -156,6 +156,23 @@ class Ajax extends CI_Controller {
 		$nama_pemilih=rawurldecode($this->input->get('nama'));
 		$tahun_pemilihan=date('Y');
 		$data=array();
+
+		$data['tahun_pemilihan']=array();
+		$tahun_pemilihan=$this->m_model->selectcustom('SELECT * FROM `tahun_pemilihan` order by tahun ASC');
+		$data['tahun_pemilihan_semua']=$tahun_pemilihan;
+		foreach ($tahun_pemilihan as $key => $value) {
+			// code...
+			#echo $key;
+			$data['tahun_pemilihan']=$value;
+			$data['tahunpemilihan']=$value->tahun;
+			if($value->tahun == $this->input->get('tahunpemilihan')){
+				break;
+			}
+			//ini bearti tahun pemiilhannya ambil yg dilooping terakhir
+			$tahun_pemilihan=$data['tahunpemilihan'];
+		}
+
+
 		$data['nama_pemilih']=$nama_pemilih;
 		$data['id_pemilih']=$id_pemilih;
 		$data['wil_pemilih']=$wil_pemilih;
@@ -168,7 +185,8 @@ class Ajax extends CI_Controller {
 				from anggota_jemaat A 
 				left join ags_sts_kawin B on B.id = A.sts_kawin
 				left join votes_tahap1 C on C.id_calon1 = A.id && C.id_pemilih='".$id_pemilih."' && C.tahun_pemilihan='".$tahun_pemilihan."'
-				where  A.kwg_wil='".$wil_pemilih."'  && A.sts_anggota=1 && A.status=1 && A.status_pn1=1 && A.status_sidi=1 && A.kwg_no !=0
+				join anggota_jemaat_bakal_calon D on D.anggota_jemaat_id = A.id
+				where  A.kwg_wil='".$wil_pemilih."'  && A.sts_anggota=1 && A.status=1 && D.status_pn1=1 && A.status_sidi=1 && A.kwg_no !=0
 				group by A.id
 				order by voted DESC, A.nama_lengkap"; //die($sql);
 		//&& YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF('2022-04-03', A.tgl_lahir)/365 >=25 && DATEDIFF('2022-04-03', A.tgl_lahir)/365 <=65
@@ -221,6 +239,22 @@ class Ajax extends CI_Controller {
 		$wil_pemilih=$this->input->get('kwg_wil');
 		$tahun_pemilihan=date('Y');
 		$data=array();
+
+		$data['tahun_pemilihan']=array();
+		$tahun_pemilihan=$this->m_model->selectcustom('SELECT * FROM `tahun_pemilihan` order by tahun ASC');
+		$data['tahun_pemilihan_semua']=$tahun_pemilihan;
+		foreach ($tahun_pemilihan as $key => $value) {
+			// code...
+			#echo $key;
+			$data['tahun_pemilihan']=$value;
+			$data['tahunpemilihan']=$value->tahun;
+			if($value->tahun == $this->input->get('tahunpemilihan')){
+				break;
+			}
+			//ini bearti tahun pemiilhannya ambil yg dilooping terakhir
+			$tahun_pemilihan=$data['tahunpemilihan'];
+		}
+
 		$data['wil_pemilih']=$wil_pemilih;
 		$data['hak_suara_wanita']=4;
 		$data['hak_suara_pria']=4;
@@ -230,7 +264,8 @@ class Ajax extends CI_Controller {
 		$sql="select A.*, B.status_kawin, '0' as voted, '1' as locked
 				from anggota_jemaat A 
 				left join ags_sts_kawin B on B.id = A.sts_kawin
-				where  md5(CONCAT('hasg2&^!#',A.kwg_wil))='".$token."'  && A.sts_anggota=1 && A.status=1 && A.status_pn1=1 && A.status_sidi=1 && A.kwg_no !=0
+				join anggota_jemaat_bakal_calon D on D.anggota_jemaat_id = A.id
+				where  md5(CONCAT('hasg2&^!#',A.kwg_wil))='".$token."'  && A.sts_anggota=1 && A.status=1 && D.status_pn1=1 && A.status_sidi=1 && A.kwg_no !=0
 				group by A.id
 				order by voted DESC, A.nama_lengkap"; //die($sql);
 		//&& YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF('2022-04-03', A.tgl_lahir)/365 >=25 && DATEDIFF('2022-04-03', A.tgl_lahir)/365 <=65
@@ -283,6 +318,23 @@ class Ajax extends CI_Controller {
 		$where="";
 		$param_active="?";
 		$data=array();
+		
+		$data['tahun_pemilihan']=array();
+		$tahun_pemilihan=$this->m_model->selectcustom('SELECT * FROM `tahun_pemilihan` order by tahun ASC');
+		$data['tahun_pemilihan_semua']=$tahun_pemilihan;
+		foreach ($tahun_pemilihan as $key => $value) {
+			// code...
+			#echo $key;
+			$data['tahun_pemilihan']=$value;
+			$data['tahunpemilihan']=$value->tahun;
+			if($value->tahun == $this->input->get('tahunpemilihan')){
+				break;
+			}
+			//ini bearti tahun pemiilhannya ambil yg dilooping terakhir
+			$tahun_pemilihan=$data['tahunpemilihan'];
+		}
+
+
 		$data['filter_wilayah']=$filter_wilayah;
 		$data['nama_pemilih']=$nama_pemilih;
 		$data['id_pemilih']=$id_pemilih;
@@ -439,7 +491,7 @@ class Ajax extends CI_Controller {
 				join jemaat_terpilih1 D on D.anggota_jemaat_id = A.id
 				left join ags_sts_kawin B on B.id = A.sts_kawin
 				left join votes_tahap2 C on C.id_calon2 = A.id && C.id_pemilih='".$id_pemilih."' && C.tahun_pemilihan='".$tahun_pemilihan."'
-				where  A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && D.status = 1 && A.kwg_wil = '".$wil_pemilih."' ".$where." ".$group_by." ".$field_order."
+				where  A.sts_anggota=1 && A.status=1  && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && D.status = 1 && A.kwg_wil = '".$wil_pemilih."' ".$where." ".$group_by." ".$field_order."
 				) Z
 
 				UNION ALL
@@ -451,7 +503,7 @@ class Ajax extends CI_Controller {
 				join jemaat_terpilih1 D on D.anggota_jemaat_id = A.id
 				left join ags_sts_kawin B on B.id = A.sts_kawin
 				left join votes_tahap2 C on C.id_calon2 = A.id && C.id_pemilih='".$id_pemilih."' && C.tahun_pemilihan='".$tahun_pemilihan."'
-				where  A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && D.status = 1 && A.kwg_wil != '".$wil_pemilih."' ".$where." ".$group_by." ".$field_order.") Z
+				where  A.sts_anggota=1 && A.status=1 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && D.status = 1 && A.kwg_wil != '".$wil_pemilih."' ".$where." ".$group_by." ".$field_order.") Z
 				) Y, (SELECT @rownum := 0) r) W
 				order by W.voted DESC, W.num_row ASC
 				
@@ -469,8 +521,25 @@ class Ajax extends CI_Controller {
 		$id_pemilih=$this->input->get('id');
 		$wil_pemilih=$this->input->get('kwg_wil');
 		$nama_pemilih=rawurldecode($this->input->get('nama'));
-		$tahun_pemilihan=date('Y');
+		#$tahun_pemilihan=date('Y'); //ini sudah tidak terpakai lagi, sudah pakai tahun berjalan saja
+
 		$data=array();
+		$data['tahun_pemilihan']=array();
+		$tahun_pemilihan=$this->m_model->selectcustom('SELECT * FROM `tahun_pemilihan` order by tahun ASC');
+		$data['tahun_pemilihan_semua']=$tahun_pemilihan;
+		foreach ($tahun_pemilihan as $key => $value) {
+			// code...
+			#echo $key;
+			$data['tahun_pemilihan']=$value;
+			$data['tahunpemilihan']=$value->tahun;
+			if($value->tahun == $this->input->get('tahunpemilihan')){
+				break;
+			}
+			//ini bearti tahun pemiilhannya ambil yg dilooping terakhir
+			$tahun_pemilihan=$data['tahunpemilihan'];
+		}
+
+
 		$data['nama_pemilih']=$nama_pemilih;
 		$data['id_pemilih']=$id_pemilih;
 		$data['wil_pemilih']=$wil_pemilih;
@@ -480,7 +549,8 @@ class Ajax extends CI_Controller {
 				from anggota_jemaat A 
 				left join ags_sts_kawin B on B.id = A.sts_kawin
 				left join votes_tahap_ppj C on C.id_calon1 = A.id && C.id_pemilih='".$id_pemilih."' && C.tahun_pemilihan='".$tahun_pemilihan."'
-				where A.sts_anggota=1 && A.status_sidi=1 && A.status=1 && A.status_ppj=1
+				join anggota_jemaat_bakal_calon D on D.anggota_jemaat_id = A.id
+				where A.sts_anggota=1 && A.status_sidi=1 && A.status=1 && D.status_ppj=1
 				group by A.id
 				order by voted DESC, A.nama_lengkap ASC, A.kwg_wil ASC"; //die($sql);
 				//&& YEAR(A.tgl_lahir) < 2005 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 <=65
@@ -639,9 +709,10 @@ class Ajax extends CI_Controller {
 				from keluarga_jemaat B
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-09-09 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-09-09 00:00:00' && A.last_modified_dorkas < '2021-09-09 00:00:00') ) && B.status=1 && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-09-09 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-09-09 00:00:00' && A.last_modified_dorkas < '2021-09-09 00:00:00') ) && B.status=1 && A.status_sidi=1 
                 group by B.id
                 order by B.kwg_wil ASC";
+                #&& YEAR(A.tgl_lahir) < 2005
 		$pesertaPemilihan=$this->m_model->selectcustom($q);
 
 		$data['pesertaPemilihan']=array();
@@ -713,6 +784,11 @@ class Ajax extends CI_Controller {
 
 	public function statistik_pnt1_wil(){
 		$data=array();
+		$tahun_pemilihan=$this->input->post('tahun_pemilihan');
+		if(!$this->input->post('tahun_pemilihan')){
+			$tahun_pemilihan=date('Y');;
+		}
+
 		$data['num_pesertaPemilihan']=array();
 		$data['num_suaraDikunci']=array();
 		$data['num_BelumDikunci']=array();
@@ -740,9 +816,10 @@ class Ajax extends CI_Controller {
 				from keluarga_jemaat B
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-10-21 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && B.status=1  && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.created_at < '2021-10-21 00:00:00') ) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && B.status=1  && A.status_sidi=1 
                 group by B.id
                 order by B.kwg_wil ASC";
+                #&& YEAR(A.tgl_lahir) < 2005
 		$pesertaPemilihan=$this->m_model->selectcustom($q);
 
 		$data['pesertaPemilihan']=array();
@@ -765,9 +842,9 @@ class Ajax extends CI_Controller {
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
                 join votes_tahap1 D on D.id_pemilih = A.id
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-10-21 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005 && D.locked=1
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-10-21 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && A.status_sidi=1 && D.locked=1
                 group by B.id
-                order by B.kwg_wil ASC";
+                order by B.kwg_wil ASC"; #&& YEAR(A.tgl_lahir) < 2005 
 		$suaraDikunci=$this->m_model->selectcustom($q1);
 		$data['suaraDikunci']=array();
 		foreach ($suaraDikunci as $key => $value) {
@@ -873,9 +950,10 @@ class Ajax extends CI_Controller {
 				from keluarga_jemaat B
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2022-01-27 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2022-01-10 00:00:00' && A.last_modified_dorkas < '2022-01-27 00:00:00') ) && B.status=1  && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2022-01-27 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2022-01-10 00:00:00' && A.last_modified_dorkas < '2022-01-27 00:00:00') ) && B.status=1  && A.status_sidi=1 
                 group by B.id
                 order by B.kwg_wil ASC";
+                #&& YEAR(A.tgl_lahir) < 2005
 		$pesertaPemilihan=$this->m_model->selectcustom($q);
 
 		$data['pesertaPemilihan']=array();
@@ -898,9 +976,9 @@ class Ajax extends CI_Controller {
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
                 join votes_tahap2 D on D.id_pemilih = A.id
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2022-01-27 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2022-01-10 00:00:00' && A.last_modified_dorkas < '2022-01-27 00:00:00') ) && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005 && D.locked=1
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2022-01-27 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2022-01-10 00:00:00' && A.last_modified_dorkas < '2022-01-27 00:00:00') ) && A.status_sidi=1 && D.locked=1
                 group by B.id
-                order by B.kwg_wil ASC";
+                order by B.kwg_wil ASC"; #&& YEAR(A.tgl_lahir) < 2005
 		$suaraDikunci=$this->m_model->selectcustom($q1);
 		$data['suaraDikunci']=array();
 		foreach ($suaraDikunci as $key => $value) {
@@ -922,9 +1000,9 @@ class Ajax extends CI_Controller {
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
                 join votes_tahap2 D on D.id_pemilih = A.id
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2022-01-27 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2022-01-10 00:00:00' && A.last_modified_dorkas < '2022-01-27 00:00:00') ) && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005 && D.locked=0
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2022-01-27 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2022-01-10 00:00:00' && A.last_modified_dorkas < '2022-01-27 00:00:00') ) && A.status_sidi=1 && D.locked=0
                 group by B.id
-                order by B.kwg_wil ASC";
+                order by B.kwg_wil ASC"; #&& YEAR(A.tgl_lahir) < 2005
 		$suaraBelumDikunci=$this->m_model->selectcustom($q2);
 
 		$data['suaraBelumDikunci']=array();
@@ -944,9 +1022,9 @@ class Ajax extends CI_Controller {
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
                 join (select * from votes_tahap2 group by id_pemilih) D on D.id_pemilih = A.id
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2022-01-27 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2022-01-10 00:00:00' && A.last_modified_dorkas < '2022-01-27 00:00:00') ) && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005 && D.locked=0
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2022-01-27 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2022-01-10 00:00:00' && A.last_modified_dorkas < '2022-01-27 00:00:00') ) && A.status_sidi=1 && D.locked=0
                 group by B.kwg_wil
-                order by B.kwg_wil ASC";
+                order by B.kwg_wil ASC"; #&& YEAR(A.tgl_lahir) < 2005 
 		$suaraBelumDikunci3=$this->m_model->selectcustom($q3);
 
 		foreach ($suaraBelumDikunci3 as $key => $value) {
@@ -959,9 +1037,10 @@ class Ajax extends CI_Controller {
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
                 join (select * from votes_tahap2 group by id_pemilih) D on D.id_pemilih = A.id
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2022-01-27 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2022-01-10 00:00:00' && A.last_modified_dorkas < '2022-01-27 00:00:00') ) && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005 && D.locked=1
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2022-01-27 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2022-01-10 00:00:00' && A.last_modified_dorkas < '2022-01-27 00:00:00') ) && A.status_sidi=1  && D.locked=1
                 group by B.kwg_wil
                 order by B.kwg_wil ASC";
+                #&& YEAR(A.tgl_lahir) < 2005
 		$suaraDikunci4=$this->m_model->selectcustom($q4);
 
 		foreach ($suaraDikunci4 as $key => $value) {
@@ -1001,9 +1080,10 @@ class Ajax extends CI_Controller {
 				from keluarga_jemaat B
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-10-21 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && B.status=1  && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-10-21 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && B.status=1  && A.status_sidi=1 
                 group by B.id
                 order by B.kwg_wil ASC";
+                #&& YEAR(A.tgl_lahir) < 2005
 		$pesertaPemilihan=$this->m_model->selectcustom($q);
 
 		$data['pesertaPemilihan']=array();
@@ -1026,9 +1106,10 @@ class Ajax extends CI_Controller {
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
                 join (select * from votes_tahap1 group by id_pemilih) D on D.id_pemilih = A.id
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-10-21 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005 && D.locked=1
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-10-21 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && A.status_sidi=1 && D.locked=1
                 group by B.id
                 order by B.kwg_wil ASC";
+                #&& YEAR(A.tgl_lahir) < 2005
 		$suaraDikunci=$this->m_model->selectcustom($q1);
 
 		$data['suaraDikunci']=array();
@@ -1051,9 +1132,10 @@ class Ajax extends CI_Controller {
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
                 join (select * from votes_tahap1 group by id_pemilih) D on D.id_pemilih = A.id
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-10-21 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005 && D.locked=0
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-10-21 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && A.status_sidi=1 && D.locked=0
                 group by B.id
                 order by B.kwg_wil ASC";
+                #&& YEAR(A.tgl_lahir) < 2005
 		$suaraBelumDikunci=$this->m_model->selectcustom($q2);
 
 		$data['suaraBelumDikunci']=array();

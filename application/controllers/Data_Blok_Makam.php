@@ -140,7 +140,7 @@ class Data_Blok_Makam extends CI_Controller
     $kpkp_bayar_tahunan=$this->m_model->selectas('kpkp_blok_makam_id', $recid, 'kpkp_bayar_tahunan');
     
     $pokok_iuran=$this->m_model->selectas('status','1','kpkp_pokok_iuran_makam');
-    $data['pokok_iuran']=$pokok_iuran[0];
+    $data['pokok_iuran']=$pokok_iuran;
     //$penghuni_makam=$this->m_model->selectas2('kpkp_blok_makam_id', $recid,'deleted_at is NULL',NULL, 'kpkp_penghuni_makam', 'id', 'ASC');
     $penghuni_makam=$this->m_model->selectcustom("select * from kpkp_penghuni_makam where kpkp_blok_makam_id='".$recid."' && deleted_at is NULL order by sts DESC, id ASC");
     $data['penghuni_makam']=$penghuni_makam;
