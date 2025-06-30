@@ -688,6 +688,10 @@ class Ajax extends CI_Controller {
 	}
 
 	public function statistik_ppj_wil(){
+		$tahun_pemilihan=date('Y');
+		if($this->input->post('tahun_pemilihan') >0){
+			$tahun_pemilihan=$this->input->post('tahun_pemilihan');
+		}
 		$data=array();
 		$data['num_pesertaPemilihan']=array();
 		$data['num_suaraDikunci']=array();
@@ -705,15 +709,18 @@ class Ajax extends CI_Controller {
 			$data['num_BelumDikunci'][$value->wilayah]=0;
 		}
 
-		$q="select B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, C.hub_keluarga, COUNT(A.id) as peserta
+		$q="select B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, C.hub_keluarga, COUNT(A.id) as peserta_old, COUNT(D.id) as peserta
 				from keluarga_jemaat B
-				join anggota_jemaat A on B.id = A.kwg_no
-				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-09-09 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-09-09 00:00:00' && A.last_modified_dorkas < '2021-09-09 00:00:00') ) && B.status=1 && A.status_sidi=1 
+				left join anggota_jemaat A on B.id = A.kwg_no
+				left join ags_hub_kwg C on C.idhubkel = A.hub_kwg
+				left join anggota_jemaat_peserta_pemilihan D on D.anggota_jemaat_id = A.id && D.tahun_pemilihan='".$tahun_pemilihan."'
+				where A.id >0 && A.status=1 
                 group by B.id
                 order by B.kwg_wil ASC";
+                #ini  kondisi dulu awal 2021
+                #&& ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-09-09 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-09-09 00:00:00' && A.last_modified_dorkas < '2021-09-09 00:00:00') ) && B.status=1 && A.status_sidi=1 
                 #&& YEAR(A.tgl_lahir) < 2005
-		$pesertaPemilihan=$this->m_model->selectcustom($q);
+		$pesertaPemilihan=$this->m_model->selectcustom($q);#die(nl2br($q));
 
 		$data['pesertaPemilihan']=array();
 		foreach ($pesertaPemilihan as $key => $value) {
@@ -726,7 +733,7 @@ class Ajax extends CI_Controller {
 
 			$data['num_pesertaPemilihan_global']=$data['num_pesertaPemilihan_global']+$value->peserta;
 		}
-
+		#print_r($data); die();
 		$data['max_peserta_pemilihan']=max($data['num_pesertaPemilihan']);
 		$data['min_peserta_pemilihan']=min($data['num_pesertaPemilihan']);
 

@@ -49,6 +49,8 @@
     </div>
     <div class="form-group col-xs-12">
     	<input type="submit" class="btn btn-primary pull-right" value="Cari" name="search">
+      <a class="btn btn-danger pull-right" inasdk="<?=base_url();?>pnppj/penetapan_peserta_pemilihan?tahun_pemilihan=<?=$tahunpemilihan;?>" id="btn_penetapan_peserta" tahun_pemilihan="<?=$tahunpemilihan;?>" title="Penetapan Peserta Pemilihan <?=$tahunpemilihan;?>"><i class="fa fa-lock"></i>&nbsp;&nbsp;Penetapan</a>
+
       <a class="btn btn-warning pull-left" href="<?=base_url();?>pdf/suratsuarappj.php?tahunpemilihan=<?=$tahunpemilihan;?>" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Cetak Surat Suara PPJ</a>
       <a class="btn btn-success pull-left" href="<?=base_url();?>pdf/suratsuarapnt1.php?tahunpemilihan=<?=$tahunpemilihan;?>" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Cetak Surat Suara PNT-I</a>
       <a class="btn btn-danger pull-left" href="<?=base_url();?>pdf/suratsuarapnt2.php?tahunpemilihan=<?=$tahunpemilihan;?>" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Cetak Surat Suara PNT-II</a>

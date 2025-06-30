@@ -192,6 +192,23 @@ $this->load->view('layout/footer');
       $('#modal-content').html(data)
     })
   })
+
+  $(document).on('click touchstart', '[id=btn_penetapan_peserta]', function(e){
+    e.preventDefault()
+    url=$(this).attr('inasdk');
+    var r = confirm("Apakah Anda yakin ingin mengupdate Peserta Pemilihan (Periode <?=$tahun_pemilihan->periode;?>) berdasarkan syarat yang berlaku? (Jika OK, Tidak dapat dibatalkan!");
+    if (r == false) {
+      e.preventDefault();
+      return false;
+    } 
+
+    $.get(url, function(data){
+      json=$.parseJSON(data)
+      if(json.sts==1){
+        window.location.reload();
+      }
+    })
+  })
 </script>
 
 <script type="text/javascript">

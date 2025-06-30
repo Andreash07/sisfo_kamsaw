@@ -4307,6 +4307,53 @@ $having_count="";
 
     }
 
+
+    public function penetapan_peserta_pemilihan($value='')
+	{
+		// code...
+		$tahun_pemilihan=$this->input->get('tahun_pemilihan');
+		$data=array();
+		if($tahun_pemilihan='2021'){
+            #ini  kondisi dulu awal 2021
+            $q="select B.id as kwg_no, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, A.nama_lengkap, C.hub_keluarga, A.id as anggota_jemaat_id, D.id as peserta, A.tgl_sidi, A.created_at
+				from keluarga_jemaat B
+				join anggota_jemaat A on B.id = A.kwg_no
+				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
+				left join anggota_jemaat_peserta_pemilihan D on D.anggota_jemaat_id = A.id && D.tahun_pemilihan='".$tahun_pemilihan."'
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1 && (A.created_at < '2021-09-09 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-09-09 00:00:00' && A.created_at < '2021-09-09 00:00:00') ) && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005 && (A.tgl_sidi < '".$tahun_pemilihan."-09-01' || (A.tgl_sidi='0000-00-00' && A.status_sidi=1))
+				order by B.kwg_wil , B.kwg_nama ASC;
+				";
+		}else{
+			$q="select B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk,A.nama_lengkap,  C.hub_keluarga, A.id as anggota_jemaat_id, D.id as peserta
+					from keluarga_jemaat B
+					join anggota_jemaat A on B.id = A.kwg_no
+					join ags_hub_kwg C on C.idhubkel = A.hub_kwg
+					left join anggota_jemaat_peserta_pemilihan D on D.anggota_jemaat_id = A.id && D.tahun_pemilihan='".$tahun_pemilihan."'
+					where A.id >0 && A.status=1 && B.status=1 && A.status_sidi=1 && (A.tgl_sidi < '".$tahun_pemilihan."-09-01' || (A.tgl_sidi='0000-00-00' && A.status_sidi=1)) && A.created_at < '".$tahun_pemilihan."-09-01 00:00:00'
+	                order by B.kwg_wil ASC";
+		}
+
+		$s=$this->m_model->selectcustom($q);
+		#die(nl2br($q));
+		foreach ($s as $key => $value) {
+			// code...
+			if($value->peserta!=null && $value->peserta>0){
+				continue;
+				#dilewatin aja
+			}
+			$param=array();
+			$param['tahun_pemilihan']=$tahun_pemilihan;
+			$param['status_peserta_pn1']=1;
+			$param['status_peserta_pn2']=1;
+			$param['status_peserta_ppj']=1;
+			$param['anggota_jemaat_id']=$value->anggota_jemaat_id;
+
+			$i=$this->m_model->insertgetid($param, 'anggota_jemaat_peserta_pemilihan');
+		}
+
+		echo json_encode(array('sts'=>1, 'msg'=>'Selesai diperbarui data Peserta Pemilihan!'));
+	}
+
 }
 
 ?>

@@ -87,6 +87,7 @@ $this->load->view('layout/footer');
 <script type="text/javascript">
 
 	$(document).ready(function(){
+		var tahun_pemilihan=$('#stat_tahun_pemilihan').val()
 		var theme = {
 		  	color: [
 				  '#26B99A', '#34495E', '#BDC3C7', '#3498DB',
@@ -306,6 +307,7 @@ $this->load->view('layout/footer');
 		var suaraBelumDikunci=[]
 		var wil=[1,2,3,4,5,6,7]
 		dataMap={}
+		dataMap['tahun_pemilihan']=tahun_pemilihan
 		$.post('<?=base_url();?>ajax/statistik_ppj_wil', dataMap, function(data){
 			json=$.parseJSON(data)
 			
