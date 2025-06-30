@@ -32,7 +32,7 @@ $this->load->view('layout/header');
     </div>
     <div class="col-xs-12">
       <div class="x_panel">
-        <span>Menampilakn <b><?=count($data_keluarga_jemaat);?></b> dari <b><?=$TotalOfData;?></b></span>
+        <span>Menampilakn <b><?=count($data_keluarga_jemaat);?></b> dari <b><?=$TotalOfData;?></b> <text class="text-danger">(Pemilihan Periode: <?=$tahun_pemilihan->periode;?>)</text></span>
         <?= $pagingnation; ?>
         <table class='table table-striped'>
           <thead>
@@ -160,7 +160,7 @@ $this->load->view('layout/header');
               <div class="">
                 <label>
                   <i class="fa fa-list-alt fa-2x " style="top: 8px; position: relative;" title="Konvensional"></i>&nbsp;&nbsp; 
-                    <input type="checkbox" class="js-switch"  <?=$checked;?> recid="<?=$value->kwg_no;?>"  title="<?=$value->kwg_nama;?>"  angjemid_pemilih="<?=$angjemid_pemilih;?>" />
+                    <input type="checkbox" class="js-switch"  <?=$checked;?> recid="<?=$value->kwg_no;?>"  title="<?=$value->kwg_nama;?>"  angjemid_pemilih="<?=$angjemid_pemilih;?>" tahun_pemilihan="<?=$tahun_pemilihan->tahun;?>"  />
                   &nbsp;&nbsp; <i class="fa fa-mobile fa-2x text-success" style="top: 8px; position: relative;" title="Online"></i>
                 </label>
               </div>
@@ -200,6 +200,7 @@ $this->load->view('layout/footer');
     dataMap={}
     dataMap['recid']=$(this).attr('recid')
     dataMap['angjemid_pemilih']=$(this).attr('angjemid_pemilih')
+    dataMap['tahun_pemilihan']=$(this).attr('tahun_pemilihan')
     if($(this).prop('checked') == true){
         //alert("checking");
           dataMap['locked']=0 //calon pemilih memilih secara ONLINE

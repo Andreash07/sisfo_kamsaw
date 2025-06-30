@@ -7,9 +7,28 @@ $this->load->view('layout/header');
 <!-- page content -->
 
 <div class="right_col" role="main">
-  	<h2>Statistik Perolehan Suara - PPJ</h2>
 	<div class="row">
-		<div class="col-md-8 col-sm-12 col-xs-12">
+		<h2 class="col-md-7 col-sm-7 col-xs-12">Statistik Perolehan Suara - PPJ</h2>
+		<div class="col-md-5 col-sm-5 col-xs-12">
+	  	<select class="form-control" id="stat_tahun_pemilihan" name="stat_tahun_pemilihan">
+	  		<?php 
+	  			foreach ($tahun_pemilihan_semua as $key => $value) {
+	  				// code...
+	  				$selected="";
+	  				if($tahunpemilihan==$value->tahun){
+	  					$selected='selected';
+
+	  				}
+				?>
+					<option value="<?=$value->tahun;?>" <?=$selected;?>>Periode <?=$value->periode;?></option>
+				<?php
+	  			}
+	  		?>
+	  	</select>
+	  </div>
+	</div>
+	<div class="row">
+		<div class="col-md-7 col-sm-12 col-xs-12">
 	      	<div class="x_panel tile">
 	            <div class="x_title">
 	              	<h2>Suara Pemilihan PPJ - Wilayah</h2>
@@ -20,7 +39,7 @@ $this->load->view('layout/header');
 	            </div>
       		</div>
         </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
+        <div class="col-md-5 col-sm-12 col-xs-12">
             <div class="x_panel">
               <div class="x_title">
                 <h2>Suara Pemilihan PPJ</h2>

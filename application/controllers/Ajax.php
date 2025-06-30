@@ -816,7 +816,7 @@ class Ajax extends CI_Controller {
 				from keluarga_jemaat B
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
-				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.created_at < '2021-10-21 00:00:00') ) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && B.status=1  && A.status_sidi=1 
+				where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.created_at < '".$tahun_pemilihan."-07-31 00:00:00') ) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && B.status=1  && A.status_sidi=1 
                 group by B.id
                 order by B.kwg_wil ASC";
                 #&& YEAR(A.tgl_lahir) < 2005

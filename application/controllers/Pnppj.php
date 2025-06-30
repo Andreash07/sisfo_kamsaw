@@ -2984,7 +2984,7 @@ $having_count="";
 
 
 
-        $sql_angjem="select A.*, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, C.hub_keluarga, COUNT(D.id) as num_pemilih_konvensional
+        $sql_angjem="select A.*, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, C.hub_keluarga, COUNT(D.id) as num_pemilih_konvensional, E.id as peserta_pemilihan_id, E.status_peserta_pn1, E.status_peserta_pn2, E.status_peserta_ppj, E.tahun_pemilihan
 
 				from anggota_jemaat A
 
@@ -2993,6 +2993,8 @@ $having_count="";
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
 
 				left join pemilih_konvensional D on D.anggota_jemaat_id = A.id && A.kwg_no = D.kwg_no && D.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."'  
+
+				left join anggota_jemaat_peserta_pemilihan E on E.anggota_jemaat_id = A.id && E.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."'
 
 				where A.id >0 && A.status=1 && A.sts_anggota=1 && B.status=1 && A.status_sidi=1 ".$where."
 
@@ -3214,6 +3216,8 @@ $having_count="";
 
 		$angjemid_pemilih=$this->input->post('angjemid_pemilih');
 
+		$tahun_pemilihan=$this->input->post('tahun_pemilihan');
+
 		if($angjemid_pemilih!=0){
 
 			$arr_angjemid_pemilih=explode(',', $angjemid_pemilih);
@@ -3228,8 +3232,10 @@ $having_count="";
 
 			//delete semua data pemilihan konvensional yang ada
 
-			$q=$this->m_model->deleteas('kwg_no', $kwg_no, 'pemilih_konvensional');
-
+			$q=$this->m_model->deleteas2('kwg_no', $kwg_no, 'tahun_pemilihan', $tahun_pemilihan,  'pemilih_konvensional');
+			if($q){
+				echo json_encode(array('sts'=>'OK!', 'msg'=>'Berhasil mendaftarkan sebagai pemilih Online!'));
+			}
 		}
 
 		else{
@@ -3264,7 +3270,7 @@ $having_count="";
 
 					$param['tipe_pemilihan_id']=$valuetipe_pemilihan->id;
 
-					$param['tahun_pemilihan']='2021';
+					$param['tahun_pemilihan']=$tahun_pemilihan;
 
 					$param['created_at']=date('Y-m-d H:i:s');
 
@@ -3273,17 +3279,10 @@ $having_count="";
 					$param['path_qrcode']=$generate_qrcode;
 
 					$q=$this->m_model->insertgetid($param, 'pemilih_konvensional');
-
-
-
 				}
-
 			}
-
-
-
+			echo json_encode(array('sts'=>'OK!', 'msg'=>'Berhasil mendaftarkan sebagai pemilih Konvensional!'));
 		}
-
 	}
 
 
@@ -4216,7 +4215,19 @@ $having_count="";
 
     	$data['wil']=$wil;
 
-
+    	$data['tahun_pemilihan']=array();
+		$tahun_pemilihan=$this->m_model->selectcustom('SELECT * FROM `tahun_pemilihan` order by tahun ASC');
+		$data['tahun_pemilihan_semua']=$tahun_pemilihan;
+		foreach ($tahun_pemilihan as $key => $value) {
+			// code...
+			#echo $key;
+			$data['tahun_pemilihan']=$value;
+			$data['tahunpemilihan']=$value->tahun;
+			if($value->tahun == $this->input->get('tahunpemilihan')){
+				break;
+			}
+			//ini bearti tahun pemiilhannya ambil yg dilooping terakhir
+		}
 
     	$this->load->view('pemilu/statistik/ppj/index', $data);
 

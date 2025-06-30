@@ -1224,7 +1224,7 @@ function countTahunTercover_new($saldo, $pokok_iuran, $sts_keanggotaan, $current
     $cur_iruran=array();
     foreach ($pokok_iuran as $key => $value) {
         // code...
-        $min_tahun_preiode
+        $min_tahun_preiode;
         if($value->tahun_iuran > $current_Year){
             $cur_iruran=$value;
         }
