@@ -5,8 +5,10 @@
 			<th class='text-center'>Nama Jemaat</th>
 			<th class='text-center'> Jenis Kelamin</th>
 			<th class='text-center'>Umur</th>
+			<th class='text-center'>Tanggal Lahir</th>
+			<th class='text-center'>Tanggal Sidi</th>
 			<th class='text-center'>Umur Sidi</th>
-			<th class='text-center'>Umur Atestasi</th>
+			<th class='text-center'>Tanggal Atestasi</th>
 			<!--<th class='text-center' style="width: 30%;">Wilayah</th>-->
 		</tr>
 	</thead>
@@ -39,10 +41,19 @@ foreach ($data_jemaat as $key => $value) {
     else{
   		$ico_status_sidi='<i class="fa fa-times text-danger"></i>';
     }
+	if($value->tgl_lahir !=''){
+		$tgl_lahir = $value->tgl_lahir;
+	}
+	if($value->tgl_sidi !=''){
+		$tgl_sidi = $value->tgl_sidi;
+	}
+	if($value->tgl_attestasi_masuk !=''){
+		$tgl_attestasi_masuk = $value->tgl_attestasi_masuk;
+	}
 
     $status_seleksi=0;
     $msg_seleksi='<label class="label label-danger"><i class="fa fa-times"></i> Tidak Termasuk Kriteria Dipilih</label>';
-    $tglCutoff="2022-04-03";
+    $tglCutoff="2025-03-05";
 	if( $value->tgl_lahir == '0000-00-00'){
 		$umurLahir=0;
 		$umurLahir_lbl="<i style='color:white; background-color:red;'>-</i>";
@@ -106,13 +117,17 @@ foreach ($data_jemaat as $key => $value) {
 			<td style="text-align:center;">
 				<?=getUmur(date('Y-m-d'), $value->tgl_lahir);?>
 			</td>
-			<td>
-				<?=$umurSidi;?>
-				Tahun
+			<td style="text-align:center;">
+				<?=$tgl_lahir;?>
 			</td>
-			<td>
-				<?=$umurAttesasi;?>
-				Tahun
+			<td style="text-align:center;">
+				<?=$tgl_sidi;?>
+			</td>
+			<td style="text-align:center;">
+				<?=$umurSidi_lbl;?>
+			</td>
+			<td style="text-align:center;">
+				<?=$tgl_attestasi_masuk;?>
 			</td>
 		</tr>
 <?php
