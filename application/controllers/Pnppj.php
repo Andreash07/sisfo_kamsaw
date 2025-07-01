@@ -2855,16 +2855,19 @@ class Pnppj extends CI_Controller {
 
 $having_count="";
 
-		if($this->input->get('methode_pemilihan') == 1){
+		if($this->input->get('methode_pemilihan') == '1'){
 
 			$having_count=" HAVING COUNT(D.id)>0 ";
 
 		}
 
-		else if($this->input->get('methode_pemilihan') == 0){
+		else if($this->input->get('methode_pemilihan') == '0'){
 
 			$having_count=" HAVING COUNT(D.id) = 0 ";
 
+		}
+		else{
+			#$param_active.="status_pn1=".$this->input->get('status_pn1')."&";
 		}
 
 
@@ -2879,6 +2882,7 @@ $having_count="";
 
 
 		if($this->input->get('tahunpemilihan')){
+			$param_active.="tahunpemilihan=".$this->input->get('tahunpemilihan')."&";
 
 			$data['tahunpemilihan']=$this->input->get('tahunpemilihan');
 
@@ -2899,6 +2903,21 @@ $having_count="";
 				where A.id >0 && A.status=1 && A.sts_anggota=1 && B.status=1 && A.status_sidi=1 ".$where.""; //A.status=1 bearti tidak pernah di delete
 				#mengecek sudah sidi apa belum saja tidak perlu tahun kelahiran.
 				#&& YEAR(A.tgl_lahir) < 2005  
+
+		$sql="select A.*, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, C.hub_keluarga, COUNT(D.id) as num_pemilih_konvensional
+
+				from anggota_jemaat_peserta_pemilihan E
+
+				join anggota_jemaat A on E.anggota_jemaat_id = A.id
+
+				join keluarga_jemaat B on B.id = A.kwg_no
+
+				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
+
+				left join pemilih_konvensional D on D.anggota_jemaat_id = A.id && A.kwg_no = D.kwg_no && D.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."' 
+
+				where A.id >0 && A.status=1 && A.status_sidi=1 ".$where.""; 
+				# yg baru langsung cek ke jemaat peserta pemilihan
 
 
 
@@ -3002,11 +3021,31 @@ $having_count="";
 
 				order by A.no_urut ASC, A.nama_lengkap ASC"; //die($sql_angjem);
 				#mengecek sudah sidi apa belum saja tidak perlu tahun kelahiran.
-				#&& YEAR(A.tgl_lahir) < 2005  
+				#&& YEAR(A.tgl_lahir) < 2005
+
+		$sql_angjem="select A.*, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, C.hub_keluarga, '0' as num_pemilih_konvensional, E.id as peserta_pemilihan_id, E.status_peserta_pn1, E.status_peserta_pn2, E.status_peserta_ppj, E.tahun_pemilihan
+
+			from anggota_jemaat_peserta_pemilihan E
+
+			join anggota_jemaat A on E.anggota_jemaat_id = A.id
+
+			join keluarga_jemaat B on B.id = A.kwg_no
+
+			join ags_hub_kwg C on C.idhubkel = A.hub_kwg 
+
+			where A.id >0 && A.status_sidi=1 && E.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."' 
+
+			group by A.id
+
+			order by A.no_urut ASC, A.nama_lengkap ASC"; //die($sql_angjem);
+			 #yg terbaru tanpa cek keluarga, karena langsung ke anggota jemaat peserta pemilihan
+			
+			#&& A.status=1 && A.sts_anggota=1 && B.status=1 && 
+
 
 		$data_jemaat=$this->m_model->selectcustom($sql_angjem);
-
-		#die(nl2br($sql_angjem));
+		//echo count($data_jemaat);
+		//die(nl2br($sql_angjem));
 
 
 
@@ -3027,6 +3066,7 @@ $having_count="";
         	#$tglCutoff="2022-04-03";
         	#ini sudah dinamis
         	$tglCutoff=$data['tahun_pemilihan']->tgl_peneguhan;
+
 
 
 
@@ -3116,13 +3156,15 @@ $having_count="";
 
 				//print_r($value); die("asdasd");
 
-				$jemaatPesertaPemilihanOnline++;
-
+				if($value->peserta_pemilihan_id !=null && $value->peserta_pemilihan_id > 0){
+					$jemaatPesertaPemilihanOnline++;
+				}
 			}
 
 			else{
-
-				$jemaatPesertaPemilihanKonvensional++;
+				if($value->peserta_pemilihan_id !=null && $value->peserta_pemilihan_id > 0){
+					$jemaatPesertaPemilihanKonvensional++;
+				}
 
 			}
 
@@ -4313,9 +4355,9 @@ $having_count="";
 		// code...
 		$tahun_pemilihan=$this->input->get('tahun_pemilihan');
 		$data=array();
-		if($tahun_pemilihan='2021'){
+		if($tahun_pemilihan=='2021'){
             #ini  kondisi dulu awal 2021
-            $q="select B.id as kwg_no, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, A.nama_lengkap, C.hub_keluarga, A.id as anggota_jemaat_id, D.id as peserta, A.tgl_sidi, A.created_at
+            $q="select B.id as kwg_no, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, A.nama_lengkap, C.hub_keluarga, A.id as anggota_jemaat_id, D.id as peserta, A.tgl_sidi, A.created_at, A.tgl_meninggal, A.tmpt_meninggal, A.remarks, A.tgl_keluar, A.sts_anggota 
 				from keluarga_jemaat B
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
@@ -4324,7 +4366,7 @@ $having_count="";
 				order by B.kwg_wil , B.kwg_nama ASC;
 				";
 		}else{
-			$q="select B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk,A.nama_lengkap,  C.hub_keluarga, A.id as anggota_jemaat_id, D.id as peserta
+			$q="select B.id as kwg_no, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, A.nama_lengkap, C.hub_keluarga, A.id as anggota_jemaat_id, D.id as peserta, A.tgl_sidi, A.created_at, A.tgl_meninggal, A.tmpt_meninggal, A.remarks, A.tgl_keluar, A.sts_anggota
 					from keluarga_jemaat B
 					join anggota_jemaat A on B.id = A.kwg_no
 					join ags_hub_kwg C on C.idhubkel = A.hub_kwg
@@ -4347,6 +4389,7 @@ $having_count="";
 			$param['status_peserta_pn2']=1;
 			$param['status_peserta_ppj']=1;
 			$param['anggota_jemaat_id']=$value->anggota_jemaat_id;
+			$param['created_at']=date('Y-m-d H:i:s');
 
 			$i=$this->m_model->insertgetid($param, 'anggota_jemaat_peserta_pemilihan');
 		}

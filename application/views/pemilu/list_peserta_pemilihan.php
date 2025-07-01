@@ -82,6 +82,11 @@ $this->load->view('layout/header');
           foreach ($data_jemaat[$valuekwg->kwg_no] as $key => $value) {
             # code...
             $ls_angjem_id[]=$value->id;
+            $sts_peserta='<label class="label label-danger"><i class="fa fa-times"></i> Belum terdaftar sebagai Peserta Pemilihan!</label>';
+            if($value->peserta_pemilihan_id != null && $value->peserta_pemilihan_id >0){
+              $sts_peserta='<label class="label label-success"><i class="fa fa-check-square"></i> Terdaftar sebagai Peserta Pemilihan!</label>';
+            }
+
             if($value->jns_kelamin=='L'){
                       $jns_kelamin="Laki-laki";
                   }
@@ -158,11 +163,21 @@ $this->load->view('layout/header');
             </td>
             <td class='text-center' title="<?=$value->kwg_nama;?>">
               <div class="">
+                <?php
+                if($value->peserta_pemilihan_id != null && $value->peserta_pemilihan_id >0){
+                ?>  
                 <label>
                   <i class="fa fa-list-alt fa-2x " style="top: 8px; position: relative;" title="Konvensional"></i>&nbsp;&nbsp; 
                     <input type="checkbox" class="js-switch"  <?=$checked;?> recid="<?=$value->kwg_no;?>"  title="<?=$value->kwg_nama;?>"  angjemid_pemilih="<?=$angjemid_pemilih;?>" tahun_pemilihan="<?=$tahun_pemilihan->tahun;?>"  />
                   &nbsp;&nbsp; <i class="fa fa-mobile fa-2x text-success" style="top: 8px; position: relative;" title="Online"></i>
                 </label>
+                <?php
+                }else{
+                ?>
+                <?=$sts_peserta;?>
+                <?php
+                }
+                ?>
               </div>
               </td>
             </tr>
