@@ -2916,7 +2916,7 @@ $having_count="";
 
 				left join pemilih_konvensional D on D.anggota_jemaat_id = A.id && A.kwg_no = D.kwg_no && D.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."' 
 
-				where A.id >0 && A.status=1 && A.status_sidi=1 ".$where.""; 
+				where A.id >0 && A.status=1 && A.status_sidi=1 && E.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."' ".$where.""; 
 				# yg baru langsung cek ke jemaat peserta pemilihan
 
 
@@ -2957,7 +2957,7 @@ $having_count="";
 
         $data_kwg_jemaat=$this->m_model->selectcustom($sql." ".$group_by." ".$field_order." ".$order_by);
 
-        #die(nl2br($sql." ".$group_by." ".$field_order." ".$order_by));
+       	#die(nl2br($sql." ".$group_by." ".$field_order." ".$order_by));
 
         $data_keluarga_jemaat=array();
 
@@ -3023,7 +3023,7 @@ $having_count="";
 				#mengecek sudah sidi apa belum saja tidak perlu tahun kelahiran.
 				#&& YEAR(A.tgl_lahir) < 2005
 
-		$sql_angjem="select A.*, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, C.hub_keluarga, '0' as num_pemilih_konvensional, E.id as peserta_pemilihan_id, E.status_peserta_pn1, E.status_peserta_pn2, E.status_peserta_ppj, E.tahun_pemilihan
+		$sql_angjem="select A.*, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, C.hub_keluarga, COUNT(D.id) as num_pemilih_konvensional, E.id as peserta_pemilihan_id, E.status_peserta_pn1, E.status_peserta_pn2, E.status_peserta_ppj, E.tahun_pemilihan
 
 			from anggota_jemaat_peserta_pemilihan E
 
@@ -3032,6 +3032,8 @@ $having_count="";
 			join keluarga_jemaat B on B.id = A.kwg_no
 
 			join ags_hub_kwg C on C.idhubkel = A.hub_kwg 
+
+			left join pemilih_konvensional D on D.anggota_jemaat_id = A.id && A.kwg_no = D.kwg_no && D.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."'  
 
 			where A.id >0 && A.status_sidi=1 && E.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."' 
 
@@ -3154,7 +3156,7 @@ $having_count="";
 
 			if( $value->num_pemilih_konvensional == 0){
 
-				//print_r($value); die("asdasd");
+				#print_r($value); die("asdasd");
 
 				if($value->peserta_pemilihan_id !=null && $value->peserta_pemilihan_id > 0){
 					$jemaatPesertaPemilihanOnline++;
@@ -3167,6 +3169,7 @@ $having_count="";
 				}
 
 			}
+			#echo $jemaatPesertaPemilihanKonvensional; die();
 
 
 
@@ -3293,8 +3296,10 @@ $having_count="";
 				$param['kwg_no']=$kwg_no;
 
 				$param['anggota_jemaat_id']=$value;
+				if(isset($this->session->userdata('userdata')->username)){
+					$param['created_by']=$this->session->userdata('userdata')->username;
 
-				$param['created_by']=$this->session->userdata('userdata')->username;
+				}
 
 				foreach ($tipe_pemilihan as $keytipe_pemilihan => $valuetipe_pemilihan) {
 
