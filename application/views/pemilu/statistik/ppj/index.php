@@ -85,6 +85,12 @@ $this->load->view('layout/footer');
 <script src="../vendors/echarts/dist/echarts.min.js"></script>
 <script src="../vendors/echarts/map/js/world.js"></script>
 <script type="text/javascript">
+	$(document).on('change', '#stat_tahun_pemilihan', function(e){
+		dataMap={};
+		tahun_pemilihan=$(this).val();
+		window.location.href = "<?=base_url();?>/pnppj/statistik_ppj?tahunpemilihan="+tahun_pemilihan;
+
+	})
 
 	$(document).ready(function(){
 		var tahun_pemilihan=$('#stat_tahun_pemilihan').val()

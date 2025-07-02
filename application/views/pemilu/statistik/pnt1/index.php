@@ -151,6 +151,12 @@ $this->load->view('layout/footer');
 <script src="../vendors/echarts/map/js/world.js"></script>
 
 <script type="text/javascript">
+	$(document).on('change', '#stat_tahun_pemilihan', function(e){
+		dataMap={};
+		tahun_pemilihan=$(this).val();
+		window.location.href = "<?=base_url();?>/pnppj/statistik_pnt1?tahunpemilihan="+tahun_pemilihan;
+
+	})
 
 
 
