@@ -27,6 +27,7 @@
   </div>
   <!-- End Header -->
   <!-- Page content -->
+  <input type="hidden" value="<?=base_url();?>" name="url_response" id="url_response">
   <div class="container pt-5 pb-2">
     <div class="row justify-content-center">
       <div class="col-lg-6">

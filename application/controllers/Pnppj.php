@@ -60,7 +60,7 @@ class Pnppj extends CI_Controller {
 
             // Your own constructor code
 
-        $this->tahun_pemilihan='2022';
+        $this->tahun_pemilihan='2025';
 
 
 
@@ -71,8 +71,11 @@ class Pnppj extends CI_Controller {
 	public function index(){
 
 		$data=array();
+		$stahun_pemilihan="SELECT * FROM `tahun_pemilihan` ORDER BY `tahun` DESC limit 1";
+		$qtahun_pemilihan=$this->m_model->selectcustom($stahun_pemilihan);
+		$data['tahun_pemilihan']=$qtahun_pemilihan[0];
 
-		$setting=$this->m_model->selectas('tahun_pemilihan', '2021', 'lock_pemilihan');
+		$setting=$this->m_model->selectas('tahun_pemilihan', $this->tahun_pemilihan, 'lock_pemilihan', 'tipe_pemilihan', 'ASC');
 
 		$data['setting']=array();
 
@@ -80,15 +83,17 @@ class Pnppj extends CI_Controller {
 
 			# code...
 
-			$data['setting'][$value->id]=$value;
+			$data['setting'][$value->tipe_pemilihan]=$value;
 
 		}
+
+		#echo "<pre>"; print_r($data['setting']); echo "</pre>"; die();
 
 
 
 		//check si pemilih offiline atau online
 
-		$offline=$this->m_model->selectas('kwg_no', $this->session->userdata('sess_keluarga')->id, 'pemilih_konvensional');
+		$offline=$this->m_model->selectas2('kwg_no', $this->session->userdata('sess_keluarga')->id, 'tahun_pemilihan', $this->tahun_pemilihan, 'pemilih_konvensional');
 		foreach ($offline as $key => $value) {
 			// code...
 			$data['offline'][$value->tipe_pemilihan_id]=$value;
@@ -529,7 +534,7 @@ class Pnppj extends CI_Controller {
 			//default dari login user
 			$data['kwg_wil']=$this->session->userdata('sess_keluarga')->kwg_wil;
 		}
-		$this->tahun_pemilihan='2021';
+		#$this->tahun_pemilihan='2021';
 		$q="select A.kwg_wil, COUNT(A.id) as num_angjem
 
 				from anggota_jemaat A 
@@ -725,16 +730,19 @@ class Pnppj extends CI_Controller {
 		$data=array();
 
 		$data['ls_wil']=lsWil();
-		$this->tahun_pemilihan='2021';
+		#$this->tahun_pemilihan='2021';
 
 		$q="select A.kwg_wil, COUNT(A.id) as num_angjem
 
 				from anggota_jemaat A 
 
-				where (A.tgl_meninggal is null || A.tgl_meninggal ='0000-00-00') && A.sts_anggota=1 && A.status=1 && A.status_sidi=1
+				join anggota_jemaat_peserta_pemilihan B on B.anggota_jemaat_id = A.id
+
+				where B.tahun_pemilihan='".$this->tahun_pemilihan."'
 
 				"; //group by A.kwg_wil
 
+				#where (A.tgl_meninggal is null || A.tgl_meninggal ='0000-00-00') && A.sts_anggota=1 && A.status=1 && A.status_sidi=1
 		$r=$this->m_model->selectcustom($q);
 
 		foreach ($r as $key => $value) {

@@ -772,7 +772,8 @@ class Ajax extends CI_Controller {
                 group by B.id
                 order by B.kwg_wil ASC";
                 #&& A.status=1 && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005 && D.locked=0 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-09-09 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-09-09 00:00:00' && A.last_modified_dorkas < '2021-09-09 00:00:00') )
-		$suaraBelumDikunci=$this->m_model->selectcustom($q2);
+		$suaraBelumDikunci=$this->m_model->selectcustom($q2); 
+		#die($q2);
 
 		$data['suaraBelumDikunci']=array();
 		foreach ($suaraBelumDikunci as $key => $value) {

@@ -4,9 +4,11 @@ $this->load->view('frontend/layouts/header');
 
 
 $open="2022-01-10 00:00:00";
+$open="2025-07-01 00:00:00";
 //$open="2022-01-08 16:44:00";
 
 $close="2022-01-26 23:59:59";
+$close="2025-07-06 00:00:00";
 //$close="2022-01-26 22:41:30";
 
 if(strtotime($open)> strtotime(date('Y-m-d H:i:s')) ){
@@ -60,7 +62,9 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 	                  	$sts_open=1;
 	                ?>
 
-	                    <div class="btn btn-success btn-sm" href="#!" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0;" onclick="event.preventDefault(); Pemiluopen('<b>Proses Pemilihan Penatua Tahap 2 Telah Dibuka.<br>Silahkan Masuk pada layanan Pemilihan Penatua 2022-2026</b><br><span class=\'text-success\'>Akan dibuka sampai<br>26 January 2022</span>', 'timer')">
+	                    <!--<div class="btn btn-success btn-sm" href="#!" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0;" onclick="event.preventDefault(); Pemiluopen('<b>Proses Pemilihan Penatua Tahap 2 Telah Dibuka.<br>Silahkan Masuk pada layanan Pemilihan Penatua 2022-2026</b><br><span class=\'text-success\'>Akan dibuka sampai<br>26 January 2022</span>', 'timer')">-->
+
+                    	<div class="btn btn-success btn-sm" href="#!" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0;" onclick="event.preventDefault(); Pemiluopen('<b>Proses Pemilihan Penatua & PPJ (TRIAL) Telah Dibuka.<br>Silahkan Masuk pada layanan Pemilihan Penatua & PPJ <?=$tahun_pemilihan->periode;?></b>', 'timer')">
 
 	                    	<span style="font-size: 0.65rem; font-style: italic;">
 
@@ -133,110 +137,6 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
       	</div>
 
-      	<?php 
-
-		if(isset($setting['2']) && ($setting['2']->show == 1)){
-
-				//ini berati sedang di buka pemilihannya
-
-		?>
-
-		<div class="card mt-4" style="width: 18rem; margin: auto;">
-
-			<img class="card-img-top" src="<?=base_url();?>assets/images/51842-Pemilu2.jpg" alt="Card image cap">
-
-			<div class="card-body" style="padding: 0.75rem">
-
-				<h3 class="card-title">Pemilihan Penatua 2022-2026<br>Tahap II</h3>
-
-				<p class="card-text text-danger small">
-
-					<?php 
-
-					if( ($setting['2']->locked==0 || strtotime($open)<strtotime(date('Y-m-d H:i:s'))) && strtotime($close)>strtotime(date('Y-m-d H:i:s')) ){
-
-					//	<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (30 Ags - 9 Sep '21) .</label>
-
-					//<label class="text-danger" style="border-bottom: 1px solid #ededed;"><b>Dalam Proses sosialisai</b>.<br>Proses Pemungutan Suara <b>belum dibuka</b></label>
-					?>
-						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (10 Jan - 26 Jan '22) .</label>
-					<?php
-
-					}
-
-					?>
-
-					<?php 
-
-					if(isset($offline[2])){
-
-					?>
-
-						*Keluarga Anda terdaftar sebagai Peserta Pemilihan Konvensional!
-
-					<?php
-
-					}
-
-					?>
-
-				</p>
-
-				<?php 
-
-				if($setting['2']->approve==1 ){
-
-				?>
-
-					<a href="<?=base_url();?>pnppj/perolehansuarapemilu2" class="btn btn-success float-left" title="Hasil Perolehan Suara Sementar">Hasil <i class="ni ni-bullet-list-67"></i></a>
-
-				<?php
-
-				}
-
-				?>
-
-
-
-				<?php 
-
-				if((($setting['2']->locked==0 && !isset($offline[2]) ) || strtotime($open)<strtotime(date('Y-m-d H:i:s'))) && strtotime($close)>strtotime(date('Y-m-d H:i:s'))){
-
-					//ini beari masih di buka untuk pemungutan suara
-
-				?>
-
-				<a href="<?=base_url();?>pnppj/pemilihan2" class="btn btn-primary float-right">Masuk <i class="ni ni-bullet-list-67"></i></a>
-
-				<?php 
-
-				}else{
-
-				?>
-
-				<br>
-
-				<br>
-
-				<br>
-
-				<?php
-
-				}
-
-				?>
-
-			</div>
-
-		</div>
-
-		<?php
-
-		}
-
-		?>
-
-
 		<?php 
 
 		if(isset($setting['3']) && ($setting['3']->show == 1)){
@@ -251,7 +151,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
 			<div class="card-body" style="padding: 0.75rem">
 
-				<h3 class="card-title">Pemilihan PPJ 2022-2026</h3>
+				<h3 class="card-title">Pemilihan PPJ <?=$tahun_pemilihan->periode;?></h3>
 
 
 
@@ -263,7 +163,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
 					?>
 
-						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (30 Ags - 9 Sep '21) .</label>
+						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (<b class="text-danger">Trial</b>) .</label>
 
 					<?php
 
@@ -371,7 +271,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
 					?>
 
-						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung. (04 Okt - 20 Okt '21)</label>
+						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung. (<b class="text-danger">Trial</b>)</label>
 
 					<?php
 						/*<label class="text-danger" style="border-bottom: 1px solid #ededed;"><b>Dalam Proses sosialisai</b>.<br>Proses Pemungutan Suara <b>belum dibuka</b></label>*/
@@ -457,6 +357,109 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 		<?php
 
 		}
+
+		?>
+
+		<?php 
+
+		/*if(isset($setting['2']) && ($setting['2']->show == 1)){
+
+				//ini berati sedang di buka pemilihannya
+
+		?>
+
+		<div class="card mt-4" style="width: 18rem; margin: auto;">
+
+			<img class="card-img-top" src="<?=base_url();?>assets/images/51842-Pemilu2.jpg" alt="Card image cap">
+
+			<div class="card-body" style="padding: 0.75rem">
+
+				<h3 class="card-title">Pemilihan Penatua <?=$tahun_pemilihan->periode;?> <br>Tahap II</h3>
+
+				<p class="card-text text-danger small">
+
+					<?php 
+
+					if( ($setting['2']->locked==0 || strtotime($open)<strtotime(date('Y-m-d H:i:s'))) && strtotime($close)>strtotime(date('Y-m-d H:i:s')) ){
+
+					//	<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (30 Ags - 9 Sep '21) .</label>
+
+					//<label class="text-danger" style="border-bottom: 1px solid #ededed;"><b>Dalam Proses sosialisai</b>.<br>Proses Pemungutan Suara <b>belum dibuka</b></label>
+					?>
+						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (10 Jan - 26 Jan '22) .</label>
+					<?php
+
+					}
+
+					?>
+
+					<?php 
+
+					if(isset($offline[2])){
+
+					?>
+
+						*Keluarga Anda terdaftar sebagai Peserta Pemilihan Konvensional!
+
+					<?php
+
+					}
+
+					?>
+
+				</p>
+
+				<?php 
+
+				if($setting['2']->approve==1 ){
+
+				?>
+
+					<a href="<?=base_url();?>pnppj/perolehansuarapemilu2" class="btn btn-success float-left" title="Hasil Perolehan Suara Sementar">Hasil <i class="ni ni-bullet-list-67"></i></a>
+
+				<?php
+
+				}
+
+				?>
+
+
+
+				<?php 
+
+				if((($setting['2']->locked==0 && !isset($offline[2]) ) || strtotime($open)<strtotime(date('Y-m-d H:i:s'))) && strtotime($close)>strtotime(date('Y-m-d H:i:s'))){
+
+					//ini beari masih di buka untuk pemungutan suara
+
+				?>
+
+				<a href="<?=base_url();?>pnppj/pemilihan2" class="btn btn-primary float-right">Masuk <i class="ni ni-bullet-list-67"></i></a>
+
+				<?php 
+
+				}else{
+
+				?>
+
+				<br>
+
+				<br>
+
+				<br>
+
+				<?php
+
+				}
+
+				?>
+
+			</div>
+
+		</div>
+
+		<?php
+
+		}*/
 
 		?>
 

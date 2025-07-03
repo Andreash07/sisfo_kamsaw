@@ -17,7 +17,8 @@ domReady(function () {
       alert('QR code tidak valid. Silakan coba lagi.');
       return;
     } else {
-      const modifiedURL = decodeText.replace('sisfo-gkpkampungsawah.com', 'sisfo.gkpkampungsawah.org');
+      url_new=$('#url_response').val();
+      const modifiedURL = decodeText.replace('https://sisfo-gkpkampungsawah.com', url_new);
       window.location.href = modifiedURL;
     }
   }
