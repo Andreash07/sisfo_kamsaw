@@ -425,7 +425,22 @@ $this->load->view('layout/footer');
 			if ($('#'+dom).length ){  
 				belummemlih=parseInt(peserta) - (parseInt(suaradikunci)+parseInt(suarabelumdikunci))
 			  var echartPie = echarts.init(document.getElementById(dom), theme1);
+				real_peserta=peserta;
+				num_pesertaMemilih='';
+			  lbl_persent_pesertaMemilih='';
+
+		  	num_pesertaMemilih=parseInt(suaradikunci)+parseInt(suarabelumdikunci)
+		  	persent_pesertaMemilih=(num_pesertaMemilih/real_peserta*100).toFixed(2);
+		  	lbl_persent_pesertaMemilih=num_pesertaMemilih+' ('+String(persent_pesertaMemilih)+' %)';
+
 			  echartPie.setOption({
+			  	title: {
+
+						text: 'Peserta Pemilihan '+real_peserta+'\n'+lbl_persent_pesertaMemilih+' Sudah Memilih',
+
+					  subtext: 'Suara '+peserta+' (x1 @1Peserta)'
+
+					},
 				tooltip: {
 				  trigger: 'item',
 				  formatter: "{a} <br/>{b} : {c} ({d}%)"
