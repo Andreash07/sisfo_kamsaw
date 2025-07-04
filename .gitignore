@@ -17,6 +17,7 @@ application/third_party/*
 !/assets/frontend/css/qrCodeScanner.css
 !/assets/frontend/js/
 !/assets/frontend/js/qrCodeScanner.js
+!/assets/frontend/js/scanner-qrcode.js
 images/*
 pdf_old/*
 pdf/_class/

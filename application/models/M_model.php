@@ -261,6 +261,16 @@ Class M_model extends CI_Model {
             return 0;
         }
     }
+    function deleteas3($as, $data, $as2, $data2, $as3, $data3, $dbase) {
+        $this->db->where($as, $data);
+        $this->db->where($as2, $data2);
+        $this->db->where($as3, $data3);
+        if ($this->db->delete($dbase)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
     function loginData($data) {
         $condition = "email ="."'".$data['email']."' AND "."password ="."'".md5($data['password'])

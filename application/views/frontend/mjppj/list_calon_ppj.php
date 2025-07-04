@@ -27,7 +27,7 @@
     <input type="hidden" name="wil_pemilih" id="wil_pemilih" value="<?=$wil_pemilih;?>">
     <div class="row" id="content_list_calon2">
       <?php 
-      //print_r($calon);      die();
+      #print_r($calon);      die();
       $num_voted=0;
       foreach ($calon as $key => $value) {
         # code...
@@ -51,6 +51,12 @@
         if($value->foto != null){
           $foto_thumb=base_url().$value->foto_thumb;
           $foto=base_url().$value->foto;
+
+          if(strpos($value->foto, 'https://') >=0 ){
+            $foto_thumb=$value->foto_thumb;
+            $foto=$value->foto;
+          }
+
         }
 
         $checked="";
@@ -75,7 +81,7 @@
                 </a>
                 <div class="pt-2 text-center">
                   <h5 class="h3 title">
-                    <small class="d-block mb-0"><?=$title.ucwords($value->nama_lengkap);?></small>
+                    <small class="d-block mb-0"><?=$title.ucwords($value->nama_lengkap2);?></small>
                     <small class="h5 font-weight-light text-muted"><?=getUmur(date('Y-m-d'), $value->tgl_lahir);?> tahun | Wil. <?=$value->kwg_wil;?></small>
                   </h5>
                   <div>

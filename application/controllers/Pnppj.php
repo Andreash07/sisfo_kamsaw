@@ -117,6 +117,7 @@ class Pnppj extends CI_Controller {
 		//print_r($this->session->userdata());
 
 		if(!$this->session->userdata('sess_keluarga')){
+			redirect(base_url().'login/keluarga');
 
 			die("User Invalid, Access Denied!");
 
@@ -157,6 +158,7 @@ class Pnppj extends CI_Controller {
 		//print_r($this->session->userdata());
 
 		if(!$this->session->userdata('sess_keluarga')){
+			redirect(base_url().'login/keluarga');
 
 			die("User Invalid, Access Denied!");
 
@@ -171,8 +173,13 @@ class Pnppj extends CI_Controller {
 				from anggota_jemaat A 
 
 				left join ags_sts_kawin B on B.id = A.sts_kawin
+				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id
 
-				where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1";
+				where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && C.id >0 && C.id is not null && C.tahun_pemilihan='".$this->tahun_pemilihan."' && C.status_peserta_ppj=1
+				order by A.hub_kwg ASC, A.no_urut ASC ";
+
+				#ini kondisi pemilihan tahun 2021, belum dinamis
+				#where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1";
 
 		$data['anggota_sidi']=$this->m_model->selectcustom($sql);
 
@@ -197,7 +204,7 @@ class Pnppj extends CI_Controller {
 		//print_r($this->session->userdata());
 
 		if(!$this->session->userdata('sess_keluarga')){
-
+			redirect(base_url().'login/keluarga');
 			die("User Invalid, Access Denied!");
 
 		}
@@ -690,12 +697,16 @@ class Pnppj extends CI_Controller {
 		$q="select A.kwg_wil, COUNT(A.id) as num_angjem
 
 				from anggota_jemaat A 
+				join anggota_jemaat_peserta_pemilihan B on B.anggota_jemaat_id = A.id 
 
-				where (A.tgl_meninggal is null || A.tgl_meninggal ='0000-00-00') && A.sts_anggota=1 && A.status=1 && A.status_sidi=1
+				where B.id >0 && B.tahun_pemilihan='".$this->tahun_pemilihan."'
 
 				"; //group by A.kwg_wil
+				#ini filter kondisiuntuk pemilihan tahun 2021, belum dinamis
+				#where (A.tgl_meninggal is null || A.tgl_meninggal ='0000-00-00') && A.sts_anggota=1 && A.status=1 && A.status_sidi=1
 
 		$r=$this->m_model->selectcustom($q);
+		#die($q);
 
 		foreach ($r as $key => $value) {
 
@@ -744,6 +755,7 @@ class Pnppj extends CI_Controller {
 
 				#where (A.tgl_meninggal is null || A.tgl_meninggal ='0000-00-00') && A.sts_anggota=1 && A.status=1 && A.status_sidi=1
 		$r=$this->m_model->selectcustom($q);
+		#die(nl2br($q));
 
 		foreach ($r as $key => $value) {
 
@@ -1115,7 +1127,7 @@ class Pnppj extends CI_Controller {
 
 
 
-		$q="select A.*, B.status_kawin, count(C.id) as voted, C.tahun_pemilihan, D.id as jemaat_terpilih1_id, D.status as status_terpilih, D.note, E.wilayah, MAX(C.created_date) as last_vote
+		/*$q="select A.*, B.status_kawin, count(C.id) as voted, C.tahun_pemilihan, D.id as jemaat_terpilih1_id, D.status as status_terpilih, D.note, E.wilayah, MAX(C.created_date) as last_vote
 
 				from anggota_jemaat A 
 
@@ -1133,7 +1145,30 @@ class Pnppj extends CI_Controller {
 
 				group by A.id
 
-                order by voted DESC, last_vote ASC"; //die($q);
+                order by voted DESC, last_vote ASC"; */
+                #die(nl2br($q));
+        #diatas sql lama
+
+        $q="select A.*, B.status_kawin, count(C.id) as voted, C.tahun_pemilihan, D.id as jemaat_terpilih1_id, D.status as status_terpilih, D.note, E.wilayah, MAX(C.created_date) as last_vote
+
+				from anggota_jemaat A 
+
+				join wilayah E on E.id = A.kwg_wil
+
+				left join ags_sts_kawin B on B.id = A.sts_kawin
+
+				left join votes_tahap_ppj C on C.id_calon1 = A.id && C.tahun_pemilihan='".$tahun."' && C.locked = 1
+
+				left join jemaat_terpilih_ppj D on D.anggota_jemaat_id = A.id && D.tahun_pemilihan='".$tahun."'
+
+				join anggota_jemaat_bakal_calon  F on F.anggota_jemaat_id = A.id 
+
+				where F.tahun_pemilihan ='2025' && F.status_ppj = 1
+
+				group by A.id
+
+                order by voted DESC, last_vote ASC"; 
+                #die(nl2br($q));
 
         $r=$this->m_model->selectcustom($q);
 

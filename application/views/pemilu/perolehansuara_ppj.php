@@ -58,14 +58,31 @@ if(isset($voted) && count($voted) > 0){
 	    if($valuevoted->foto != null){
 	    	$foto_thumb=base_url().$valuevoted->foto_thumb;
 	    	$foto=base_url().$valuevoted->foto;
+
+    	 	if(strpos($valuevoted->foto, 'https://') >=0 ){
+            	$foto_thumb=$valuevoted->foto_thumb;
+            	$foto=$valuevoted->foto;
+          	}
 	    }
+
+	    $title="Ibu ";
+        if($valuevoted->sts_kawin==1){
+          $title="Sdri. ";
+        }
+        if(mb_strtolower($valuevoted->jns_kelamin)=='l'){
+          $color_gender="bg-gradient-blue";
+          $ico_gender='<i class="fa fa-male" style="font-size:12pt;"></i>';
+          $title="Bp. ";
+          if($valuevoted->sts_kawin==1){
+            $title="Sdr. ";
+          }
+        }
 
 	?>
 		<tr>
 			<td class="text-center"><?=$keyvoted+1;?></td>
 			<td style=" vertical-align: middle;">
-				<img src="<?=$foto_thumb;?>" data-caption="<?=$valuevoted->nama_lengkap;?>" alt="<?=$valuevoted->nama_lengkap;?>" class="img-circle img-responsive" style="width: 77px;height: 77px;object-fit: cover; cursor: pointer; margin-right: 10px; display: inline;" href="<?=$foto;?>" data-fancybox="images" data-caption="<?=$valuevoted->nama_lengkap;?>">
-	            <?=$valuevoted->nama_lengkap;?></td>
+				<img src="<?=$foto_thumb;?>" data-caption="<?=$title.$valuevoted->nama_lengkap2;?>" alt="<?=$title.$valuevoted->nama_lengkap2;?>" class="img-circle img-responsive" style="width: 77px;height: 77px;object-fit: cover; cursor: pointer; margin-right: 10px; display: inline;" href="<?=$foto;?>" data-fancybox="images" data-caption="<?=$title.$valuevoted->nama_lengkap2;?>"> <?=$title.$valuevoted->nama_lengkap2;?></td>
 			<td class="text-center"><?=$valuevoted->wilayah;?></td>
 			<td class="text-center">
 			 	<div class="progress" style="margin-bottom: 0px;">
@@ -87,7 +104,7 @@ if(isset($voted) && count($voted) > 0){
 			            <div class="modal-header">
 			              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
 			              </button>
-			              <h4 class="modal-title" id="myModalLabel2"><?=$valuevoted->nama_lengkap;?></h4>
+			              <h4 class="modal-title" id="myModalLabel2"><?=$title.$valuevoted->nama_lengkap2;?></h4>
 			            </div>
 			            <div class="modal-body">
 			              <h4>Catatan</h4>
