@@ -493,6 +493,18 @@ class Pnppj extends CI_Controller {
 				where (A.tgl_meninggal is null || A.tgl_meninggal ='0000-00-00') && A.sts_anggota=1 && A.status=1 && A.status_sidi=1
 
 				group by A.kwg_wil";
+		#diatas  yg lama pemilihan tahun 2021, belum dinamis
+
+
+		$q="select A.kwg_wil, COUNT(A.id) as num_angjem
+
+				from anggota_jemaat A
+
+				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id 
+
+				where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_pn1=1
+
+				group by A.kwg_wil";
 
 		$r=$this->m_model->selectcustom($q);
 
@@ -547,6 +559,18 @@ class Pnppj extends CI_Controller {
 				from anggota_jemaat A 
 
 				where (A.tgl_meninggal is null || A.tgl_meninggal ='0000-00-00') && A.sts_anggota=1 && A.status=1 && A.status_sidi=1 && A.kwg_wil='".$data['kwg_wil']."'
+
+				group by A.kwg_wil";
+		#diatas  yg lama pemilihan tahun 2021, belum dinamis
+
+
+		$q="select A.kwg_wil, COUNT(A.id) as num_angjem
+
+				from anggota_jemaat A
+
+				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id 
+
+				where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_pn1=1 && A.kwg_wil='".$data['kwg_wil']."'
 
 				group by A.kwg_wil";
 
@@ -884,6 +908,28 @@ class Pnppj extends CI_Controller {
 				group by A.id
 
                 order by voted DESC, last_vote ASC";  //die($q);
+        #yg diatas tahun 2021, belum dinamis
+
+        $q="select A.*, B.status_kawin, count(C.id) as voted, C.tahun_pemilihan, D.id as jemaat_terpilih1_id, D.status as status_terpilih, D.note, MAX(C.created_date) as last_vote, F.voted_konvensional, last_vote_konvensional, D.id as id_terpilih
+
+				from anggota_jemaat A 
+
+				left join ags_sts_kawin B on B.id = A.sts_kawin
+
+				left join votes_tahap1 C on C.id_calon1 = A.id && C.tahun_pemilihan='".$tahun."' && C.wil_calon1='".$wil."' && C.locked = 1
+				
+				left join (select id_calon1, count(F.id) as voted_konvensional, MAX(F.created_date) as last_vote_konvensional from votes_tahap1 F where F.tahun_pemilihan='".$tahun."' && F.wil_calon1='".$wil."' && F.locked = 1 && F.sn_surat_suara is not NULL && F.sn_surat_suara !='' group by F.id_calon1) F  on F.id_calon1 = A.id
+
+				left join jemaat_terpilih1 D on D.anggota_jemaat_id = A.id && D.tahun_pemilihan='".$tahun."'
+
+
+				where  A.kwg_wil='".$wil."' && A.id in ( select id_calon1 from votes_tahap1 where tahun_pemilihan='".$tahun."' && wil_calon1='".$wil."' && locked = 1 order by created_date asc)
+
+				group by A.id
+
+                order by voted DESC, last_vote ASC";  //die($q);
+
+                #join anggota_jemaat_bakal_calon E on E.anggota_jemaat_id = A.id coba gak pakai ini dulu, karena udah where in id calon yg di pilih di vote_tahap1
 
         $r=$this->m_model->selectcustom($q);
 

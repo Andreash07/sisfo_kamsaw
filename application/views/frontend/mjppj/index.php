@@ -54,7 +54,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 	            <!-- Card body -->
 
 	            <div class="card-body" style="padding:unset; position:relative;">
-	                <img src="<?=base_url();?>/assets/images/poster-mobile-pnt2-01_compressed.jpg" class="img-fluid" instyle="border-top-left-radius: .375rem;border-top-right-radius: .375rem;">
+	                <img src="<?=base_url();?>/assets/images/poster-mobile-ppj-01_compressed.jpg" class="img-fluid" instyle="border-top-left-radius: .375rem;border-top-right-radius: .375rem;">
 
 	               <?php 
 

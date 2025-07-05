@@ -157,7 +157,7 @@ $this->load->view('frontend/layouts/header');
 
 								<td class="text-center" style=" vertical-align:middle;"><?=$keyvoted+1;?></td>
 
-								<td style="width: 60% !important; font-size: 12px; white-space:unset;  vertical-align:middle;"><?=$title.$valuevoted->nama_lengkap;?></td>
+								<td style="width: 60% !important; font-size: 12px; white-space:unset;  vertical-align:middle;"><?=$title.$valuevoted->nama_lengkap2;?></td>
 
 								<td class="text-center">&nbsp;<?=$valuevoted->voted;?><br>(<?= round($percent,2);?>%)</td>
 

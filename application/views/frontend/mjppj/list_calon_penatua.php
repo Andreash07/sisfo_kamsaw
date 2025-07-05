@@ -140,7 +140,7 @@
 
             </div>
 
-            <?=$title.ucwords($value->nama_lengkap);?>
+            <?=$title.ucwords($value->nama_lengkap2);?>
             <br>
             <label class="text-muted"><?=getUmur(date('Y-m-d'), $value->tgl_lahir);?> tahun | Wilayah <?=$value->kwg_wil;?></label>&nbsp;&nbsp;<?= $note_lock;?>
 

@@ -77,8 +77,8 @@
 
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/frontend/css/qrCodeScanner.css">
 <!--<script src="https://unpkg.com/html5-qrcode"></script>-->
-<script type="text/javascript" src="<?php echo base_url(); ?>/assets/frontend/js/scanner-qrcode.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>/assets/frontend/js/qrCodeScanner.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/frontend/js/scanner-qrcode.js?v=<?= microtime();?>"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/frontend/js/qrCodeScanner.js?v=<?= microtime();?>"></script>
 <script>
   const myQRReader = document.getElementById('my-qr-reader');
   const form = document.querySelector('form');

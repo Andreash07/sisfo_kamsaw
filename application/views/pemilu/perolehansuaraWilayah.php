@@ -80,6 +80,19 @@ if(isset($voted_wil) && count($voted_wil) > 0){
 
 		}
 
+		$title="Ibu ";
+    if($valuevoted->sts_kawin==1){
+      $title="Sdri. ";
+    }
+    if(mb_strtolower($valuevoted->jns_kelamin)=='l'){
+      $color_gender="bg-gradient-blue";
+      $ico_gender='<i class="fa fa-male" style="font-size:12pt;"></i>';
+      $title="Bp. ";
+      if($valuevoted->sts_kawin==1){
+        $title="Sdr. ";
+      }
+    }
+
 //$this->m_model->updateas('id', $valuevoted->id_terpilih, array('persen_vote'=>$percent,'last_vote'=>$valuevoted->last_vote), 'jemaat_terpilih1');
 
 	?>
@@ -88,7 +101,7 @@ if(isset($voted_wil) && count($voted_wil) > 0){
 
             <div class="w_left w_55">
 
-              <span><?=$keyvoted+1;?>. <?=$valuevoted->nama_lengkap;?></span>
+              <span><?=$keyvoted+1;?>. <?=$title;?><?=$valuevoted->nama_lengkap2;?></span>
 
             </div>
 

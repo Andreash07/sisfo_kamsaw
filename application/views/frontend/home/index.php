@@ -64,6 +64,10 @@ $open="2022-01-10 00:00:00";//pnt
 
 $close="2022-01-26 23:59:59";
 
+$open="2025-07-01 00:00:00";//pnt
+
+$close="2025-07-06 00:00:00";
+
 
 
 $timestamp = strtotime($open);
@@ -129,7 +133,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
             <!-- Card body -->
 
             <div class="card-body" style="padding:unset; position:relative;">
-                <img src="<?=base_url();?>/assets/images/poster-mobile-pnt2-01_compressed.jpg" class="img-fluid" instyle="border-bottom-left-radius: .375rem;border-bottom-right-radius: .375rem;"> 
+                <img src="<?=base_url();?>/assets/images/poster-mobile-ppj-01_compressed.jpg" class="img-fluid" instyle="border-bottom-left-radius: .375rem;border-bottom-right-radius: .375rem;"> 
                 <?php 
 
                   if(strtotime($open)< strtotime(date('Y-m-d H:i:s')) ){

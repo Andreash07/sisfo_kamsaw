@@ -188,7 +188,7 @@ class Ajax extends CI_Controller {
 				join anggota_jemaat_bakal_calon D on D.anggota_jemaat_id = A.id
 				where  A.kwg_wil='".$wil_pemilih."'  && A.sts_anggota=1 && A.status=1 && D.status_pn1=1 && A.status_sidi=1 && A.kwg_no !=0
 				group by A.id
-				order by voted DESC, A.nama_lengkap"; //die($sql);
+				order by voted DESC, A.nama_lengkap"; #die(nl2br($sql));
 		//&& YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF('2022-04-03', A.tgl_lahir)/365 >=25 && DATEDIFF('2022-04-03', A.tgl_lahir)/365 <=65
 		$data['calon']=$this->m_model->selectcustom($sql);
 
