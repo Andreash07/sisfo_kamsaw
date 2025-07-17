@@ -176,7 +176,7 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
               <div class="x_content text-center">
                 <?php
                 if ($makam->sts_dompet_digital == 1) {
-                  $hitung_bulan_iuran_makam=countTahunTercover_new($makam->saldo, $pokok_iuran, $makam->sts_keanggotaan_makam, date('Y'));
+                  $hitung_bulan_iuran_makam=countTahunTercover_new($makam->saldo, $pokok_iuran_all, $makam->sts_keanggotaan_makam, date('Y'));
 
                   $sts_keanggotaan_penghuni_makam="Non GKP Kampung Sawah";
                   if ($makam->sts_keanggotaan_makam == 1) {
