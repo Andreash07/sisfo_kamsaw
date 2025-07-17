@@ -1222,36 +1222,63 @@ function countTahunTercover($total_biayaKPKP, $saldo_akhir, $current_Year=null){
 function countTahunTercover_new($saldo, $pokok_iuran, $sts_keanggotaan, $current_Year){
     $data=array();
     $cur_iruran=array();
+    $arr_pokok_iuran=array();
     foreach ($pokok_iuran as $key => $value) {
         // code...
-        $min_tahun_preiode;
-        if($value->tahun_iuran > $current_Year){
+        $arr_pokok_iuran[$value->tahun_iuran]=$value;
+        if($current_Year>=$value->tahun_iuran){
             $cur_iruran=$value;
         }
 
         //batas bawah tahun
     }
+    krsort($arr_pokok_iuran);
+    #print_r($pokok_iuran);
+    #print_r($arr_pokok_iuran);
+    #die();
     $total_biayaKPKP=0;
     if($sts_keanggotaan==1){
         $total_biayaKPKP=$cur_iruran->nilai_iuran_angjem;
     }else{
         $total_biayaKPKP=$cur_iruran->nilai_iuran_non;
     }
-    $num_tahun=floor($saldo_akhir/$total_biayaKPKP);
-
-    foreach ($pokok_iuran as $key => $value) {
-        // code...
-        for ($i=$current_Year; $i >= $value->tahun_iuran ; $i--) { 
-            // code...
-            
-        }
+    $num_tahun=floor($saldo/$total_biayaKPKP);
+    if($num_tahun>=0){
+        #langsung seperti biasa tidak perlu hitung tahun mundur dan cek tahun iuran yg berlakunya 
+        $num_tahun_tercover=floor($saldo/$total_biayaKPKP);
+        $data['tahun_tercover']=date("Y",strtotime($num_tahun_tercover." year"));
+        $data['num_tahun_tercover']=$num_tahun_tercover;
     }
+    else{
+        //ini untuk tahun yg kurang bayar (saldo minus)
+        $saldo_positif=$saldo*-1;
+        #ini num tahunnya berdasarkan hitungna mundur dari pengurangan saldo yg ada. berdasarkan pokok iuran KPKP yg berlaku.
+        $num_tahun_new=0;
 
-    $tahun_tercover=floor($saldo_akhir/$total_biayaKPKP);
-
-    $data['tahun_tercover']=date("Y",strtotime($num_tahun_tercover." year"));
-    $data['num_tahun_tercover']=$num_tahun_tercover;
-
+        while ($saldo_positif>0) {
+            // code...
+            $total_biayaKPKP=0;
+            //cek tahun iuran pokok yg berlaku dulu
+            foreach ($arr_pokok_iuran as $key1 => $value1) {
+                // code...
+                if($current_Year>=$value1->tahun_iuran){
+                    if($sts_keanggotaan==1){
+                        $total_biayaKPKP=$value1->nilai_iuran_angjem;
+                    }else{
+                        $total_biayaKPKP=$value1->nilai_iuran_non;
+                    }
+                    break;
+                }
+            }
+            $saldo_positif=$saldo_positif-$total_biayaKPKP;
+            #if($saldo_positif>=0){
+                $num_tahun_new--;
+            #}
+        }
+        #pengecekan mundur seleai baru hitung tahunnya
+        $data['tahun_tercover']=date("Y",strtotime($num_tahun_new." year"));
+        $data['num_tahun_tercover']=$num_tahun_new;
+    }
     return $data;
 }
 

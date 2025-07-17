@@ -140,7 +140,10 @@ class Data_Blok_Makam extends CI_Controller
     $kpkp_bayar_tahunan=$this->m_model->selectas('kpkp_blok_makam_id', $recid, 'kpkp_bayar_tahunan');
     
     $pokok_iuran=$this->m_model->selectas('status','1','kpkp_pokok_iuran_makam');
-    $data['pokok_iuran']=$pokok_iuran;
+    $data['pokok_iuran']=$pokok_iuran[0];
+
+    $pokok_iuran_all=$this->m_model->selectas('id > 0',null,'kpkp_pokok_iuran_makam');
+    $data['pokok_iuran_all']=$pokok_iuran_all;
     //$penghuni_makam=$this->m_model->selectas2('kpkp_blok_makam_id', $recid,'deleted_at is NULL',NULL, 'kpkp_penghuni_makam', 'id', 'ASC');
     $penghuni_makam=$this->m_model->selectcustom("select * from kpkp_penghuni_makam where kpkp_blok_makam_id='".$recid."' && deleted_at is NULL order by sts DESC, id ASC");
     $data['penghuni_makam']=$penghuni_makam;
@@ -437,8 +440,26 @@ class Data_Blok_Makam extends CI_Controller
       $json=array('sts'=>1, 'title'=>'Wow.. ','msg'=>"Status Makam Berhasil di perbarui!", 'class'=>"iziToast-success");
     }
     echo json_encode($json);
+  }
 
 
+  public function calculator(){
+    $data=array();
+    $param=array();
+    if($this->input->get('nominal')){
+      $nominal=$this->input->get('nominal');
+      $data['nominal']=$nominal;
+      $data['pokok_iuran']=$nominal;
 
+      $pokok_iuran=$this->m_model->selectas('status','1','kpkp_pokok_iuran_makam');
+      $data['pokok_iuran']=$pokok_iuran[0];
+
+      $pokok_iuran_all=$this->m_model->selectas('id > 0',null,'kpkp_pokok_iuran_makam');
+      $data['pokok_iuran_all']=$pokok_iuran_all;
+
+    
+    }
+
+    $this->load->view('kpkp/calculator', $data);
   }
 }
