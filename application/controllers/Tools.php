@@ -196,15 +196,19 @@ ORDER by B.kwg_no ASC";
 
     }
 
-    public function generate_qrcode($keluarga=null){
+    public function generate_qrcode($keluarga=null, $regenerate=0){
+        #die(base_url());
         $this->load->library('Ciqrcode');
         $where="";
         if($keluarga!=null){
             $where=" && id='".$keluarga."'";
         }
-        $q="select * from keluarga_jemaat where status=1 && (qrcode is null || qrcode ='') ".$where;
+        if($regenerate==0){
+            $where="  && (qrcode is null || qrcode ='') ";
+        }
+        $q="select * from keluarga_jemaat where status=1 ".$where;
         $data=array();
-        $data['qrcode']=$this->m_model->selectcustom($q);
+        $data['qrcode']=$this->m_model->selectcustom($q);# die($q);
         //print_r($data['qrcode']);
         //die();
 
@@ -230,16 +234,19 @@ ORDER by B.kwg_no ASC";
             $file_name1 = $text1.uniqid().".png";
             $file_name = $folder.$file_name1;
             QRcode::png($text,$file_name);*/
-            $text1="qJKpSawah-";
+            #$text1="qJKpSawah-"; 
+            $text1="qJKpSawahNew-"; #ini membedakan dengan qrcode lama
             //$valueQRCODE=base_url()."invitation/assign_quest/".$value->id;
-            $valueQRCODE="https://sisfo-gkpkampungsawah.com/qrcode/scan/".md5($value->id."#17ashdkj25ahsdkja96#Asthaaksjdha");
+            #$valueQRCODE="https://sisfo-gkpkampungsawah.com/qrcode/scan/".md5($value->id."#17ashdkj25ahsdkja96#Asthaaksjdha");
+            $valueQRCODE=base_url()."qrcode/scan/".md5($value->id."#17ashdkj25ahsdkja96#Asthaaksjdha");
             $file_name1 = $text1.uniqid().".png";
 
             $image_name=$file_name1; //buat name dari qr code sesuai dengan nip
 
             $params=array();
             $params['data'] = $valueQRCODE; //data yang akan di jadikan QR CODE
-            $params['level'] = 'H'; //H=High
+            #$params['level'] = 'H'; //H=High
+            $params['level'] = 'L'; //L=Low lebih mudah terbaca karena QR tidak penuh
             $params['size'] = 10;
             $params['savename'] = FCPATH.$config['imagedir'].$image_name; //simpan image QR CODE ke folder assets/images/
             $this->ciqrcode->generate($params); // fungsi untuk generate QR CODE
