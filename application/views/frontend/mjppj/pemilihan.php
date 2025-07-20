@@ -121,6 +121,11 @@ $this->load->view('frontend/layouts/footer');
         </ol>
 
       </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-sm pull-right" type="button" data-dismiss="modal" aria-label="Close">
+          Ya, Saya Mengerti!
+        </button>
+      </div>
 
     </div>
 

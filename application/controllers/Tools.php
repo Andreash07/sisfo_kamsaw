@@ -47,7 +47,7 @@ class Tools extends CI_Controller {
         parent::__construct();
 
 
-
+        $this->tahun_pemilihan='2025';
             // Your own constructor code
 
     }
@@ -447,19 +447,36 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
 
 
         $data=array();
-        $s="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks
+        /*$s="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks
 from anggota_jemaat A 
 join keluarga_jemaat B on (B.id = A.kwg_no)
 where A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-09-09 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-09-09 00:00:00' && A.last_modified_dorkas < '2021-09-09 00:00:00') ) && A.status_sidi=1 ".$where."
+order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";*/
+
+$s="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks
+from anggota_jemaat A 
+join keluarga_jemaat B on (B.id = A.kwg_no)
+join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id 
+where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_pn1=1 ".$where."
 order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
 
         $data['angjem']=$this->m_model->selectcustom($s);
 
-        $s1="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks, C.locked, C.sn_surat_suara
+        /*$s1="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks, C.locked, C.sn_surat_suara
 from anggota_jemaat A 
 join keluarga_jemaat B on (B.id = A.kwg_no)
 join votes_tahap_ppj C on (C.id_pemilih = A.id)
 where A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-09-09 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-09-09 00:00:00' && A.last_modified_dorkas < '2021-09-09 00:00:00') ) && A.status_sidi=1 && C.locked in (1,0) ".$where."
+group by C.id_pemilih
+order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";*/
+
+
+$s1="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks, C.locked, C.sn_surat_suara
+from anggota_jemaat A 
+join keluarga_jemaat B on (B.id = A.kwg_no)
+join votes_tahap_ppj C on (C.id_pemilih = A.id)
+join wilayah E on E.id = A.kwg_wil
+where A.status=1 && A.status_sidi=1 && C.locked in (1,0) && ".$where."
 group by C.id_pemilih
 order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
 

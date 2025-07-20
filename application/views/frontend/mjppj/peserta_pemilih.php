@@ -59,7 +59,7 @@
             <p class="mt-3 mb-0 text-sm">
               <h5 class="text-muted mb-0">Pemilihan</h5>
               <div class="divider" style="width: 100%; border-bottom: 1px #8898aa solid; clear: both; margin-bottom: 5px; margin-top:1px;"></div>
-              <a id="btn_ajax_modal" href="<?=base_url();?>ajax/list_calon_penatua/?kwg_wil=<?=$value->kwg_wil;?>&id=<?=$value->id;?>&nama=<?=rawurlencode($title.ucwords($value->nama_lengkap));?>" class="col-12 btn btn-info btn-sm text-nowrap float-left" data-toggle="modal" data-target="#exampleModal" onclick="event.preventDefault();"><i class="ni ni-bullet-list-67"></i><b>Penatua</b></a>
+              <a id="btn_ajax_modal" href="<?=base_url();?>ajax/list_calon_penatua/?kwg_wil=<?=$value->kwg_wil;?>&id=<?=$value->id;?>&nama=<?=rawurlencode($title.ucwords($value->nama_lengkap));?>" class="col-12 btn btn-info text-nowrap float-left" data-toggle="modal" data-target="#exampleModal" onclick="event.preventDefault();"><i class="ni ni-bullet-list-67"></i><b>Surat Suara Penatua</b></a>
             </p>
           </div>
         </div>

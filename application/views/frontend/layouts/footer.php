@@ -12,11 +12,11 @@
 
               <div class="copyright text-center  text-lg-left  text-muted">
 
-              	<small>Ver. 0.99 Beta</small>
+              	<small>Ver. 1 Beta</small>
 
               	<br>
 
-                &copy; 2021 <a href="https://gkpkampungsawah.org/" class="font-weight-bold ml-1" target="_blank">GKP Kampung Sawah</a>
+                &copy; <?=date('Y');?> <a href="https://gkpkampungsawah.org/" class="font-weight-bold ml-1" target="_blank">GKP Kampung Sawah</a>
 
               </div>
 
@@ -28,7 +28,7 @@
 
                 <li class="nav-item">
 
-                  <a href="https://kedaikite.gkpkampungsawah.org/" class="nav-link" target="_blank"><i class="ni ni-bag-17"></i> Kedai Kite</a>
+                  <!--<a href="https://kedaikite.gkpkampungsawah.org/" class="nav-link" target="_blank"><i class="ni ni-bag-17"></i> Kedai Kite</a>-->
 
                 </li>
 
@@ -76,7 +76,17 @@
 
           <div class="form-group">
 
+            <?php 
+            if(isset($this->session->userdata('sess_keluarga')->kwg_nama)){
+            ?>  
             <input type="text" class="form-control" id="txt_keluarga" name="txt_keluarga" placeholder="Keluarga" value="<?=$this->session->userdata('sess_keluarga')->kwg_nama;?>" readonly>
+            <?php 
+            }else{
+            ?>
+              <input type="text" class="form-control" id="txt_keluarga" name="txt_keluarga" placeholder="Keluarga" value="" placeholder="Nama Keluarga Anda...">
+            <?php 
+            }
+            ?>
 
             <label for="txt_pengguna">Pengguna</label>
 

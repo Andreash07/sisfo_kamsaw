@@ -16,7 +16,7 @@ $this->load->view('layout/header');
 <div class="container-fluid">
 	
 <?php 
-$tglCutoff="2022-04-03";
+$tglCutoff="2026-04-12";
 $tglCutoff=date('Y-m-d');
 $tglCutoffMemilih=date('d-m-Y H:i');
 ?>

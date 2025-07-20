@@ -13,7 +13,7 @@ function domReady(fn) {
 
 domReady(function () {
   function onScanSuccess(decodeText, decodeResult) {
-    if (!decodeText.includes('sisfo-gkpkampungsawah.com')) {
+    if (!decodeText.includes('sisfo-gkpkampungsawah.com') && !decodeText.includes('sisfo.gkpkampungsawah.org')) {
       alert('QR code tidak valid. Silakan coba lagi.');
       return;
     } else {

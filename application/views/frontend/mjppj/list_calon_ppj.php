@@ -17,11 +17,11 @@
   <div class="clearfix"></div>
 
   <small class="text-danger">* Tolong klik tombol <b>Kunci Pilihan</b>. Agar suara pilihan Anda dianggap Sah.</small>
-
+  <button type="button" class="btn btn-primary pull-right" id="btn_kunciPilihan" onclick="event.preventDefault()">Kunci Pilihan</button>
   <div class="clearfix"></div>
 
   <form id="form_pemilihan" action="<?=base_url();?>pnppj/submit_pemilihan">
-
+<br>
     <input type="hidden" name="id_pemilih" id="id_pemilih" value="<?=$id_pemilih;?>">
 
     <input type="hidden" name="wil_pemilih" id="wil_pemilih" value="<?=$wil_pemilih;?>">

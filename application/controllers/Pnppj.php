@@ -133,7 +133,7 @@ class Pnppj extends CI_Controller {
 
 				left join ags_sts_kawin B on B.id = A.sts_kawin
 				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id
-				where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && C.id >0 && C.id is not null && C.tahun_pemilihan='".$this->tahun_pemilihan."' && C.status_peserta_ppj=1
+				where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && C.id >0 && C.id is not null && C.tahun_pemilihan='".$this->tahun_pemilihan."' && C.status_peserta_pn1=1 && A.sts_anggota=1 && A.status=1 && A.status_sidi=1
 				order by A.hub_kwg ASC, A.no_urut ASC ";
 
 				#where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1";
@@ -178,7 +178,7 @@ class Pnppj extends CI_Controller {
 				left join ags_sts_kawin B on B.id = A.sts_kawin
 				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id
 
-				where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && C.id >0 && C.id is not null && C.tahun_pemilihan='".$this->tahun_pemilihan."' && C.status_peserta_ppj=1
+				where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && C.id >0 && C.id is not null && C.tahun_pemilihan='".$this->tahun_pemilihan."' && C.status_peserta_ppj=1 && A.sts_anggota=1 && A.status=1 && A.status_sidi=1
 				order by A.hub_kwg ASC, A.no_urut ASC ";
 
 				#ini kondisi pemilihan tahun 2021, belum dinamis
@@ -221,8 +221,9 @@ class Pnppj extends CI_Controller {
 				from anggota_jemaat A 
 
 				left join ags_sts_kawin B on B.id = A.sts_kawin
+				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id
 
-				where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1";
+				where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && C.id >0 && C.id is not null && C.tahun_pemilihan='".$this->tahun_pemilihan."' && C.status_peserta_pn2=1 && A.sts_anggota=1 && A.status=1 && A.status_sidi=1";
 
 		$data['anggota_sidi']=$this->m_model->selectcustom($sql);
 

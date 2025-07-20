@@ -13,7 +13,7 @@
               <br>
               GKP Kampung Sawah
               <br>
-              <small>Ver. 0.99 Beta</small>
+              <small>Ver. 1.0</small>
             </p>
           </div>
         </div>

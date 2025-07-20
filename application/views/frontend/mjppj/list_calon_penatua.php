@@ -19,7 +19,7 @@
   <div class="clearfix"></div>
 
   <small class="text-danger">* Tolong klik tombol <b>Kunci Pilihan</b>. Agar suara pilihan Anda dianggap Sah.</small>
-
+  <button type="button" class="btn btn-primary pull-right" id="btn_kunciPilihan" onclick="event.preventDefault()">Kunci Pilihan</button>
   <div class="clearfix"></div>
   <div class="form-group row">
     <div class="col-7">
