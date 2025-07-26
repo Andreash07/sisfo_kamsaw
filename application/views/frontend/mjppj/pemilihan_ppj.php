@@ -1,7 +1,7 @@
 <?php $this->load->view('frontend/layouts/header'); ?>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link rel="stylesheet" href="<?=base_url();?>assets/frontend/css/star-rating.css">
+<link rel="stylesheet" href="<?= base_url(); ?>assets/frontend/css/star-rating.css">
 
 <div class="container-fluid mt-4">
   <div class="row align-items-center">
@@ -9,7 +9,7 @@
       <h2>Pemilihan PPJ</h2>
     </div>
   </div>
-  <?php $this->load->view('frontend/mjppj/peserta_pemilih_ppj', array('anggota_sidi'=>$anggota_sidi)); ?>
+  <?php $this->load->view('frontend/mjppj/peserta_pemilih_ppj', array('anggota_sidi' => $anggota_sidi)); ?>
 </div>
 
 <!-- Feedback Modal -->
@@ -59,18 +59,18 @@
 
 <!-- star rating click effect -->
 <script type="text/javascript">
-    document.querySelectorAll('.star-rating:not(.readonly) label').forEach(star => {
-        star.addEventListener('click', function() {
-            this.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 200);
-        });
+  document.querySelectorAll('.star-rating:not(.readonly) label').forEach(star => {
+    star.addEventListener('click', function() {
+      this.style.transform = 'scale(1.2)';
+      setTimeout(() => {
+        this.style.transform = 'scale(1)';
+      }, 200);
     });
+  });
 </script>
 
 <script type="text/javascript">
-  $(document).on('click touchstart', '[id=btn_kunciPilihan]', function(e){
+  $(document).on('click touchstart', '[id=btn_kunciPilihan]', function(e) {
     var r = confirm("Apakah anda yakin ingin Mengunci Pilihan Calon PPJ? (Peringatan: Jika OK, anda tidak dapat mengubah lagi!)");
     if (r == false) {
       return;
@@ -80,20 +80,19 @@
 
     $('#loading').show();
 
-    dataMap={}
-    dataMap['id_pemilih']=$('#id_pemilih').val()
-    dataMap['wil_pemilih']=$('#wil_pemilih').val()
-    $.post('<?=base_url();?>pnppj/kunciPilihan_ppj', dataMap, function(data){
-      json=$.parseJSON(data)
-      if(json.status==1){
+    dataMap = {}
+    dataMap['id_pemilih'] = $('#id_pemilih').val()
+    dataMap['wil_pemilih'] = $('#wil_pemilih').val()
+    $.post('<?= base_url(); ?>pnppj/kunciPilihan_ppj', dataMap, function(data) {
+      json = $.parseJSON(data)
+      if (json.status == 1) {
         iziToast.success({
           title: '',
           message: json.msg,
           position: "topRight",
         });
         $('#exampleModal').modal('hide')
-      }
-      else{
+      } else {
         iziToast.error({
           title: '',
           message: json.msg,
@@ -102,64 +101,56 @@
       }
       $('#loading').hide();
     })
-
   })
-  
-  $(document).on('click touchstart', '[id^=calon_pn]', function(e){
-    $('#loading').show();
-    ini=$(this);
-    dataMap={}
-    dataMap['id_pemilih']=$('#id_pemilih').val()
-    dataMap['wil_pemilih']=$('#wil_pemilih').val()
-    dataMap['val_calon']=$(this).val()
-    num_voted=parseInt($('#num_voted').val());
-    //console.log(num_voted+"alskla")
-    hak_suara=parseInt($('#hak_suara').html());
 
-    if($(this).prop('checked') == true){
+  $(document).on('click touchstart', '[id^=calon_pn]', function(e) {
+    $('#loading').show();
+    ini = $(this);
+    dataMap = {}
+    dataMap['id_pemilih'] = $('#id_pemilih').val()
+    dataMap['wil_pemilih'] = $('#wil_pemilih').val()
+    dataMap['val_calon'] = $(this).val()
+    num_voted = parseInt($('#num_voted').val());
+    //console.log(num_voted+"alskla")
+    hak_suara = parseInt($('#hak_suara').html());
+
+    if ($(this).prop('checked') == true) {
       //alert("checking");
-      dataMap['vote']=1 //1 voted
-       if(num_voted>=1){
-      //ini bearti sudah 1 voting
-        alert("Peringatan: Anda tidak dapat memilih lebih dari "+hak_suara+" calon!"); 
+      dataMap['vote'] = 1 //1 voted
+      if (num_voted >= 1) {
+        //ini bearti sudah 1 voting
+        alert("Peringatan: Anda tidak dapat memilih lebih dari " + hak_suara + " calon!");
         $('#loading').hide();
         return false;
       }
-    }else{
+    } else {
       //alert("unchecking");
-      dataMap['vote']=2//2 unvote
-    } 
+      dataMap['vote'] = 2 //2 unvote
+    }
 
-    $.post('<?=base_url();?>pnppj/vote_tahap_ppj', dataMap, function(data){
-      json=$.parseJSON(data)
-      if(dataMap['vote']==2 && json.status==3){
+    $.post('<?= base_url(); ?>pnppj/vote_tahap_ppj', dataMap, function(data) {
+      json = $.parseJSON(data)
+      if (dataMap['vote'] == 2 && json.status == 3) {
         //bearti gagal delet jadi tidak jadi unvoted
         ini.prop('checked', true);
-      }
-      else if(dataMap['vote']==1 && json.status==0){
+      } else if (dataMap['vote'] == 1 && json.status == 0) {
         //bearti gagal voting jadi tidak jadi voted
         ini.prop('checked', false);
-      }
-      else if(dataMap['vote']==2 && json.status==2){
+      } else if (dataMap['vote'] == 2 && json.status == 2) {
         //bearti berhasil delet
-        num_voted=num_voted-1;
+        num_voted = num_voted - 1;
         $('#lbl_num_pilihan').html(num_voted)
         $('#num_voted').val(num_voted)
-  console.log(num_voted+"akl")
-
-      }
-      else if(dataMap['vote']==1 && json.status==1){
+        console.log(num_voted + "akl")
+      } else if (dataMap['vote'] == 1 && json.status == 1) {
         //bearti berhasil voting 
-        num_voted=num_voted+1;
+        num_voted = num_voted + 1;
         $('#lbl_num_pilihan').html(num_voted)
         $('#num_voted').val(num_voted)
-  console.log(num_voted+"mm")
-
+        console.log(num_voted + "mm")
       }
-
       $('#loading').hide();
     })
-
   })
 </script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
