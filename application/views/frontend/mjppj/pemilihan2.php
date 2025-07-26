@@ -4,6 +4,8 @@ $this->load->view('frontend/layouts/header');
 
 ?>
 
+<?php $this->load->view('frontend/mjppj/feedback_form'); ?>
+
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
 
 
@@ -219,6 +221,8 @@ $this->load->view('frontend/layouts/footer');
 
       return;
 
+    } else {
+      $('#feedbackModal').modal('show');
     }
 
 

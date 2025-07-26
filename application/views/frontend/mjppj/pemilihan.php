@@ -4,6 +4,8 @@ $this->load->view('frontend/layouts/header');
 
 ?>
 
+<?php $this->load->view('frontend/mjppj/feedback_form'); ?>
+
 <style type="text/css">
 
   .blink_me {
@@ -171,6 +173,8 @@ $this->load->view('frontend/layouts/footer');
 
       return;
 
+    } else {
+      $('#feedbackModal').modal('show');
     }
 
 
