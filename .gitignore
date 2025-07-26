@@ -15,6 +15,7 @@ application/third_party/*
 !/assets/frontend/
 !/assets/frontend/css/
 !/assets/frontend/css/qrCodeScanner.css
+!/assets/frontend/css/star-rating.css
 !/assets/frontend/js/
 !/assets/frontend/js/qrCodeScanner.js
 !/assets/frontend/js/scanner-qrcode.js
