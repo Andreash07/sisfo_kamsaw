@@ -1644,5 +1644,43 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
         }
     }
 
+
+    public function generate_userjemaat($value='')
+    {
+        // code...
+
+        $s="SELECT A.id, A.kwg_nama, A.kwg_wil, B.id as userjemaat_id, B.username, B.password 
+            FROM keluarga_jemaat A 
+            left join users_jemaat B on A.id = B.keluarga_jemaat_id
+            WHERe A.id>0 && A.status=1 && B.id is null;";
+        $q=$this->m_model->selectcustom($s);
+
+        foreach ($q as $key => $value) {
+            // code...
+            $arr_Kwg_nama=explode(' ', $value->kwg_nama);
+            $username=strtolower($arr_Kwg_nama[0].rand(1000,10000)); //angka random 4 digit
+
+
+            $users_jemaat=array();
+
+            $users_jemaat['username']=$username;
+
+            $users_jemaat['password']=md5($username);
+
+            $users_jemaat['status']=1; 
+
+            $users_jemaat['created_by']=1; //ini bearti dari barcode
+
+            $users_jemaat['created_at']=date('Y-m-d H:i:s'); 
+
+            $users_jemaat['keluarga_jemaat_id']=$value->id;
+            $users_jemaat['device_id']=NULL;
+
+            //input ke users_jemaat
+
+            $createUsers_jemaat=$this->m_model->insertgetid($users_jemaat, 'users_jemaat');
+        }
+    }
+
 }
 

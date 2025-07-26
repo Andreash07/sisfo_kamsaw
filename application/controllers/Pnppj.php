@@ -4474,7 +4474,7 @@ $having_count="";
 		}
 
 		$s=$this->m_model->selectcustom($q);
-		#die(nl2br($q));
+		die(nl2br($q));
 		foreach ($s as $key => $value) {
 			// code...
 			if($value->peserta!=null && $value->peserta>0){

@@ -4,11 +4,11 @@ $this->load->view('frontend/layouts/header');
 
 
 $open="2022-01-10 00:00:00";
-$open="2025-07-01 00:00:00";
+$open="2025-07-25 00:00:00";
 //$open="2022-01-08 16:44:00";
 
 $close="2022-01-26 23:59:59";
-$close="2025-07-06 00:00:00";
+$close="2025-08-20 00:00:00";
 //$close="2022-01-26 22:41:30";
 
 if(strtotime($open)> strtotime(date('Y-m-d H:i:s')) ){
