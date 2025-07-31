@@ -170,6 +170,7 @@ class Pnppj extends CI_Controller {
 		$data=array();
 
 		$data['keluarga']=$this->session->userdata('sess_keluarga')->kwg_nama;
+		$data['tahun_pemilihan']=$this->tahun_pemilihan;
 
 		$sql="select A.*, B.status_kawin
 
@@ -186,6 +187,29 @@ class Pnppj extends CI_Controller {
 
 		$data['anggota_sidi']=$this->m_model->selectcustom($sql);
 
+		$ls_id_pemilih=array();
+		$ls_id_pemilih[]=0;
+		foreach ($data['anggota_sidi'] as $key => $value) {
+			// code...
+			$ls_id_pemilih[]=$value->id;
+		}
+
+		$spemilih_voting="select * from votes_tahap_ppj where id_pemilih in (".implode(', ', $ls_id_pemilih).") && tahun_pemilihan = '".$this->tahun_pemilihan."'";
+		$qpemilih_voting=$this->m_model->selectcustom($spemilih_voting);
+
+		$data['pemilih_voting']=array();
+		foreach ($qpemilih_voting as $key => $value) {
+			// code...
+			$data['pemilih_voting'][$value->id_pemilih][]=$value;
+		}
+
+		$sulasan="select * from ulasan_user where user_id in (".implode(', ', $ls_id_pemilih).") && module='Pemilihan PPJ ".$this->tahun_pemilihan."' ";
+		$qulasan=$this->m_model->selectcustom($sulasan); #die($sulasan);
+		$data['ulasan']=array();
+		foreach ($qulasan as $key => $value) {
+			// code...
+			$data['ulasan'][$value->user_id]=$value;
+		}
 
 
 
@@ -2923,6 +2947,7 @@ class Pnppj extends CI_Controller {
 		}
 
 		$where="";
+		$where2="";
 
 		$param_active="?";
 
@@ -2931,6 +2956,7 @@ class Pnppj extends CI_Controller {
 			$param_active.="nama_anggota=".rawurldecode($this->input->get('nama_anggota'))."&";
 
 			$where.=" && (lower(A.nama_lengkap) like '%".rawurldecode($this->input->get('nama_anggota'))."%' || lower(B.kwg_nama) like '%".rawurldecode($this->input->get('nama_anggota'))."%' )";
+			$where2.=" && (lower(A.nama_lengkap) like '%".rawurldecode($this->input->get('nama_anggota'))."%' || lower(B.kwg_nama) like '%".rawurldecode($this->input->get('nama_anggota'))."%' )";
 
 		}
 
@@ -2941,6 +2967,7 @@ class Pnppj extends CI_Controller {
 			$param_active.="kwg_wil=".$this->input->get('kwg_wil')."&";
 
 			$where.=" && A.kwg_wil ='".$this->input->get('kwg_wil')."'";
+			$where2.=" && A.kwg_wil ='".$this->input->get('kwg_wil')."'";
 
 		}
 
@@ -3128,7 +3155,7 @@ $having_count="";
 
 			left join pemilih_konvensional D on D.anggota_jemaat_id = A.id && A.kwg_no = D.kwg_no && D.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."'  
 
-			where A.id >0 && A.status_sidi=1 && E.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."' 
+			where A.id >0 && A.status_sidi=1 && E.tahun_pemilihan ='".$data['tahun_pemilihan']->tahun."' ".$where2."
 
 			group by A.id
 
@@ -4464,17 +4491,21 @@ $having_count="";
 				order by B.kwg_wil , B.kwg_nama ASC;
 				";
 		}else{
+			//delet dulu datanya lalu create ulang
+			$d="delete from anggota_jemaat_peserta_pemilihan where tahun_pemilihan ='".$tahun_pemilihan."'";
+			$qd=$this->m_model->querycustom($d);
+			//warning
+
 			$q="select B.id as kwg_no, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, A.nama_lengkap, C.hub_keluarga, A.id as anggota_jemaat_id, D.id as peserta, A.tgl_sidi, A.created_at, A.tgl_meninggal, A.tmpt_meninggal, A.remarks, A.tgl_keluar, A.sts_anggota
 					from keluarga_jemaat B
 					join anggota_jemaat A on B.id = A.kwg_no
 					join ags_hub_kwg C on C.idhubkel = A.hub_kwg
 					left join anggota_jemaat_peserta_pemilihan D on D.anggota_jemaat_id = A.id && D.tahun_pemilihan='".$tahun_pemilihan."'
-					where A.id >0 && A.status=1 && B.status=1 && A.status_sidi=1 && (A.tgl_sidi < '".$tahun_pemilihan."-09-01' || (A.tgl_sidi='0000-00-00' && A.status_sidi=1)) && A.created_at < '".$tahun_pemilihan."-09-01 00:00:00'
+					where A.id >0 && A.sts_anggota = 1 && A.status=1 && B.status=1 && A.status_sidi=1 && (A.tgl_sidi < '".$tahun_pemilihan."-09-01' || (A.tgl_sidi='0000-00-00' && A.status_sidi=1)) && A.created_at < '".$tahun_pemilihan."-09-01 00:00:00'
 	                order by B.kwg_wil ASC";
 		}
 
 		$s=$this->m_model->selectcustom($q);
-		die(nl2br($q));
 		foreach ($s as $key => $value) {
 			// code...
 			if($value->peserta!=null && $value->peserta>0){

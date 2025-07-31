@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <link rel="stylesheet" href="<?= base_url(); ?>assets/frontend/css/star-rating.css">
 
-<div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+<div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true" indata-backdrop="static" >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -12,10 +12,17 @@
       </div>
       <div class="modal-body">
         <form id="feedbackForm">
+          <input type="hidden" name="auth_review" value="<?=md5($this->session->userdata('sess_keluarga')->id.'(71hkas37%');?>">
+          <input type="hidden" name="user_idUlasan" id="user_idUlasan" value="">
+          <input type="hidden" name="moduleUlasan" id="moduleUlasan" value="">
+          <div class="form-group">
+            <label for="feedbackText">Nama Keluarga</label>
+            <input type="text" id="nama_pengguna_ulasan" name="nama_pengguna" class="form-control" readonly value="<?=$this->session->userdata('sess_keluarga')->kwg_nama;?>">
+          </div>
           <div>
             <div class="rating-card">
               <div class="star-rating animated-stars">
-                <input type="radio" id="star5" name="rating" value="5">
+                <input type="radio" id="star5" name="rating" value="5" checked  >
                 <label for="star5" class="bi bi-star-fill"></label>
                 <input type="radio" id="star4" name="rating" value="4">
                 <label for="star4" class="bi bi-star-fill"></label>
@@ -30,13 +37,13 @@
           </div>
           <div class="form-group">
             <label for="feedbackText">Tuliskan tanggapan/saran anda</label>
-            <textarea class="form-control" id="feedbackText" rows="3"></textarea>
+            <textarea class="form-control" id="feedbackText" name="feedbackText" rows="3"></textarea>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-        <button type="button" class="btn btn-primary">Kirim</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="display:none;">Batal</button>
+        <button type="button" class="btn btn-primary" onclick="event.preventDefault(); submitUlasan();">Kirim</button>
       </div>
     </div>
   </div>

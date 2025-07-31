@@ -8,7 +8,7 @@
       <h2>Pemilihan PPJ</h2>
     </div>
   </div>
-  <?php $this->load->view('frontend/mjppj/peserta_pemilih_ppj', array('anggota_sidi' => $anggota_sidi)); ?>
+  <?php $this->load->view('frontend/mjppj/peserta_pemilih_ppj', array('anggota_sidi' => $anggota_sidi, 'pemilih_voting' => $pemilih_voting, 'ulasan'=> $ulasan )); ?>
 </div>
 
 <hr>
@@ -21,14 +21,24 @@
     if (r == false) {
       return;
     } else {
-      $('#feedbackModal').modal('show');
+      //show formnya pindah ke bawah aja setelah sudah kelar process kunci
     }
 
     $('#loading').show();
 
+    setTimeout(function(){
+      $('#exampleModal').modal('hide');
+      $('#loading').hide();
+    }, 20000)
+
     dataMap = {}
     dataMap['id_pemilih'] = $('#id_pemilih').val()
     dataMap['wil_pemilih'] = $('#wil_pemilih').val()
+    dataMap['nama_pemilih_suratsuara'] = $('#nama_pemilih_suratsuara').val()
+    $('#nama_pengguna_ulasan').val(dataMap['nama_pemilih_suratsuara'])
+    $('#user_idUlasan').val(dataMap['id_pemilih'])
+    $('#moduleUlasan').val('Pemilihan PPJ <?=$tahun_pemilihan;?>')
+
     $.post('<?= base_url(); ?>pnppj/kunciPilihan_ppj', dataMap, function(data) {
       json = $.parseJSON(data)
       if (json.status == 1) {
@@ -46,8 +56,45 @@
         });
       }
       $('#loading').hide();
+      if($('#ulasan_sts'+dataMap['id_pemilih']).val() != '1'){
+        //ulasan muncul kalau belum kasih ulasan..
+        $('#feedbackModal').modal('show');
+      }
     })
   })
+
+  function submitUlasan(){
+    $('#loading').show();
+
+    formUlasan=$('#feedbackForm')
+    dataMap=formUlasan.serialize();
+    url="<?=base_url();?>/api/submitReview"
+    setTimeout(function(){
+      $('#feedbackModal').modal('hide');
+      $('#loading').hide();
+      location.reload();
+    }, 20000)
+    $.post(url, dataMap, function(data){
+      json=$.parseJSON(data)
+      if (json.sts == 1) {
+        iziToast.success({
+          title: '',
+          message: json.msg,
+          position: "topRight",
+        });
+        $('#exampleModal').modal('hide')
+      } else {
+        iziToast.error({
+          title: '',
+          message: json.msg,
+          position: "topRight",
+        });
+      }
+      $('#feedbackModal').modal('hide');
+      $('#loading').hide();
+      location.reload();
+    })
+  }
 
   $(document).on('click touchstart', '[id^=calon_pn]', function(e) {
     $('#loading').show();

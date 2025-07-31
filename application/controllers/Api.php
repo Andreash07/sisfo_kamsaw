@@ -79,6 +79,34 @@ class Api extends CI_Controller {
 
 	}
 
+	public function submitReview(){
+		$data=array();
+		$param=array();
+		if($this->input->post('auth_review') != md5($this->session->userdata('sess_keluarga')->id.'(71hkas37%')){
+			$data['sts']=0;
+			$data['msg']='Gagal simpan Ulasan, Peringatan: Akses tidak sah!';
+			echo json_encode($data, JSON_PRETTY_PRINT);
+			return;
+		}
+
+
+		#$param['user_id']=$this->session->userdata('sess_keluarga')->id;
+		$param['user_id']=$this->input->post('user_idUlasan');
+		$param['nama']=$this->input->post('nama_pengguna');
+		$param['rating']=$this->input->post('rating');
+		$param['pesan']=$this->input->post('feedbackText');
+		$param['module']=$this->input->post('moduleUlasan');
+
+		$i=$this->m_model->insertgetid($param, 'ulasan_user');
+		if($i>0){
+			$data['sts']=1;
+			$data['msg']='Berhasil simpan Ulasan.<br>Hatur nuhun <b>'.$param['nama'].'</b>, Tuhan Yesus Memberkati.🙏';
+		}else{
+			$data['sts']=0;
+			$data['msg']='Gagal simpan Ulasan, Peringatan: General Error!';
+		}
+			echo json_encode($data, JSON_PRETTY_PRINT);
+	}
 
 }
 

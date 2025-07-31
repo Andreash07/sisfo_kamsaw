@@ -116,11 +116,11 @@ FROM keluarga_jemaat B
 
 left join  anggota_jemaat A on B.id = A.kwg_no && A.status=1 && A.sts_anggota = 1
 
-WHERE B.status=1 && B.id=2
+WHERE B.status=1
 
 group by B.kwg_no
 
-ORDER by B.kwg_no ASC";
+ORDER by B.kwg_no ASC"; #&& B.id=2
 
     	$anggota=$this->m_model->selectcustom($query);
 
@@ -137,16 +137,16 @@ ORDER by B.kwg_no ASC";
     		unset($param);
 
     		$param['num_anggota']=$value->Sum_anggota;
-            $param['kwg_nama']=$value->kwg_nama;
+            #$param['kwg_nama']=$value->kwg_nama;
 
             if($param['num_anggota']>0){
-                if($value->Sum_anggota == 25){
-                 $update=$this->m_model->updateas('id', $value->id, $param, 'keluarga_jemaat');
+                #if($value->Sum_anggota == 25){
+                 #$update=$this->m_model->updateas('id', $value->id, $param, 'keluarga_jemaat');
 
-                }
-                else{
-			     //$update=$this->m_model->updateas('id', $value->id, $param, 'keluarga_jemaat');
-                }
+                #}
+                #else{
+			     $update=$this->m_model->updateas('id', $value->id, $param, 'keluarga_jemaat');
+                #}
             }
             else{
                 //die($value->id);
@@ -202,7 +202,7 @@ ORDER by B.kwg_no ASC";
         if($keluarga!=null){
             $where=" && id='".$keluarga."'";
         }
-        $q="select * from keluarga_jemaat where status=1 && (qrcode is null || qrcode ='') ".$where;
+        $q="select * from keluarga_jemaat where status=1  ".$where; #&& (qrcode is null || qrcode ='')
         $data=array();
         $data['qrcode']=$this->m_model->selectcustom($q);
         //print_r($data['qrcode']);
@@ -230,16 +230,18 @@ ORDER by B.kwg_no ASC";
             $file_name1 = $text1.uniqid().".png";
             $file_name = $folder.$file_name1;
             QRcode::png($text,$file_name);*/
-            $text1="qJKpSawah-";
+            #$text1="qJKpSawah-";
+            $text1="qJKpSawahNew-";
             //$valueQRCODE=base_url()."invitation/assign_quest/".$value->id;
-            $valueQRCODE="https://sisfo-gkpkampungsawah.com/qrcode/scan/".md5($value->id."#17ashdkj25ahsdkja96#Asthaaksjdha");
+            #$valueQRCODE="https://sisfo-gkpkampungsawah.com/qrcode/scan/".md5($value->id."#17ashdkj25ahsdkja96#Asthaaksjdha");
+            $valueQRCODE="https://sisfo.gkpkampungsawah.org/qrcode/scan/".md5($value->id."#17ashdkj25ahsdkja96#Asthaaksjdha");
             $file_name1 = $text1.uniqid().".png";
 
             $image_name=$file_name1; //buat name dari qr code sesuai dengan nip
 
             $params=array();
             $params['data'] = $valueQRCODE; //data yang akan di jadikan QR CODE
-            $params['level'] = 'H'; //H=High
+            $params['level'] = 'L'; //H=High
             $params['size'] = 10;
             $params['savename'] = FCPATH.$config['imagedir'].$image_name; //simpan image QR CODE ke folder assets/images/
             $this->ciqrcode->generate($params); // fungsi untuk generate QR CODE
@@ -457,10 +459,10 @@ $s="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil,
 from anggota_jemaat A 
 join keluarga_jemaat B on (B.id = A.kwg_no)
 join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id 
-where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_pn1=1 ".$where."
+where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_ppj=1 ".$where."
 order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
 
-        $data['angjem']=$this->m_model->selectcustom($s);
+        $data['angjem']=$this->m_model->selectcustom($s); #die(nl2br($s));
 
         /*$s1="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks, C.locked, C.sn_surat_suara
 from anggota_jemaat A 
@@ -476,7 +478,7 @@ from anggota_jemaat A
 join keluarga_jemaat B on (B.id = A.kwg_no)
 join votes_tahap_ppj C on (C.id_pemilih = A.id)
 join wilayah E on E.id = A.kwg_wil
-where A.status=1 && A.status_sidi=1 && C.locked in (1,0) && ".$where."
+where A.status=1 && A.status_sidi=1 && C.locked in (1,0) && C.tahun_pemilihan='".$this->tahun_pemilihan."' ".$where."
 group by C.id_pemilih
 order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
 
@@ -498,6 +500,16 @@ from anggota_jemaat A
 join keluarga_jemaat B on (B.id = A.kwg_no)
 join pemilih_konvensional C on (C.anggota_jemaat_id = A.id)
 where A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-09-09 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-09-09 00:00:00' && A.last_modified_dorkas < '2021-09-09 00:00:00') ) && A.status_sidi=1 && C.tipe_pemilihan_id in (3) ".$where."
+group by C.anggota_jemaat_id
+order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //ini yang lama 2021
+
+
+$s2="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks
+from anggota_jemaat A 
+join keluarga_jemaat B on (B.id = A.kwg_no)
+join pemilih_konvensional C on (C.anggota_jemaat_id = A.id)
+join anggota_jemaat_peserta_pemilihan D on D.anggota_jemaat_id = A.id 
+where A.status=1 && A.sts_anggota = 1 && A.status_sidi=1 && C.tipe_pemilihan_id in (3) && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && D.tahun_pemilihan ='".$this->tahun_pemilihan."' ".$where."
 group by C.anggota_jemaat_id
 order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
 

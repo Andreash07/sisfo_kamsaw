@@ -23,6 +23,7 @@
   <form id="form_pemilihan" action="<?=base_url();?>pnppj/submit_pemilihan">
 <br>
     <input type="hidden" name="id_pemilih" id="id_pemilih" value="<?=$id_pemilih;?>">
+    <input type="hidden" name="nama_pemilih_suratsuara" id="nama_pemilih_suratsuara" value="<?=$nama_pemilih;?>">
 
     <input type="hidden" name="wil_pemilih" id="wil_pemilih" value="<?=$wil_pemilih;?>">
     <div class="row" id="content_list_calon2">

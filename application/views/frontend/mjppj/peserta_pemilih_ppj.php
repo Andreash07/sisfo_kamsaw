@@ -24,6 +24,23 @@
           $title="Sdr. ";
         }
       }
+
+      $voted_sts='<label class="text-danger text-sm" >Pengingat: Belum menggunakan <b>Hak Suara</b>! </label>';
+      if(isset($pemilih_voting[$value->id])){
+        $voted_sts='<label class="text-success text-sm"> Hatur Nuhun, Calon PPJ pilihan sudah di <b>Kunci Pilihan</b>! </label>';
+        foreach ($pemilih_voting[$value->id] as $keyVoted => $valueVoted) {
+          // code...
+          #print_r($valueVoted);
+          if($valueVoted->locked != 1){
+            $voted_sts='<label class="text-warning text-sm"> Pengingat: Suara untuk Calon PPJ belum di <b>Kunci Pilihan</b> </label>';
+          }
+        }
+      }
+
+      $ulasan_sts=0;
+      if(isset($ulasan[$value->id])){
+        $ulasan_sts=1;
+      }
   ?>
       <div class="col-xl-6 col-md-6 col-sm-12">
         <div class="card card-stats">
@@ -32,6 +49,7 @@
             <div class="row">
               <div class="col">
                 <h5 class="card-title text-muted mb-0"><?=$title.ucwords($value->nama_lengkap);?></h5>
+                <input type="hidden" id="ulasan_sts<?=$value->id;?>" value="<?=$ulasan_sts;?>">
                 <span class="h5 font-weight-bold mb-0"><i class="ni ni-calendar-grid-58 text-success"></i>&nbsp;<?=convert_tgl_dMY($value->tgl_lahir);?> (<?=getUmur(date('Y-m-d'), $value->tgl_lahir);?> tahun)</span>
                 <br>
                 <span class="h5 mb-0">
@@ -60,6 +78,7 @@
               <h5 class="text-muted mb-0">Pemilihan</h5>
               <div class="divider" style="width: 100%; border-bottom: 1px #8898aa solid; clear: both; margin-bottom: 5px; margin-top:1px;"></div>
               <a id="btn_ajax_modal" href="<?=base_url();?>ajax/list_calon_ppj/?kwg_wil=<?=$value->kwg_wil;?>&id=<?=$value->id;?>&nama=<?=rawurlencode($title.ucwords($value->nama_lengkap));?>" class="col-12 btn btn-info text-nowrap float-left" data-toggle="modal" data-target="#exampleModal" onclick="event.preventDefault();"><i class="ni ni-bullet-list-67"></i><b>Surat Suara PPJ</b></a>
+              <?=$voted_sts;?>
             </p>
           </div>
         </div>
