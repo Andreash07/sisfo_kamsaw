@@ -8,7 +8,7 @@ $open="2025-07-25 00:00:00";
 //$open="2022-01-08 16:44:00";
 
 $close="2022-01-26 23:59:59";
-$close="2025-08-20 00:00:00";
+$close="2025-08-13 00:00:00";
 //$close="2022-01-26 22:41:30";
 
 if(strtotime($open)> strtotime(date('Y-m-d H:i:s')) ){
@@ -64,7 +64,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
 	                    <!--<div class="btn btn-success btn-sm" href="#!" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0;" onclick="event.preventDefault(); Pemiluopen('<b>Proses Pemilihan Penatua Tahap 2 Telah Dibuka.<br>Silahkan Masuk pada layanan Pemilihan Penatua 2022-2026</b><br><span class=\'text-success\'>Akan dibuka sampai<br>26 January 2022</span>', 'timer')">-->
 
-                    	<div class="btn btn-success btn-sm" href="#!" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0;" onclick="event.preventDefault(); Pemiluopen('<b>Proses Pemilihan Penatua & PPJ (TRIAL) Telah Dibuka.<br>Silahkan Masuk pada layanan Pemilihan Penatua & PPJ <?=$tahun_pemilihan->periode;?></b>', 'timer')">
+                    	<div class="btn btn-success btn-sm" href="#!" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0;" onclick="event.preventDefault(); Pemiluopen('<b>Proses Pemilihan Penatua & PPJ (UJI COBA) Telah Dibuka.<br>Silahkan Masuk pada layanan Pemilihan Penatua & PPJ <?=$tahun_pemilihan->periode;?></b>', 'timer')">
 
 	                    	<span style="font-size: 0.65rem; font-style: italic;">
 
@@ -163,7 +163,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
 					?>
 
-						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (<b class="text-danger">Trial</b>) .</label>
+						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (<b class="text-danger">UJI COBA</b>) .</label>
 
 					<?php
 

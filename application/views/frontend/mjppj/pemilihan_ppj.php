@@ -5,7 +5,7 @@
 <div class="container-fluid mt-4">
   <div class="row align-items-center">
     <div class="col-12 text-center" style="margin: auto;">
-      <h2>Pemilihan PPJ</h2>
+      <h2>Pemilihan PPJ (Uji Coba)</h2>
     </div>
   </div>
   <?php $this->load->view('frontend/mjppj/peserta_pemilih_ppj', array('anggota_sidi' => $anggota_sidi, 'pemilih_voting' => $pemilih_voting, 'ulasan'=> $ulasan )); ?>
@@ -60,6 +60,11 @@
         //ulasan muncul kalau belum kasih ulasan..
         $('#feedbackModal').modal('show');
       }
+      else{
+        setTimeout(function(){
+          location.reload();
+        }, 2000)
+      }
     })
   })
 
@@ -97,23 +102,28 @@
   }
 
   $(document).on('click touchstart', '[id^=calon_pn]', function(e) {
+  //$(document).on('change', '[id^=calon_pn]', function(e) {
     $('#loading').show();
+    id_ini = $(this).attr('id');
     ini = $(this);
     dataMap = {}
     dataMap['id_pemilih'] = $('#id_pemilih').val()
     dataMap['wil_pemilih'] = $('#wil_pemilih').val()
-    dataMap['val_calon'] = $(this).val()
+    dataMap['val_calon'] = $('#'+id_ini).val()
     num_voted = parseInt($('#num_voted').val());
     //console.log(num_voted+"alskla")
     hak_suara = parseInt($('#hak_suara').html());
 
-    if ($(this).prop('checked') == true) {
+    if ($('#'+id_ini).prop('checked') == true) {
       //alert("checking");
       dataMap['vote'] = 1 //1 voted
       if (num_voted >= 1) {
         //ini bearti sudah 1 voting
         alert("Peringatan: Anda tidak dapat memilih lebih dari " + hak_suara + " calon!");
         $('#loading').hide();
+        e.preventDefault();
+
+        $('#'+id_ini).prop('checked', false);
         return false;
       }
     } else {
@@ -144,6 +154,15 @@
       }
       $('#loading').hide();
     })
+  })
+
+  $(document).on('click', '[id=triger_calon_pn]', function(e) {
+    e.preventDefault();
+    div=$(this).attr('value');
+
+    $('#'+div).click();
+
+
   })
 </script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>

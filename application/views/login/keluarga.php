@@ -1,4 +1,19 @@
 <?php $this->load->view('frontend/layouts/header'); ?>
+<style>
+  .input-group {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      border-left:1px solid #8898aa;
+      z-index: 9999;
+    }
+</style>
 <!-- Main content -->
 <div class="main-content">
   <!-- Header -->
@@ -53,7 +68,8 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                   </div>
-                  <input class="form-control" placeholder="Kata Sandi" type="password" name="password">
+                  <input class="form-control" placeholder="Kata Sandi" type="password" name="password" id="password" >
+                  <span class="toggle-password" onclick="togglePassword()"><i id="ico_see" class="fa fa-eye" style="padding-left: 5px;"></i></span>
                 </div>
               </div>
               <div class="text-center">
@@ -95,6 +111,19 @@
       changeLoginBtn.innerText = 'User ID';
     }
   });
+
+  function togglePassword() {
+    const passwordInput = document.getElementById("password");
+    const toggle = document.querySelector(".toggle-password");
+    
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      toggle.innerHTML = '<i id="ico_see" class="fa fa-eye-slash" style="padding-left: 5px;"></i>'; // Ganti ikon
+    } else {
+      passwordInput.type = "password";
+      toggle.innerHTML = '<i id="ico_see" class="fa fa-eye" style="padding-left: 5px;"></i>';
+    }
+  }
 </script>
 
 <?php
