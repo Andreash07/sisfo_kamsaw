@@ -14,6 +14,7 @@
           <thead>
             <tr class="headings">
               <th class="column-title">Nama </th>
+              <th class="column-title">Module </th>
               <th class="column-title">Rating </th>
               <th class="column-title">Pesan </th>
             </tr>
@@ -23,6 +24,7 @@
             <?php foreach ($ulasan as $u): ?>
               <tr>
                 <td><?= htmlspecialchars($u->nama) ?></td>
+                <td><?= htmlspecialchars($u->module) ?></td>
                 <td><?= htmlspecialchars($u->rating) ?></td>
                 <td><?= htmlspecialchars($u->pesan) ?></td>
               </tr>
