@@ -24,10 +24,10 @@ foreach ($calon as $key => $value) {
     if($value->foto != null){
     	$foto_thumb=base_url().$value->foto_thumb;
     	$foto=base_url().$value->foto;
-    	if(strpos($value->foto, 'https://') >=0 ){
-        $foto_thumb=$value->foto_thumb;
-        $foto=$value->foto;
-      }
+		if(strpos($value->foto, 'https://')  !== false ){
+        	$foto_thumb=$value->foto_thumb;
+        	$foto=$value->foto;
+      	}
     }
 ?>
 		<tr>
