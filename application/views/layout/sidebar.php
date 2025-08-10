@@ -414,6 +414,15 @@
                       <a>PPJ<span class="fa fa-chevron-down"></span></a>
 
                       <ul class="nav child_menu">
+                        <li class="sub_menu">
+
+                          <a href="<?=base_url();?>pnppj/list_calonppj">
+
+                            Calon PPJ
+
+                          </a>
+
+                        </li>
 
                         <li class="sub_menu">
 

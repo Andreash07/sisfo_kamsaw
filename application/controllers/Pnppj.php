@@ -2032,6 +2032,167 @@ class Pnppj extends CI_Controller {
 
 	}
 
+	public function list_calonppj(){
+
+		$nama_anggota=$this->input->get('nama_anggota');
+		$jns_kelamin=$this->input->get('jns_kelamin');
+		$id_pemilih=$this->input->get('id');
+
+		$wil_pemilih=$this->input->get('kwg_wil');
+
+		$tahun_pemilihan=date('Y');
+
+		$where="";
+
+		$param_active="?";
+
+		$data=array();
+
+		$data['id_pemilih']=$id_pemilih;
+
+		$data['wil_pemilih']=$wil_pemilih;
+
+		$data['hak_suara']=10;
+
+		$numLimit=10;
+
+        $numStart=0;
+
+        if($this->input->get('keyword')){
+
+        	$keyword=clearText($this->input->get('keyword'));
+
+        	$where=" && LOWER(A.nama_lengkap) like '%".strtolower($keyword)."%'";
+
+			$param_active="keyword=".$this->input->get('keyword');	
+
+        }
+        if($this->input->get('kwg_wil')){
+
+
+        	$where.=" && A.kwg_wil = '".$wil_pemilih."'";
+
+			$param_active.="kwg_wil=".$this->input->get('kwg_wil')."&";	
+
+        }
+        if($this->input->get('nama_anggota')){
+
+
+        	$where.=" && LOWER(A.nama_lengkap) like '%".strtolower($nama_anggota)."%'";
+
+			$param_active.="nama_anggota=".$this->input->get('nama_anggota')."&";	
+
+        }
+
+        if($this->input->get('jns_kelamin')){
+
+
+        	$where.=" && LOWER(A.jns_kelamin) like '%".strtolower($jns_kelamin)."%'";
+
+			$param_active.="jns_kelamin=".$this->input->get('jns_kelamin')."&";	
+
+        }
+
+
+
+
+
+        if(!$this->input->get('page')){
+
+        	//kkalau masuk ini bearti  bukan dari klik page
+
+            $page=1;
+
+            $numStart=($numLimit*$page)-$numLimit;
+
+	        $limit="";
+
+        }
+
+        else{
+
+        	//dari click page
+
+            $page=$this->input->get('page');
+
+            $numStart=($numLimit*$page)-$numLimit;
+
+
+
+	        $limit='LIMIT '.$numStart.', '.$numLimit;
+
+	        $limit="";
+
+        }
+
+
+
+        $data['page']=$page;
+
+        $data['numStart']=$numStart;
+
+		//get all calon penatua perwilayah
+
+        /*start get data */
+
+		$get_data=$this->get_data_calon_ppj($tahun_pemilihan, $id_pemilih, $where, $limit);
+
+
+
+
+
+    	$data['totalofData']=count($get_data);
+
+    	//echo $data['totalofData'];
+
+        $page_active=$page;
+
+        $param_active=base_url().'pnppj/list_calonppj'.$param_active;
+
+    	$data['pagingnation']=pagingnation($data['totalofData'], $numLimit, $page_active, $param_active, $links=2);
+
+    	if($page>1){
+
+            array_splice($get_data, 0, $numStart);
+
+            array_splice($get_data,$numLimit );
+
+        }
+
+        else{
+
+            array_splice($get_data, $numStart+$numLimit);
+
+        }
+
+
+
+
+
+		$data['calon']=$get_data;
+
+		//print_r($data['calon']);die();
+
+
+
+		
+
+
+
+    	if(!$this->input->get('view') && !$this->input->post('view')){
+
+			$this->load->view('pemilu/list_calonppj', $data);
+
+		}
+
+    	else{
+
+			$this->load->view('pemilu/listcalonppj', $data);
+
+    	}
+
+	}
+
 	private function get_data_calon_penatua2_srt($tahun_pemilihan, $id_pemilih, $where, $limit, $wil_pemilih=null){
 		$sql="select A.*, B.status_kawin, count(D.id) as terpilih1, D.status as status_acc, Count(C.id) as voted2, A.kwg_wil, COUNT(C.id) as voted, C.locked
 				from anggota_jemaat A 
@@ -2078,6 +2239,162 @@ class Pnppj extends CI_Controller {
         //$get_data=$this->m_model->selectcustom($sql." ".$group_by." ".$field_order." ".$order_by." ".$limit);
         $get_data=$this->m_model->selectcustom($sql." ".$limit);
         return $get_data;
+	}
+
+
+	public function get_data_calon_ppj($tahun_pemilihan, $id_pemilihan=null, $where=null, $limit){
+
+		$data=array();
+
+
+
+		$sql="select A.*, B.status_kawin, D.id as terpilih1, D.status_ppj as status_acc, E.kwg_nama, E.kwg_alamat, C.hub_keluarga
+
+				from anggota_jemaat A 
+
+				join anggota_jemaat_bakal_calon D on D.anggota_jemaat_id = A.id  && D.tahun_pemilihan='".$tahun_pemilihan."'
+
+				left join ags_sts_kawin B on B.id = A.sts_kawin
+
+				join keluarga_jemaat E on E.id = A.kwg_no
+
+				join ags_hub_kwg C on C.id = A.hub_kwg
+
+				where  A.sts_anggota=1 && A.status=1 && D.status_ppj = 1
+
+				"; 
+
+		if($where!=null){
+			$sql="select A.*, B.status_kawin, D.id as terpilih1, D.status_ppj as status_acc, E.kwg_nama, E.kwg_alamat, C.hub_keluarga
+
+				from anggota_jemaat A 
+
+				left join anggota_jemaat_bakal_calon D on D.anggota_jemaat_id = A.id  && D.tahun_pemilihan='".$tahun_pemilihan."'
+
+				left join ags_sts_kawin B on B.id = A.sts_kawin
+
+				join keluarga_jemaat E on E.id = A.kwg_no
+
+				join ags_hub_kwg C on C.id = A.hub_kwg
+
+				where  A.sts_anggota=1 && A.status=1
+
+				"; 
+		}
+
+		$group_by=" group by A.id ";
+
+        //$field_order=" order by A.nama_lengkap  ";
+        $field_order="  order by D.no_urut_ppj ASC ";
+
+        $order_by=" ";
+
+       // die($sql." ".$where." ".$group_by." ".$field_order." ".$order_by." ".$limit);
+        $get_data=$this->m_model->selectcustom($sql." ".$where." ".$group_by." ".$field_order." ".$order_by." ".$limit);
+        #die(nl2br($sql." ".$where." ".$group_by." ".$field_order." ".$order_by." ".$limit));
+
+        //die($sql." ".$where." ".$group_by." ".$field_order." ".$order_by." ".$limit);
+
+        return $get_data;
+
+	}
+
+	public function upload_foto_ppj(){
+
+		$data=array();
+
+		$action="view";
+
+		if($this->input->post('action')){
+
+			$action=$this->input->post('action');
+
+		}
+
+
+
+		if($action == 'view'){
+
+			$data['recid']=$this->input->post('recid');
+
+			$this->load->view('pemilu/upload_foto_calonppj.php', $data);
+
+		}
+
+		else if($action == 'upload'){
+
+			//print_r($this->input->post()); die();
+
+			$recid=$this->input->post('recid');
+
+		 	$config['upload_path']          = FCPATH.'/images/anggota_jemaat';
+
+		 	$config['file_name']          	= $recid."-".uniqid();
+
+		 	$config['allowed_types']        = 'jpg|png|jpeg|gif';
+
+
+
+            $this->load->library('upload', $config);
+
+
+
+            if ( ! $this->upload->do_upload('file'))
+
+            {
+
+                    //$error = array('error' => $this->upload->display_errors());
+
+
+
+                    echo $this->upload->display_errors();
+
+            }
+
+            else
+
+            {
+
+            	$nameFileNew=$this->upload->data('file_name');
+
+            	$config['image_library'] = 'gd2';
+
+				$config['source_image'] = FCPATH.'/images/anggota_jemaat/'.$nameFileNew;
+
+				$config['create_thumb'] = TRUE;
+
+				$config['maintain_ratio'] = TRUE;
+
+				$config['width']         = 120;
+
+				//$config['height']         = 120;
+
+				$this->load->library('image_lib', $config);
+
+
+
+				$this->image_lib->resize();
+
+
+
+				//after resize update field foto 
+
+				$param=array();
+
+				$param['foto']="images/anggota_jemaat/".$nameFileNew;
+
+				$param['foto_thumb']="images/anggota_jemaat/".$this->upload->data('raw_name')."_thumb".$this->upload->data('file_ext');
+
+
+
+				$this->m_model->updateas('id', $recid, $param, 'anggota_jemaat');
+
+            }
+
+		}
+
+
+
 	}
 
 
@@ -2915,6 +3232,53 @@ class Pnppj extends CI_Controller {
 			$json['status']=0;
 
 			$json['msg']="Oooppsss... Status Bakal Calon Gagal di Update!";	
+
+		}
+
+
+
+		echo json_encode($json);
+
+
+
+	}
+
+
+	function statusppj(){
+
+		$data=array();
+
+		if(!$this->input->is_ajax_request() ){
+
+			die("Access Denied!");
+
+		}
+
+
+
+		$param=array();
+
+		$param['status_ppj']=clearText($this->input->post('locked'));
+
+		#$update=$this->m_model->updateas('id', clearText($this->input->post('recid')), $param , 'anggota_jemaat');
+		//per 27 juni 2025 dari table anggota_jemaat_bakal_calon
+		$update=$this->m_model->updateas('id', clearText($this->input->post('recid')), $param , 'anggota_jemaat_bakal_calon');
+
+		$json=array();
+
+		if($update){
+
+			$json['status']=1;
+
+			$json['msg']="Wow... Status Bakal Calon PPJ Berhasil di Update!";
+
+		}
+
+		else{
+
+			$json['status']=0;
+
+			$json['msg']="Oooppsss... Status Bakal Calon PPJ Gagal di Update!";	
 
 		}
 
