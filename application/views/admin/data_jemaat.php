@@ -306,6 +306,12 @@ $this->load->view('layout/header');
 						<a id="btn_qrcode" class="btn btn-danger pull-right" href="<?=base_url();?>tools/generate_qrcode/<?=$this->input->get('id');?>" target="_BLANK"><i class="fa fa-qrcode"></i>&nbsp;&nbsp;QRcode</a>
 					<?php
 					}
+					else if(strpos($dataKK[0]->qrcode, 'qJKpSawahNew') === FALSE){
+						//karena ada perubahan isi qrcode, qJKpSawahNew= nama file qrcode yg baru, jika bearti sudah pernah generate ulang
+					?>
+						<a id="btn_qrcode" class="btn btn-warning pull-right" href="<?=base_url();?>tools/generate_qrcode/<?=$this->input->get('id');?>/1" target="_BLANK"><i class="fa fa-qrcode"></i>&nbsp;&nbsp;Buat Ulang QRcode</a>
+					<?php
+					}
 					?>
 
 				</div>
