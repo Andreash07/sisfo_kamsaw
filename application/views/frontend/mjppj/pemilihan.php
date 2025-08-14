@@ -4,6 +4,8 @@ $this->load->view('frontend/layouts/header');
 
 ?>
 
+<?php $this->load->view('frontend/mjppj/feedback_form'); ?>
+
 <style type="text/css">
 
   .blink_me {
@@ -121,6 +123,11 @@ $this->load->view('frontend/layouts/footer');
         </ol>
 
       </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-sm pull-right" type="button" data-dismiss="modal" aria-label="Close">
+          Ya, Saya Mengerti!
+        </button>
+      </div>
 
     </div>
 
@@ -166,6 +173,8 @@ $this->load->view('frontend/layouts/footer');
 
       return;
 
+    } else {
+      $('#feedbackModal').modal('show');
     }
 
 

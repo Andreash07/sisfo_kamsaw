@@ -28,7 +28,8 @@ class Keluarga extends CI_Controller {
 		$sql="select A.*, B.status_kawin
 				from anggota_jemaat A 
 				left join ags_sts_kawin B on B.id = A.sts_kawin
-				where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && A.status=1 && A.sts_anggota=1";
+				where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && A.status=1 && A.sts_anggota=1
+				order by A.hub_kwg ASC, A.no_urut";
 		$data['anggota']=$this->m_model->selectcustom($sql);
 		//$data['anggota']=$this->m_model->selectas3('kwg_no', $this->session->userdata('sess_keluarga')->id, 'status_migration', 1, 'status', 1, 'anggota_jemaat');
 		$this->load->view('frontend/home/anggota_keluarga', $data);

@@ -61,7 +61,7 @@ else{
         $total_biayaKPKP=0;
         //cek tahun iuran pokok yg berlaku dulu
         foreach ($arr_pokok_iuran as $key1 => $value1) {
-        print_r($value1); die();
+        print_r($valuez1); die();
             // code...
           echo $value1->tahun_iuran.' <--->'.$last_current_year;
             if($last_current_year>=$value1->tahun_iuran){

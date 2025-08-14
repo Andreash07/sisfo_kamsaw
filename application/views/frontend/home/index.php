@@ -141,7 +141,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
                 ?>
 
-                    <a class="btn btn-info btn-sm" href="<?=base_url();?>pnppj" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0;">Nyok Milih Di sini! </a>
+                    <a class="btn btn-info" href="<?=base_url();?>pnppj" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0; font-size: 1.2rem;">Nyok Milih Di sini! (Uji Coba) </a>
 
                 <?php
 
@@ -278,7 +278,9 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
               <p class="mt-3 mb-0 text-sm">
 
-              	<a id="btn_ajax_modal" href="<?=base_url();?>keluarga/view" class="btn btn-info btn-sm text-nowrap float-right" data-toggle="modal" data-target="#exampleModal" onclick="event.preventDefault();"><b>Detil & Perbaruhi Data</b>!</a>
+              	<a target="_BLANK" href="<?=base_url();?>pdf/kkwithbarcode.php?id=<?=$this->session->userdata('sess_keluarga')->id;?>" class="btn btn-warning btn-sm text-nowrap float-lef"><i class="ni ni-paper-diploma"></i><b>Cetak KK</b></a>
+
+                <a id="btn_ajax_modal" href="<?=base_url();?>keluarga/view" class="btn btn-info btn-sm text-nowrap float-right" data-toggle="modal" data-target="#exampleModal" onclick="event.preventDefault();"><i class="ni ni-bullet-list-67"></i><b>Data KK</b>!</a>
 
               	<br>
 
