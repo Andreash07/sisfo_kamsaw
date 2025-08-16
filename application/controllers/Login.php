@@ -184,7 +184,7 @@ class Login extends CI_Controller {
 
             //$check_token=$this->m_model->selectas2('username', , 'password', md5($password), 'users_jemaat' );
 
-            $sql="select B.*
+            $sql="select B.*, A.username
 
                     from keluarga_jemaat B 
 
@@ -197,6 +197,11 @@ class Login extends CI_Controller {
 
 
             if(count($check_token)>0){
+
+                $checkUsers=$this->m_model->selectas2('keluarga_jemaat_id', $check_token[0]->id, 'status', 1, 'users_jemaat');
+                if(count($checkUsers)>0){
+                    $data['sess_username']=$checkUsers[0]->username;
+                }
 
                 $token=MD5($check_token[0]->id.$this->keyHash);
 

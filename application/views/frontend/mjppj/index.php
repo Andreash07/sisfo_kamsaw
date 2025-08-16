@@ -4,26 +4,46 @@ $this->load->view('frontend/layouts/header');
 
 
 $open="2022-01-10 00:00:00";
-$open="2025-07-25 00:00:00";
+$open2="2022-01-10 00:00:00";
+$open3="2022-01-10 00:00:00";
 //$open="2022-01-08 16:44:00";
 
 $close="2022-01-26 23:59:59";
-$close="2025-08-13 00:00:00";
+$close2="2022-01-26 23:59:59";
+$close3="2022-01-26 23:59:59";
 //$close="2022-01-26 22:41:30";
-
-if(strtotime($open)> strtotime(date('Y-m-d H:i:s')) ){
-
-	$timestamp = strtotime($open);
-
-}else{
-
-	$timestamp = strtotime($close);
-
+$label="Penatua & PPJ";
+foreach ($setting as $key => $value) {
+	// code...
+	switch ($value->tipe_pemilihan) {
+		case '1':
+			// code...
+			break;
+		case '2':
+			// code...
+			break;
+		case '3':
+			// code...
+			$open3=$value->start_at;
+			$close3=$value->end_at;
+			break;
+	}
+	if($value->locked == 0 && $value->tipe_pemilihan =='3'){
+		$timestamp_open=strtotime($open3);	
+		$timestamp=strtotime($close3);	
+		$label="PPJ";
+	}
+	if($value->locked == 0 && $value->tipe_pemilihan =='1'){
+		$timestamp=strtotime($close);	
+		$timestamp_open=strtotime($open);	
+		$label="Penatua Tahap 1";
+	}
+	if($value->locked == 0 && $value->tipe_pemilihan =='2'){
+		$timestamp_open=strtotime($open2);	
+		$timestamp=strtotime($close2);	
+		$label="Penatua Tahap 2";
+	}
 }
-
-$countDown=date('Y-m-d H:i:s', $timestamp);
-
-
 
 ?>
 
@@ -58,13 +78,14 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
 	               <?php 
 
-	                  if(strtotime($open)<strtotime(date('Y-m-d H:i:s')) && strtotime($close)>strtotime(date('Y-m-d H:i:s')) ){
+	                  if($timestamp_open<strtotime(date('Y-m-d H:i:s')) && $timestamp>strtotime(date('Y-m-d H:i:s')) ){
 	                  	$sts_open=1;
+	                  	$countDown=date('Y-m-d H:i:s', $timestamp);
 	                ?>
 
 	                    <!--<div class="btn btn-success btn-sm" href="#!" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0;" onclick="event.preventDefault(); Pemiluopen('<b>Proses Pemilihan Penatua Tahap 2 Telah Dibuka.<br>Silahkan Masuk pada layanan Pemilihan Penatua 2022-2026</b><br><span class=\'text-success\'>Akan dibuka sampai<br>26 January 2022</span>', 'timer')">-->
 
-                    	<div class="btn btn-success btn-sm" href="#!" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0;" onclick="event.preventDefault(); Pemiluopen('<b>Proses Pemilihan Penatua & PPJ (UJI COBA) Telah Dibuka.<br>Silahkan Masuk pada layanan Pemilihan Penatua & PPJ <?=$tahun_pemilihan->periode;?></b>', 'timer')">
+                    	<div class="btn btn-success btn-sm" href="#!" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0;" onclick="event.preventDefault(); Pemiluopen('<b>Proses Pemilihan <?=$label;?> Telah Dibuka.<br>Silahkan Masuk pada layanan Pemilihan <?=$label;?> <?=$tahun_pemilihan->periode;?></b>', 'timer')">
 
 	                    	<span style="font-size: 0.65rem; font-style: italic;">
 
@@ -82,11 +103,12 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
 	                <?php
 
-	                  }else if(strtotime($close)>strtotime(date('Y-m-d H:i:s'))){
+	                  }else if($timestamp_open>strtotime(date('Y-m-d H:i:s')) &&  $timestamp > strtotime(date('Y-m-d H:i:s')) ){
 	                  	$sts_open=0;
+	                  	$countDown=date('Y-m-d H:i:s', $timestamp_open);
 	                ?>
 
-	                    <div class="btn btn-danger btn-sm" href="#!" style="width: 100%; border-bottom-left-radius: 0;border-bottom-right-radius: 0;" onclick="event.preventDefault(); Pemiluclose('<b>Maaf Pemilihan Penatua Tahap 2 masih ditutup.</b><br><span class=\'text-warning\'>Akan dibuka pada 10 January 2022</span>')">
+	                    <div class="btn btn-danger btn-sm" href="#!" style="width: 100%; border-bottom-left-radius: 0;border-bottom-right-radius: 0;" onclick="event.preventDefault(); Pemiluclose('<b>Maaf Pemilihan <?=$label;?> masih ditutup.</b><br><span class=\'text-warning\'>Akan dibuka pada <?=date('d M Y H:i:s', $timestamp_open) ;?></span>')">
 
 	                    	<span style="font-size: 0.65rem; font-style: italic;">
 
@@ -109,7 +131,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 	                  	$sts_open=0;
 	                ?>
 
-	                    <div class="btn btn-danger btn-sm" href="#!" style="width: 100%; border-bottom-left-radius: 0;border-bottom-right-radius: 0;" onclick="event.preventDefault(); Pemiluclose('<b>Maaf Pemilihan Penatua Tahap 2 sudah ditutup.</b>')">
+	                    <div class="btn btn-danger btn-sm" href="#!" style="width: 100%; border-bottom-left-radius: 0;border-bottom-right-radius: 0;" onclick="event.preventDefault(); Pemiluclose('<b>Maaf Pemilihan <?=$label;?> sudah ditutup.</b>')">
 
 	                    	<span style="font-size: 0.65rem; font-style: italic;">
 
@@ -159,11 +181,12 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
 					<?php 
 
-					if($setting['3']->locked==0){
+					#if($setting['3']->locked==0){
+					if(strtotime($open3) <= strtotime(date('Y-m-d H:i:s'))  ){
 
 					?>
 
-						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (<b class="text-danger">UJI COBA</b>) .</label>
+						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung.</label>
 
 					<?php
 
@@ -184,6 +207,16 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 					}
 
 					?>
+
+				<?php 
+				if($setting['3']->approve==1 ){
+					//ini beari masih di buka untuk pemungutan suara
+				?>
+						*Hasil Perolehan Suara sudah dapat dilihat.
+
+				<?php 
+				}
+				?>
 
 				</p>
 
@@ -207,7 +240,8 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
 				<?php 
 
-				if($setting['3']->locked==0 && !isset($offline[3])){
+				#if($setting['3']->locked==0 && !isset($offline[3])){
+				if(strtotime($open3) <= strtotime(date('Y-m-d H:i:s'))  ){
 
 					//ini beari masih di buka untuk pemungutan suara
 
@@ -220,13 +254,9 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 				}else{
 
 				?>
-
+				<label class="text-sm text-danger" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara belum dimulai.</label>
+				<label class="text-sm ">Dimual pada <b><?=date('d M Y H:i:s', $timestamp_open) ;?></b></label>
 				<br>
-
-				<br>
-
-				<br>
-
 				<?php
 
 				}
@@ -267,11 +297,11 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
 					<?php 
 
-					if($setting['1']->locked==0){
+					if(strtotime($open) <= strtotime(date('Y-m-d H:i:s'))  ){
 
 					?>
 
-						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung. (<b class="text-danger">Trial</b>)</label>
+						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung.</label>
 
 					<?php
 						/*<label class="text-danger" style="border-bottom: 1px solid #ededed;"><b>Dalam Proses sosialisai</b>.<br>Proses Pemungutan Suara <b>belum dibuka</b></label>*/
@@ -293,8 +323,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 					}
 
 					?>
-					<?php 
-
+				<?php 
 				if($setting['1']->approve==1 ){
 					//ini beari masih di buka untuk pemungutan suara
 				?>
