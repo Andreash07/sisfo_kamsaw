@@ -9,7 +9,7 @@ $this->load->view('layout/header');
           <form action="" name="form_login" method="POST">
             <h1>Login <br>SisFo GKP Kampung Sawah</h1>
             <div>
-              <input type="text" class="form-control" placeholder="Masukan Kode Wilayah" name="token" required="" />
+              <input type="text" class="form-control" placeholder="Masukan Kode Teritorial" name="token" required="" />
             </div>
             <div>
               <input type="submit" class="btn btn-default submit" name="btn_login" value="Log in">

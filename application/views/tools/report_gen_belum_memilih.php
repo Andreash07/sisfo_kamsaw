@@ -1,5 +1,5 @@
 <?php
-$this->load->view('layout/header');
+//$this->load->view('layout/header');
 ?>
 <style type="text/css">
 	table{
@@ -28,12 +28,11 @@ Jumlah Data Golput <b id="golput">0</b> (Termasuk Konvensional: <b id="konvensio
 <br>
 Jumlah Data Belum Dikunci <b id="tidaksah">0</b>
 <br>
-Tgl Cut Off: <?=$tglCutoffMemilih;?>
+Tgl Cut Off: <?= date('l, d M Y H:i:s');?>
 <table class="table table-striped" cellpadding="0" cellmargin="0">
 	<thead>
 		<tr>
 			<th cellpadding="0">#</th>
-			<th cellpadding="0">Wilayah</th>
 			<th cellpadding="0">KK</th>
 			<th cellpadding="0">Anggota Jemaat</th>
 			<th cellpadding="0">HP</th>
@@ -141,9 +140,9 @@ Tgl Cut Off: <?=$tglCutoffMemilih;?>
 		?>
 		<tr>
 			<td cellpadding="0"><?=++$i;?></td>
-			<td cellpadding="0"><?=$value->kwg_wil;?></td>
 			<td cellpadding="0">
 				<?=$value->kwg_nama;?>
+				<br><i>Wil. <?=$value->kwg_wil;?></i>
 			</td>
 			<td cellpadding="0"><?=$value->nama_lengkap;?></td>
 			<td cellpadding="0"><?=$noHP;?></td>

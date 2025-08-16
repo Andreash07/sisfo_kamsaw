@@ -408,6 +408,57 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
 
     }
 
+    function report_belum_memilih(){
+        $where="";
+        $wilayah="";
+        if(!$this->input->post('token') && $wilayah==null){
+            $this->load->view('tools/login_report');
+            return;
+        }
+
+        switch ($this->input->post('token')) {
+            case 'df43e':
+                // code...
+                $wilayah=1;
+                break;
+            case 'kj152':
+                // code...
+                $wilayah=2;
+                break;
+            case 'hg98p':
+                // code...
+                $wilayah=3;
+                break;
+            case 'yk64f':
+                // code...
+                $wilayah=4;
+                break;
+            case 'bm632':
+                // code...
+                $wilayah=5;
+                break;
+            case 'efq24':
+                // code...
+                $wilayah=6;
+                break;
+            case 'lk207':
+                // code...
+                $wilayah=7;
+                break;
+            default:
+                // code...
+                die("Token Invalid!");
+                break;
+        }
+        $data=array();
+        $data['token']=$this->input->post('token');
+
+        $this->load->view('tools/report_belum_memilih', $data);
+
+
+
+    }
+
     function report_belum_memilih_ppj($wilayah=null){
         $where="";
         if(!$this->input->post('token') && $wilayah==null){
@@ -440,7 +491,7 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
                 // code...
                 $wilayah=6;
                 break;
-            case 'am207':
+            case 'lk207':
                 // code...
                 $wilayah=7;
                 break;
@@ -531,13 +582,14 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
     }
 
     function report_belum_memilih_pnt1($wilayah=null){
+        die('Belum di mulai!');
         $where="";
         if(!$this->input->post('token') && !$this->uri->segment(3) && $wilayah==null){
             $this->load->view('tools/login_report');
             return;
         }
         $token=$this->input->post('token');
-        $token=$this->uri->segment(3);
+        //$token=$this->uri->segment(3);
         switch ($token) {
             case 'df43e':
                 // code...
@@ -563,7 +615,7 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                 // code...
                 $wilayah=6;
                 break;
-            case 'am207':
+            case 'lk207':
                 // code...
                 $wilayah=7;
                 break;
@@ -629,6 +681,7 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
     }
 
     function report_belum_memilih_pnt2($wilayah=null){
+        die('Belum di mulai!');
         $where="";
         if(!$this->input->post('token') && !$this->uri->segment(3) && $wilayah==null){
             $this->load->view('tools/login_report');
@@ -661,7 +714,7 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                 // code...
                 $wilayah=6;
                 break;
-            case 'am207':
+            case 'lk207':
                 // code...
                 $wilayah=7;
                 break;
