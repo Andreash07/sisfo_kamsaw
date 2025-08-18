@@ -1717,6 +1717,21 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
     }
 
 
+    public function cek_angjem_sidinotanggal($value='')
+    {
+        $data=array();
+        $param=array();
+        $s="SELECT A.id, B.kwg_wil, B.kwg_no, B.nama_lengkap, B.status_sidi, B.tgl_lahir, B.tgl_sidi, B.last_modified,B.user_modified,  B.last_modified_dorkas,  B.user_modified_dorkas, C.kwg_nama
+            FROM `anggota_jemaat_peserta_pemilihan` A 
+            join anggota_jemaat B on B.id = A.anggota_jemaat_id
+            join keluarga_jemaat C on C.id = B.kwg_no
+            WHERE B.status_sidi=1 && (B.tgl_sidi is null or B.tgl_sidi ='' or B.tgl_sidi ='0000-00-00') && A.tahun_pemilihan=2025 && B.sts_anggota=1 && B.status=1 
+            order by B.kwg_wil, C.kwg_nama ASC, B.no_urut ASC;";
+        $q=$this->m_model->selectcustom($s);
+        $data['angjem']=$q;
+        $this->load->view('tools/cek_angjem_sidinotanggal', $data);
+    }
+
     public function generate_userjemaat($value='')
     {
         // code...
