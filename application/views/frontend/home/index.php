@@ -133,7 +133,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
             <!-- Card body -->
 
             <div class="card-body" style="padding:unset; position:relative;">
-                <img src="<?=base_url();?>/assets/images/poster-mobile-ppj-01_compressed.jpg" class="img-fluid" instyle="border-bottom-left-radius: .375rem;border-bottom-right-radius: .375rem;"> 
+                <img src="<?=base_url();?>/assets/images/poster-mobile-ppj-01_compressed1.jpg" class="img-fluid" instyle="border-bottom-left-radius: .375rem;border-bottom-right-radius: .375rem;"> 
                 <?php 
 
                   if(strtotime($open)< strtotime(date('Y-m-d H:i:s')) ){
@@ -141,7 +141,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
                 ?>
 
-                    <a class="btn btn-info" href="<?=base_url();?>pnppj" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0; font-size: 1.2rem;">Nyok Milih Di sini! (Uji Coba) </a>
+                    <a class="btn btn-info" href="<?=base_url();?>pnppj" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0; font-size: 1.2rem;">Nyok Milih Di sini!</a>
 
                 <?php
 

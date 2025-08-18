@@ -74,7 +74,7 @@ foreach ($setting as $key => $value) {
 	            <!-- Card body -->
 
 	            <div class="card-body" style="padding:unset; position:relative;">
-	                <img src="<?=base_url();?>/assets/images/poster-mobile-ppj-01_compressed.jpg" class="img-fluid" instyle="border-top-left-radius: .375rem;border-top-right-radius: .375rem;">
+	                <img src="<?=base_url();?>/assets/images/poster-mobile-ppj-01_compressed1.jpg" class="img-fluid" instyle="border-top-left-radius: .375rem;border-top-right-radius: .375rem;">
 
 	               <?php 
 
@@ -255,7 +255,7 @@ foreach ($setting as $key => $value) {
 
 				?>
 				<label class="text-sm text-danger" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara belum dimulai.</label>
-				<label class="text-sm ">Dimual pada <b><?=date('d M Y H:i:s', $timestamp_open) ;?></b></label>
+				<label class="text-sm ">Dimulai pada <b><?=date('d M Y H:i:s', $timestamp_open) ;?></b></label>
 				<br>
 				<?php
 

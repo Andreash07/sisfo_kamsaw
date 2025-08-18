@@ -50,13 +50,14 @@
         $foto_thumb=base_url().'assets/images/default-user.png';
         $foto=base_url().'assets/images/default-user.png';
         if($value->foto != null){
-          $foto_thumb=base_url().$value->foto_thumb;
-          $foto=base_url().$value->foto;
 
-          if(strpos($value->foto, 'https://') >=0 ){
-            $foto_thumb=$value->foto_thumb;
-            $foto=$value->foto;
-          }
+          #if(strpos($value->foto, 'https://') >=0 ){
+           # $foto_thumb=$value->foto_thumb;
+           # $foto=$value->foto;
+          #}else{
+            $foto_thumb=base_url().$value->foto_thumb;
+            $foto=base_url().$value->foto;
+          #}
 
         }
 
@@ -72,6 +73,7 @@
           $disabled="disabled";
           $ket_pilih="<small class='text-danger'>Dipilih</small>";
         }
+
       ?>
 
 
@@ -86,7 +88,7 @@
                   <div class="col-12" style="border-top: solid 1px #ececec;"></div>
                   <h5 class="h3 title">
                     <a id="triger_calon_pn" value="calon_pn<?=$value->id;?>" style="text-decoration: none; color: #32325d;">
-                      <small class="d-block mb-0"><?=$title.ucwords($value->nama_lengkap2);?></small>
+                      <small class="d-block mb-0"><?=$title.ucwords($value->nama_lengkap);?></small>
                     </a>
                     <small class="h5 font-weight-light text-muted"><?=getUmur(date('Y-m-d'), $value->tgl_lahir);?> tahun</small> <!-- | Wil. <?=$value->kwg_wil;?> -->
                     <?=$ket_pilih;?>
