@@ -448,7 +448,7 @@ $this->load->view('layout/footer');
 				legend: {
 				  x: 'center',
 				  y: 'bottom',
-				  data: ['GolPut', 'Suara Sah', 'Suara Tidak Sah']
+				  data: ['Belum Memilih', 'Suara Sah', 'Suara Tidak Sah']
 				},
 				toolbox: {
 				  show: true,
@@ -498,7 +498,7 @@ $this->load->view('layout/footer');
 					name: 'Suara Sah',
 					value: suaradikunci,
 				  }, {
-					name: 'GolPut',
+					name: 'Belum Memilih',
 					value: belummemlih,
 				  }]
 				}]
