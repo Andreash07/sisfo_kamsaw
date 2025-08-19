@@ -364,39 +364,44 @@ class Pnppj extends CI_Controller {
 		$json=array();
 
 		if($vote==1){
+			//check dulu id_pemilih sudah memilih apa belum untuk PPJ, supaya tidak double
+			$scek=$this->m_model->selectas2('id_pemilih', $id_pemilih, 'tahun_pemilihan', $tahun_pemilihan, 'votes_tahap_ppj');
+			if(count($scek)>0){
+				$json=array('status'=>4,'msg'=>'sudah memilih calon lain!');
+			}else{
+				//voting
 
-			//voting
+				$param=array();
 
-			$param=array();
+				$param['id_pemilih']=$id_pemilih;
 
-			$param['id_pemilih']=$id_pemilih;
+				$param['wil_pemilih']=$wil_pemilih;
 
-			$param['wil_pemilih']=$wil_pemilih;
+				$param['id_calon1']=$id_calon;
 
-			$param['id_calon1']=$id_calon;
+				$param['wil_calon1']=$wil_calon;
 
-			$param['wil_calon1']=$wil_calon;
+				$param['tahun_pemilihan']=$tahun_pemilihan;
 
-			$param['tahun_pemilihan']=$tahun_pemilihan;
-
-			$param['created_date']=date('Y-m-d H:i:s');
+				$param['created_date']=date('Y-m-d H:i:s');
 
 
 
-			$q=$this->m_model->insertgetid($param, 'votes_tahap_ppj');
+				$q=$this->m_model->insertgetid($param, 'votes_tahap_ppj');
 
-			if($q){
+				if($q){
 
-				$json=array('status'=>1,'msg'=>'data saved');
+					$json=array('status'=>1,'msg'=>'data saved');
+
+				}
+
+				else{
+
+					$json=array('status'=>0,'msg'=>'failed saved');
+
+				}
 
 			}
-
-			else{
-
-				$json=array('status'=>0,'msg'=>'failed saved');
-
-			}
-
 		}
 
 		else if($vote==2){

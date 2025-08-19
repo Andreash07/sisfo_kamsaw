@@ -5,7 +5,7 @@
 <div class="container-fluid mt-4">
   <div class="row align-items-center">
     <div class="col-12 text-center" style="margin: auto;">
-      <h2>Pemilihan PPJ</h2>
+      <h2>Pemilihan PPJ (Uji Coba)</h2>
     </div>
   </div>
   <?php $this->load->view('frontend/mjppj/peserta_pemilih_ppj', array('anggota_sidi' => $anggota_sidi, 'pemilih_voting' => $pemilih_voting, 'ulasan'=> $ulasan )); ?>
@@ -15,75 +15,7 @@
 
 <?php $this->load->view('frontend/layouts/footer'); ?>
 
-<div class="modal fade" id="pemberitahuanModal" tabindex="9" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-
-
-
-  <div class="modal-dialog modal-lg" role="document" style="margin-top: 15%;">
-
-    <div class="modal-content" style="padding:10px;">
-
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #333; float:right;">
-
-        <span aria-hidden="true">×</span>
-
-      </button>
-
-      <div class="container-fluid">
-
-        <h2 class="text-danger text-center blink_me">Informasi!</h2>
-        <br>
-        Dalam pemilihan <b>Pengawas Perbendaharaan Jemaat Periode 2026-2030</b>, mengacu pada <b>TG Bab XIV Pasal 35 dan PPTG Bab XIV Pasal 80 tentang Kelengkapan Pelayanan Jemaat</b>, maka penetapan Calon Pengawas Perbendaharaan Jemaat adalah berdasarkan <b>rekomendasi Majelis Jemaat</b> dengan memperhatikan kriteria yang dibutuhkan sesuai fungsi dan tugas Pengawas Perbendaharaan Jemaat.
-
-        <br>
-
-        <b>Tuhan memberkati kita semua!<br>😇🙏</b>
-
-        </div>
-
-        <hr style="margin-top:1rem; margin-bottom:1rem;">
-
-        <h5 class="text-danger" style="margin-top:0px;margin-bottom:0px;">Ketentuan:</h5>
-
-        <ol>
-
-          <li>Silahkan Gunakan Hak Suara Anda dan <b>Pilih 1 Calon PPJ</b> yang tersedia!</li>
-
-        </ol>
-
-        <div class="modal-footer">
-          <button class="btn btn-primary btn-sm pull-right" type="button" data-dismiss="modal" aria-label="Close">
-            Ya, Saya Mengerti!
-          </button>
-        </div>
-      </div>
-
-    </div>
-
-
-
-  </div>
-
-
-
-</div>
-
-
-
 <script type="text/javascript">
-
-  $(document).ready(function(){
-
-    $('#pemberitahuanModal').modal('show');
-
-    setTimeout(function(){
-    $('#pemberitahuanModal').modal('hide');
-
-    }, 10000)
-
-  })
-
-
   $(document).on('click touchstart', '[id=btn_kunciPilihan]', function(e) {
     var r = confirm("Apakah anda yakin ingin Mengunci Pilihan Calon PPJ? (Peringatan: Jika OK, anda tidak dapat mengubah lagi!)");
     if (r == false) {
