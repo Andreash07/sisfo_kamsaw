@@ -156,7 +156,7 @@
 
     <!-- Custom Theme Scripts -->
 
-    <script src="<?=base_url();?>/build/js/custom.js?version=2"></script>
+    <script src="<?=base_url();?>/build/js/custom.js?version=3"></script>
     <script src="<?=base_url();?>/build/js/pagination.js"></script>
 
 

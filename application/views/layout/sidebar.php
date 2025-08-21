@@ -433,7 +433,7 @@
                           </a>
 
                         </li>
-                        <li class="sub_menu">
+                        <li class="sub_menu" style="display: none;">
 
                           <a href="<?=base_url();?>pnppj/pemilu_ppj">
 

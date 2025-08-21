@@ -80,10 +80,14 @@ var setContentHeight = function () {
             });
         } else {
             // prevent closing menu if we are on child menu
-            if (!$li.parent().is('.child_menu')) {
-            	console.log('newasdas00')
-                $SIDEBAR_MENU.find('li').removeClass('active active-sm');
-                $SIDEBAR_MENU.find('li ul').slideUp();
+            //if (!$li.parent().is('.child_menu')) {
+            //	console.log('newasdas00')
+            //    $SIDEBAR_MENU.find('li').removeClass('active active-sm');
+            //    $SIDEBAR_MENU.find('li ul').slideUp();
+            //}
+            if ( $BODY.is( ".nav-sm" ) && !$li.parent().is('.child_menu') ) {
+            	$SIDEBAR_MENU.find( "li" ).removeClass( "active active-sm" ); 
+            	$SIDEBAR_MENU.find( "li ul" ).slideUp();
             }
 			else
             {
