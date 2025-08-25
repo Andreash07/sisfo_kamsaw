@@ -30,6 +30,7 @@
       <?php 
       #print_r($calon);      die();
       $num_voted=0;
+      shuffle($calon);
       foreach ($calon as $key => $value) {
         # code...
         $ico_gender='<i class="fa fa-female" style="font-size:12pt;"></i>';
@@ -71,7 +72,7 @@
         $ket_pilih="";
         if($value->locked==1){
           $disabled="disabled";
-          $ket_pilih="<small class='text-danger'>Dipilih</small>";
+          #$ket_pilih="<small class='text-danger'>Dipilih</small>";
         }
 
       ?>
