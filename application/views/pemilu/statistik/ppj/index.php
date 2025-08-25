@@ -42,16 +42,20 @@ $this->load->view('layout/header');
 			<div class="x_panel">
 				<div class="x_title">
 					<h2>Suara Pemilihan PPJ</h2>
+					<!-- Tombol Copy -->
+			    <button class="btn btn-warning btn-sm" style="position:absolute; right:5px;" onclick="copyDiv('div_desc_suaraglobal')"title="Copy ke Clipboard">
+			      <span class="fa fa-clipboard " style="color:white; "></span>
+			    </button>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
 					<div id="echart_pie_global" style="height:350px;"><i class="fa fa-circle-o-notch fa-spin fa-4x" style="margin-left:40%;"></i></div>
-					<div style="margin-top: 1rem; padding-left: 1rem;">
-						<span id="peserta_pemilih"></span> Peserta Pemilihan<br>
-						Total Suara Masuk : <span id="total_suara_masuk"></span> Suara (<span id="persen_suara_masuk"></span>%)<br>
-						* Suara Sah (Dikunci): <span id="suara_sah"></span> Suara (<span id="persen_suara_sah"></span>%)<br>
-						* Suara Tidak Sah (Belum Dikunci): <span id="suara_tidak_sah"></span> Suara (<span id="persen_suara_tidak_sah"></span>%)<br>
-						* Suara Belum digunakan: <span id="suara_belum_digunakan"></span> Suara (<span id="persen_suara_belum_digunakan"></span>%)
+					<div style="margin-top: 1rem; padding-left: 1rem;  position: absolute; z-index: -99999" id="div_desc_suaraglobal">
+						*<b id="peserta_pemilih"></b>* Peserta Pemilihan<br>
+						Total Suara Masuk : *<b id="total_suara_masuk"></b> Suara (<b id="persen_suara_masuk"></b>%)*<br>
+						- Suara Sah (Dikunci): *<b id="suara_sah"></b> Suara (<b id="persen_suara_sah"></b>%)*<br>
+						- Suara Tidak Sah (Belum Dikunci): *<b id="suara_tidak_sah"></b> Suara (<b id="persen_suara_tidak_sah"></b>%)*<br>
+						- Suara Belum digunakan: *<b id="suara_belum_digunakan"></b> Suara (<b id="persen_suara_belum_digunakan"></b>%)*
 					</div>
 				</div>
 			</div>
@@ -67,16 +71,20 @@ $this->load->view('layout/header');
 				<div class="x_panel">
 					<div class="x_title">
 						<h2>Wil. <?= $value->wilayah; ?></h2>
+						<!-- Tombol Copy -->
+				    <button class="btn btn-warning btn-sm" style="position:absolute; right:5px;" onclick="copyDiv('div_desc_wil<?= $value->wilayah; ?>')"title="Copy ke Clipboard">
+				      <span class="fa fa-clipboard " style="color:white; "></span>
+				    </button>
 						<div class="clearfix"></div>
 					</div>
 					<div class="x_content">
 						<div id="echart_pie<?= $value->wilayah; ?>" style="height:350px;"><i class="fa fa-circle-o-notch fa-spin fa-4x" style="margin-left:40%;"></i></div>
-						<div style="margin-top: 1rem; padding-left: 1rem;">
-							Teritorial <?= $value->wilayah; ?> (<span id="peserta_wil_<?= $value->wilayah; ?>"></span> Peserta Pemilihan):<br>
-							Total Suara Masuk: <span id="jumlah_pemilih_wil_<?= $value->wilayah; ?>"></span> Suara (<span id="persen_suara_wil_<?= $value->wilayah; ?>"></span>%)<br>
-							* Suara Sah (Dikunci): <span id="suara_dikunci_wil_<?= $value->wilayah; ?>"></span> Suara (<span id="persen_dikunci_wil_<?= $value->wilayah; ?>"></span>%)<br>
-							* Suara Tidak Sah (Belum Dikunci): <span id="suara_tidak_dikunci_wil_<?= $value->wilayah; ?>"></span> Suara (<span id="persen_tidak_dikunci_wil_<?= $value->wilayah; ?>"></span>%)<br>
-							* Suara Belum digunakan: <span id="suara_belum_digunakan_wil_<?= $value->wilayah; ?>"></span> Suara (<span id="persen_belum_digunakan_wil_<?= $value->wilayah; ?>"></span>%)
+						<div style="margin-top: 1rem; padding-left: 1rem; position: absolute; z-index: -99999" id="div_desc_wil<?= $value->wilayah; ?>">
+							Teritorial <?= $value->wilayah; ?> (*<b id="peserta_wil_<?= $value->wilayah; ?>"></b> Peserta Pemilihan*):<br>
+							Total Suara Masuk: *<b id="jumlah_pemilih_wil_<?= $value->wilayah; ?>"></b> Suara (<b id="persen_suara_wil_<?= $value->wilayah; ?>"></b>%)*<br>
+							- Suara Sah (Dikunci): *<b id="suara_dikunci_wil_<?= $value->wilayah; ?>"></b> Suara (<b id="persen_dikunci_wil_<?= $value->wilayah; ?>"></b>%)*<br>
+							- Suara Tidak Sah (Belum Dikunci): *<b id="suara_tidak_dikunci_wil_<?= $value->wilayah; ?>"></b> Suara (<b id="persen_tidak_dikunci_wil_<?= $value->wilayah; ?>"></b>%)*<br>
+							- Suara Belum digunakan: *<b id="suara_belum_digunakan_wil_<?= $value->wilayah; ?>"></b> Suara (<b id="persen_belum_digunakan_wil_<?= $value->wilayah; ?>"></b>%)*
 						</div>
 					</div>
 				</div>
@@ -586,4 +594,15 @@ $this->load->view('layout/footer');
 			}
 		}
 	})
+
+function copyDiv(domId) {
+    var content = document.getElementById(domId).innerText;
+
+    navigator.clipboard.writeText(content).then(function() {
+        // Bisa diganti pakai alert Bootstrap
+        alert("Teks berhasil disalin ke clipboard!");
+    }, function(err) {
+        console.error("Gagal menyalin: ", err);
+    });
+}
 </script>
