@@ -46,6 +46,13 @@ $this->load->view('layout/header');
 				</div>
 				<div class="x_content">
 					<div id="echart_pie_global" style="height:350px;"><i class="fa fa-circle-o-notch fa-spin fa-4x" style="margin-left:40%;"></i></div>
+					<div style="margin-top: 1rem; padding-left: 1rem;">
+						<span id="peserta_pemilih"></span> Peserta Pemilihan<br>
+						Total Suara Masuk : <span id="total_suara_masuk"></span> Suara (<span id="persen_suara_masuk"></span>%)<br>
+						* Suara Sah (Dikunci): <span id="suara_sah"></span> Suara (<span id="persen_suara_sah"></span>%)<br>
+						* Suara Tidak Sah (Belum Dikunci): <span id="suara_tidak_sah"></span> Suara (<span id="persen_suara_tidak_sah"></span>%)<br>
+						* Suara Belum digunakan: <span id="suara_belum_digunakan"></span> Suara (<span id="persen_suara_belum_digunakan"></span>%)
+					</div>
 				</div>
 			</div>
 		</div>
@@ -64,6 +71,13 @@ $this->load->view('layout/header');
 					</div>
 					<div class="x_content">
 						<div id="echart_pie<?= $value->wilayah; ?>" style="height:350px;"><i class="fa fa-circle-o-notch fa-spin fa-4x" style="margin-left:40%;"></i></div>
+						<div style="margin-top: 1rem; padding-left: 1rem;">
+							Teritorial <?= $value->wilayah; ?> (<span id="peserta_wil_<?= $value->wilayah; ?>"></span> Peserta Pemilihan):<br>
+							Total Suara Masuk: <span id="jumlah_pemilih_wil_<?= $value->wilayah; ?>"></span> Suara (<span id="persen_suara_wil_<?= $value->wilayah; ?>"></span>%)<br>
+							* Suara Sah (Dikunci): <span id="suara_dikunci_wil_<?= $value->wilayah; ?>"></span> Suara (<span id="persen_dikunci_wil_<?= $value->wilayah; ?>"></span>%)<br>
+							* Suara Tidak Sah (Belum Dikunci): <span id="suara_tidak_dikunci_wil_<?= $value->wilayah; ?>"></span> Suara (<span id="persen_tidak_dikunci_wil_<?= $value->wilayah; ?>"></span>%)<br>
+							* Suara Belum digunakan: <span id="suara_belum_digunakan_wil_<?= $value->wilayah; ?>"></span> Suara (<span id="persen_belum_digunakan_wil_<?= $value->wilayah; ?>"></span>%)
+						</div>
 					</div>
 				</div>
 			</div>
@@ -338,11 +352,38 @@ $this->load->view('layout/footer');
 			$.each(wil, function(index, value) {
 				iarray = value - 1;
 				pieChart('echart_pie' + value, peserta_pemilihan[iarray], suaraDikunci[iarray], suaraBelumDikunci[iarray], 'Wil. ' + value)
+
+				//redaksi
+				$('#peserta_wil_' + value).text(peserta_pemilihan[iarray]);
+
+				$('#jumlah_pemilih_wil_' + value).text(num_pesertaMemilih);
+				$('#persen_suara_wil_' + value).text(persent_pesertaMemilih);
+
+				persen_dikunci = (suaraDikunci[iarray] / peserta_pemilihan[iarray] * 100).toFixed(2)
+				$('#suara_dikunci_wil_' + value).text(suaraDikunci[iarray]);
+				$('#persen_dikunci_wil_' + value).text(persen_dikunci);
+
+				persen_tidak_dikunci = (suaraBelumDikunci[iarray] / peserta_pemilihan[iarray] * 100).toFixed(2)
+				$('#suara_tidak_dikunci_wil_' + value).text(suaraBelumDikunci[iarray]);
+				$('#persen_tidak_dikunci_wil_' + value).text(persen_tidak_dikunci);
+
+				persen_belum_digunakan = (belummemlih / peserta_pemilihan[iarray] * 100).toFixed(2)
+				$('#suara_belum_digunakan_wil_' + value).text(belummemlih);
+				$('#persen_belum_digunakan_wil_' + value).text(persen_belum_digunakan);
 			})
 
 			pieChart('echart_pie_global', json.num_pesertaPemilihan_global, json.num_suaraDikunci_global, json.num_BelumDikunci_global, 'Perolehan Suara Total')
-
-
+			
+			//redaksi (global)
+			$('#peserta_pemilih').text(json.num_pesertaPemilihan_global);
+			$('#total_suara_masuk').text(num_pesertaMemilih);
+			$('#persen_suara_masuk').text(persent_pesertaMemilih);
+			$('#suara_sah').text(json.num_suaraDikunci_global);
+			$('#persen_suara_sah').text((json.num_suaraDikunci_global / json.num_pesertaPemilihan_global * 100).toFixed(2));
+			$('#suara_tidak_sah').text(json.num_BelumDikunci_global);
+			$('#persen_suara_tidak_sah').text((json.num_BelumDikunci_global / json.num_pesertaPemilihan_global * 100).toFixed(2));
+			$('#suara_belum_digunakan').text(belummemlih);
+			$('#persen_suara_belum_digunakan').text((belummemlih / json.num_pesertaPemilihan_global * 100).toFixed(2));
 		})
 
 
