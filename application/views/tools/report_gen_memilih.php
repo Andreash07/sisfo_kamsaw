@@ -18,6 +18,8 @@
 			<th cellpadding="0">KK</th>
 			<th cellpadding="0">Anggota Jemaat</th>
 			<th cellpadding="0">Umur</th>
+			<th cellpadding="0">Status Sidi</th>
+			<th cellpadding="0">Tanggal Sidi</th>
 			<th cellpadding="0">Umur Sidi</th>
 			<th cellpadding="0">Umur Attesasi</th>
 		</tr>
@@ -60,8 +62,13 @@
 				$umurAttesasi_lbl=$umurAttesasi." th";
 			}
 
+			$status_sidi="<i style='color:white; background-color:red;'>Belum</i>";
+			if($value->status_sidi==1){
+				$status_sidi="Sudah";
+			}
+
 			if($value->status_sidi!=1 && $value->tgl_sidi =='0000-00-00'){
-				continue;
+				#continue;
 			}
 			$namaKK_before=$value->kwg_id;
 		?>
@@ -73,6 +80,8 @@
 			</td>
 			<td cellpadding="0"><?=$value->nama_lengkap;?></td>
 			<td cellpadding="0" style="text-align: center;"><?=$umurLahir_lbl;?> </td>
+			<td cellpadding="0" style="text-align: center;"><?=$status_sidi;?> </td>
+			<td cellpadding="0" style="text-align: center;"><?=$value->tgl_sidi;?> </td>
 			<td cellpadding="0" style="text-align: center;"><?=$umurSidi_lbl;?> </td>
 			<td cellpadding="0" style="text-align: center;"><?=$umurAttesasi_lbl;?> </td>
 		</tr>

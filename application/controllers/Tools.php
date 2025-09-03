@@ -408,6 +408,75 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
 
     }
 
+    function report_peserta_pemilih_ppj($wilayah=null){
+        $where="";
+        if(!$this->input->get('token') && $wilayah==null){
+        #    $this->load->view('tools/login_report');
+        #    return;
+        }
+
+        switch ($this->input->get('token')) {
+            case 'df43e':
+                // code...
+                $wilayah=1;
+                break;
+            case 'kj152':
+                // code...
+                $wilayah=2;
+                break;
+            case 'hg98p':
+                // code...
+                $wilayah=3;
+                break;
+            case 'yk64f':
+                // code...
+                $wilayah=4;
+                break;
+            case 'bm632':
+                // code...
+                $wilayah=5;
+                break;
+            case 'efq24':
+                // code...
+                $wilayah=6;
+                break;
+            case 'lk207':
+                // code...
+                $wilayah=7;
+                break;
+            default:
+                // code...
+                die("Token Invalid!");
+                break;
+        }
+
+        if($wilayah!=null){
+            $where.=" && B.kwg_wil='".$wilayah."'";
+        }
+
+
+        $data=array();
+        /*$s="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks
+from anggota_jemaat A 
+join keluarga_jemaat B on (B.id = A.kwg_no)
+where A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-09-09 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-09-09 00:00:00' && A.last_modified_dorkas < '2021-09-09 00:00:00') ) && A.status_sidi=1 ".$where."
+order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";*/
+
+$s="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks
+from anggota_jemaat A 
+join keluarga_jemaat B on (B.id = A.kwg_no)
+join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id 
+where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_ppj=1 ".$where."
+order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
+
+        $data['angjem']=$this->m_model->selectcustom($s); #die(nl2br($s));
+
+        $this->load->view('tools/report_gen_memilih',$data);
+
+    }
+
+
+
     function report_belum_memilih(){
         $where="";
         $wilayah="";

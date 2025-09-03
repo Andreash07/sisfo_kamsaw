@@ -182,14 +182,20 @@ foreach ($setting as $key => $value) {
 					<?php 
 
 					#if($setting['3']->locked==0){
-					if(strtotime($open3) <= strtotime(date('Y-m-d H:i:s'))  ){
+					if(strtotime($open3) <= strtotime(date('Y-m-d H:i:s')) && strtotime($close3) >= strtotime(date('Y-m-d H:i:s'))  ){
 
 					?>
 
 						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung.</label>
 
 					<?php
-
+					}
+					else if(strtotime($open3) <= strtotime(date('Y-m-d H:i:s')) && strtotime($close3) <= strtotime(date('Y-m-d H:i:s'))  ){
+					?>
+						<label class="text-danger" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sudah ditutup.</label>
+						<br>
+						<label class="text-warning">Hasil pemilihan akan keluar setelah proses verifikasi selesai dilakukan.</label>
+					<?php
 					}
 
 					?>
@@ -241,7 +247,7 @@ foreach ($setting as $key => $value) {
 				<?php 
 
 				#if($setting['3']->locked==0 && !isset($offline[3])){
-				if(strtotime($open3) <= strtotime(date('Y-m-d H:i:s'))  ){
+				if(strtotime($open3) <= strtotime(date('Y-m-d H:i:s')) && strtotime($close3) >= strtotime(date('Y-m-d H:i:s'))  ){
 
 					//ini beari masih di buka untuk pemungutan suara
 
@@ -251,7 +257,13 @@ foreach ($setting as $key => $value) {
 
 				<?php 
 
-				}else{
+				}
+				else if(strtotime($open3) <= strtotime(date('Y-m-d H:i:s')) && strtotime($close3) <= strtotime(date('Y-m-d H:i:s'))  ){
+				?>
+					
+				<?php 
+				}
+				else{
 
 				?>
 				<label class="text-sm text-danger" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara belum dimulai.</label>

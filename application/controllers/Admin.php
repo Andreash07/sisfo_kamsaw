@@ -379,7 +379,10 @@ class Admin extends CI_Controller {
 			if($deleteSoft){
 
 				//jika berhasil maka anggota keluarga juda di soft delete
-
+				$param['sts_anggota']=0;
+				$param['last_modified_dorkas']=date('Y-m-d H:i:s');
+				$param['last_modified']=date('Y-m-d H:i:s');
+				$param['user_modified']=$this->session->userdata('userdata')->username;
 				$deleteSoftAnggota=$this->m_model->updateas('kwg_no', $this->input->get('id'), $param, 'anggota_jemaat');
 
 				$this->session->set_userdata(array('status_remove'=>'berhasil'));
@@ -460,7 +463,8 @@ class Admin extends CI_Controller {
 
 	        $query_data="select * from keluarga_jemaat A";
 	        
-	        $where.="where (A.delete_user is NULL || A.delete_user = '') ";
+	        #$where.="where (A.delete_user is NULL || A.delete_user = '') ";
+	        $where.="where A.id>0 ";
 
 	        //dicomment supaya keluarga yang sudah tidak aktif tapi belum di delete tetap muncul sehingga admin bisa mengetahui jejak record keluarga tersebut
             if($this->input->get('status')){

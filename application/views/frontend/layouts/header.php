@@ -9,6 +9,7 @@
   <meta charset="utf-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="color-scheme" content="light"> <!-- untuk paksa tidak ikut dark mode -->
 
   <meta name="description" content="Sistem Informasi Jemaat - GKP Kampung Sawah. Sistem ini berfungsi membantu dalam perawatan, manajemen dan pembaruan data anggota jemaat GKP Kampung Sawah.">
 

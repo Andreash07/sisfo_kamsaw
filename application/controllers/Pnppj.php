@@ -126,6 +126,7 @@ class Pnppj extends CI_Controller {
 		$data=array();
 
 		$data['keluarga']=$this->session->userdata('sess_keluarga')->kwg_nama;
+		$data['tahun_pemilihan']=$this->tahun_pemilihan;
 
 		$sql="select A.*, B.status_kawin
 
@@ -140,8 +141,37 @@ class Pnppj extends CI_Controller {
 
 		$data['anggota_sidi']=$this->m_model->selectcustom($sql);
 
+		$ls_id_pemilih=array();
+		$ls_id_pemilih[]=0;
+		foreach ($data['anggota_sidi'] as $key => $value) {
+			// code...
+			$ls_id_pemilih[]=$value->id;
+		}
+
+		$spemilih_voting="select * from votes_tahap1 where id_pemilih in (".implode(', ', $ls_id_pemilih).") && tahun_pemilihan = '".$this->tahun_pemilihan."'";
+		$qpemilih_voting=$this->m_model->selectcustom($spemilih_voting);
+
+		$data['pemilih_voting']=array();
+		foreach ($qpemilih_voting as $key => $value) {
+			// code...
+			$data['pemilih_voting'][$value->id_pemilih][]=$value;
+		}
 
 
+		$sulasan="select * from ulasan_user where user_id in (".implode(', ', $ls_id_pemilih).") && module='Pemilihan PNT Tahap 1 ".$this->tahun_pemilihan."' ";
+		$qulasan=$this->m_model->selectcustom($sulasan); #die($sulasan);
+		$data['ulasan']=array();
+		foreach ($qulasan as $key => $value) {
+			// code...
+			$data['ulasan'][$value->user_id]=$value;
+		}
+
+
+
+
+
+		$slockpemilihan=$this->m_model->selectas2('tahun_pemilihan', $this->tahun_pemilihan, 'tipe_pemilihan', 1, 'lock_pemilihan');
+		$data['lockpemilihan']=$slockpemilihan;
 
 
 
@@ -215,7 +245,9 @@ class Pnppj extends CI_Controller {
 
 
 
-
+		$slockpemilihan=$this->m_model->selectas2('tahun_pemilihan', $this->tahun_pemilihan, 'tipe_pemilihan', 3, 'lock_pemilihan');
+		$data['lockpemilihan']=$slockpemilihan;
+			
 		$this->load->view('frontend/mjppj/pemilihan_ppj', $data);
 
 		

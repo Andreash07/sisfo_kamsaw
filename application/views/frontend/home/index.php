@@ -68,7 +68,11 @@ $open="2025-07-01 00:00:00";//pnt
 
 $close="2025-07-06 00:00:00";
 
-
+foreach ($lockpemilihan as $key => $value) {
+  // code...
+  $open=$value->start_at;
+  $close=$value->end_at;
+}
 
 $timestamp = strtotime($open);
 
@@ -136,7 +140,8 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
                 <img src="<?=base_url();?>/assets/images/poster-mobile-ppj-01_compressed1.jpg" class="img-fluid" instyle="border-bottom-left-radius: .375rem;border-bottom-right-radius: .375rem;"> 
                 <?php 
 
-                  if(strtotime($open)< strtotime(date('Y-m-d H:i:s')) ){
+                  #if(strtotime($open)< strtotime(date('Y-m-d H:i:s')) ){
+                  if(strtotime($open)< strtotime(date('Y-m-d H:i:s')) && strtotime($close)>= strtotime(date('Y-m-d H:i:s')) ) {
                     $sts_open=1;
 
                 ?>
@@ -145,7 +150,14 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
                 <?php
 
-                  }else{
+                  }
+                  else if(strtotime($open)< strtotime(date('Y-m-d H:i:s')) && strtotime($close)< strtotime(date('Y-m-d H:i:s')) ){
+                    $sts_open=0;
+                  ?>
+                    <a class="btn btn-warning" href="<?=base_url();?>pnppj" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0; font-size: 1.2rem;">Sudah ditutup! Cek hasil.</a>
+                  <?php
+                  }
+                  else{
                     $sts_open=0;
 
                   /*  <a id="btn_ajax_modal" data-toggle="modal" data-target="#exampleModal" href="<?=base_url();?>ajax/list_calon_penatua_review/?token=<?=md5('hasg2&^!#'.$this->session->userdata('sess_keluarga')->kwg_wil);?>&kwg_wil=<?=$this->session->userdata('sess_keluarga')->kwg_wil;?>" class="btn btn-warning btn-sm" onclick="event.preventDefault();" style="position:absolute; left:0; bottom:50px; box-shadow: 0px 0px 7px #666;">Nyok Lihat Calonnya</a>*/

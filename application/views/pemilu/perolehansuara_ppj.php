@@ -91,7 +91,7 @@ if(isset($voted) && count($voted) > 0){
 	                </div>
               	</div>
       		 	<small class="">
-	              	&nbsp;<?=$valuevoted->voted;?> (<?= round($percent,2);?>%)
+	              	&nbsp;<?=$valuevoted->voted;?> (<?= round($percent,3);?>%)
               	</small>
 			</td>
 			<td class="text-center">

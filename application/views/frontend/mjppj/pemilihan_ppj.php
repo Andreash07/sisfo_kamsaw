@@ -8,7 +8,7 @@
       <h2>Pemilihan PPJ</h2>
     </div>
   </div>
-  <?php $this->load->view('frontend/mjppj/peserta_pemilih_ppj', array('anggota_sidi' => $anggota_sidi, 'pemilih_voting' => $pemilih_voting, 'ulasan'=> $ulasan )); ?>
+  <?php $this->load->view('frontend/mjppj/peserta_pemilih_ppj', array('anggota_sidi' => $anggota_sidi, 'pemilih_voting' => $pemilih_voting, 'ulasan'=> $ulasan, 'lockpemilihan'=> $lockpemilihan )); ?>
 </div>
 
 <hr>

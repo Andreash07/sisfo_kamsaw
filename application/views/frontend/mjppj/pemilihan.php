@@ -48,7 +48,7 @@ $this->load->view('frontend/layouts/header');
 
 <?php 
 
-$this->load->view('frontend/mjppj/peserta_pemilih', array('anggota_sidi'=>$anggota_sidi));
+$this->load->view('frontend/mjppj/peserta_pemilih', array('anggota_sidi'=>$anggota_sidi, 'pemilih_voting' => $pemilih_voting, 'ulasan'=> $ulasan, 'lockpemilihan'=> $lockpemilihan ));
 
 ?>
 
@@ -146,6 +146,10 @@ $this->load->view('frontend/layouts/footer');
   $(document).ready(function(){
 
     $('#pemberitahuanModal').modal('show');
+    setTimeout(function(){
+    $('#pemberitahuanModal').modal('hide');
+
+    }, 20000)
 
   })
 
@@ -174,20 +178,30 @@ $this->load->view('frontend/layouts/footer');
       return;
 
     } else {
-      $('#feedbackModal').modal('show');
+      //$('#feedbackModal').modal('show');
+      //show formnya pindah ke bawah aja setelah sudah kelar process kunci
     }
 
 
 
     $('#loading').show();
 
+    setTimeout(function(){
+      $('#exampleModal').modal('hide');
+      $('#loading').hide();
+    }, 20000)
+
 
 
     dataMap={}
-
     dataMap['id_pemilih']=$('#id_pemilih').val()
 
     dataMap['wil_pemilih']=$('#wil_pemilih').val()
+
+    dataMap['nama_pemilih_suratsuara'] = $('#nama_pemilih_suratsuara').val()
+    $('#nama_pengguna_ulasan').val(dataMap['nama_pemilih_suratsuara'])
+    $('#user_idUlasan').val(dataMap['id_pemilih'])
+    $('#moduleUlasan').val('Pemilihan PNT Tahap 1 <?=$tahun_pemilihan;?>')
 
     $.post('<?=base_url();?>pnppj/kunciPilihan', dataMap, function(data){
 
@@ -224,6 +238,18 @@ $this->load->view('frontend/layouts/footer');
       }
 
       $('#loading').hide();
+
+      if($('#ulasan_sts'+dataMap['id_pemilih']).val() != '1'){
+        //ulasan muncul kalau belum kasih ulasan..
+        $('#feedbackModal').modal('show');
+      }
+      else{
+        setTimeout(function(){
+          location.reload();
+        }, 2000)
+      }
+
+
 
     })
 
@@ -452,6 +478,39 @@ $this->load->view('frontend/layouts/footer');
 
 
   })
+
+  function submitUlasan(){
+    $('#loading').show();
+
+    formUlasan=$('#feedbackForm')
+    dataMap=formUlasan.serialize();
+    url="<?=base_url();?>/api/submitReview"
+    setTimeout(function(){
+      $('#feedbackModal').modal('hide');
+      $('#loading').hide();
+      location.reload();
+    }, 20000)
+    $.post(url, dataMap, function(data){
+      json=$.parseJSON(data)
+      if (json.sts == 1) {
+        iziToast.success({
+          title: '',
+          message: json.msg,
+          position: "topRight",
+        });
+        $('#exampleModal').modal('hide')
+      } else {
+        iziToast.error({
+          title: '',
+          message: json.msg,
+          position: "topRight",
+        });
+      }
+      $('#feedbackModal').modal('hide');
+      $('#loading').hide();
+      location.reload();
+    })
+  }
 
 
 

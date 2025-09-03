@@ -226,7 +226,7 @@
                 <span class="shortcut-media avatar rounded-circle bg-gradient-info">
                   <i class="ni ni-bullet-list-67"></i>
                 </span>
-                <small style="display: block;"><b>Pnt - PPJ</b><br>2022-2026</small>
+                <small style="display: block;"><b>Pnt - PPJ</b><br>2026-2030</small>
               </a>
             </div>
           </div>

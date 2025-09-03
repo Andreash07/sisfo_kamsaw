@@ -76,7 +76,7 @@
               </div>
             </div>
             <p class="mt-3 mb-0 text-sm">
-              <a id="btn_ajax_modal" href="<?=base_url();?>keluarga/view_anggota/<?=md5($value->id);?>" class="btn btn-info btn-sm text-nowrap float-right" data-toggle="modal" data-target="#exampleModal" onclick="event.preventDefault();"><b>Detil & Perbaruhi Data</b>!</a>
+              <a id="btn_ajax_modal" href="<?=base_url();?>keluarga/view_anggota/<?=md5($value->id);?>" class="btn btn-info btn-sm text-nowrap float-right" data-toggle="modal" data-target="#exampleModal" onclick="event.preventDefault();"><b>Detail</b>!</a> <!-- & Perbaruhi Data-->
             </p>
           </div>
         </div>

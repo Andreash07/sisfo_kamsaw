@@ -8,6 +8,18 @@
 </div>
   </div>
   <?php 
+    $open=1;
+    foreach ($lockpemilihan as $keylock => $valuelock) {
+      // code...
+      if(strtotime($valuelock->start_at) <= strtotime(date('Y-m-d H:i:s')) && strtotime($valuelock->end_at) >= strtotime(date('Y-m-d H:i:s')) ){
+          $open=1;
+      }
+      #else if(strtotime($valuelock->start_at) <= strtotime(date('Y-m-d H:i:s')) && strtotime($valuelock->end_at) <= strtotime(date('Y-m-d H:i:s')) ){
+      else{
+          $open=0;
+      }
+    }
+
     foreach ($anggota_sidi as $key => $value) {
       # code...
       $ico_gender='<i class="fa fa-female  fa-2x"></i>';
@@ -77,7 +89,18 @@
             <p class="mt-3 mb-0 text-sm">
               <h5 class="text-muted mb-0">Pemilihan</h5>
               <div class="divider" style="width: 100%; border-bottom: 1px #8898aa solid; clear: both; margin-bottom: 5px; margin-top:1px;"></div>
-              <a id="btn_ajax_modal" href="<?=base_url();?>ajax/list_calon_ppj/?kwg_wil=<?=$value->kwg_wil;?>&id=<?=$value->id;?>&nama=<?=rawurlencode($title.ucwords($value->nama_lengkap));?>" class="col-12 btn btn-info text-nowrap float-left" data-toggle="modal" data-target="#exampleModal" onclick="event.preventDefault();"><i class="ni ni-bullet-list-67"></i><b>Surat Suara PPJ</b></a>
+              <?php 
+              if($open==1){
+              ?>  
+                <a id="btn_ajax_modal" href="<?=base_url();?>ajax/list_calon_ppj/?kwg_wil=<?=$value->kwg_wil;?>&id=<?=$value->id;?>&nama=<?=rawurlencode($title.ucwords($value->nama_lengkap));?>" class="col-12 btn btn-info text-nowrap float-left" data-toggle="modal" data-target="#exampleModal" onclick="event.preventDefault();"><i class="ni ni-bullet-list-67"></i><b>Surat Suara PPJ</b></a>
+              <?php 
+              }
+              else{
+              ?>
+              <label class="text-danger">Sudah ditutup, Tidak dapat memilih!</label>
+              <?php 
+              }
+              ?>
               <?=$voted_sts;?>
             </p>
           </div>
