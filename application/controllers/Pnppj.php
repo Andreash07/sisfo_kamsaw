@@ -2648,9 +2648,10 @@ class Pnppj extends CI_Controller {
 
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
 
-				left join  anggota_jemaat_bakal_calon D on D.anggota_jemaat_id = A.id ".$where_bakal_calon."
+				#left 
+				join  anggota_jemaat_bakal_calon D on D.anggota_jemaat_id = A.id ".$where_bakal_calon."
 
-				where A.id >0 && A.status=1 && A.sts_anggota=1 && B.status=1 && A.status_sidi=1 ".$where.""; //A.status=1 bearti tidak pernah di delete
+				where A.id >0 && A.status=1 && A.sts_anggota=1 && B.status=1".$where.""; //A.status=1 bearti tidak pernah di delete
 				//left join  anggota_jemaat_bakal_calon baru di tambahin 27 Juni 2025 
 
 

@@ -18,6 +18,8 @@ foreach ($setting as $key => $value) {
 	switch ($value->tipe_pemilihan) {
 		case '1':
 			// code...
+			$open=$value->start_at;
+			$close=$value->end_at;
 			break;
 		case '2':
 			// code...
@@ -74,7 +76,7 @@ foreach ($setting as $key => $value) {
 	            <!-- Card body -->
 
 	            <div class="card-body" style="padding:unset; position:relative;">
-	                <img src="<?=base_url();?>/assets/images/poster-mobile-ppj-01_compressed1.jpg" class="img-fluid" instyle="border-top-left-radius: .375rem;border-top-right-radius: .375rem;">
+	                <img src="<?=base_url();?>/assets/images/poster-mobile-pnt-01_compressed2630.jpeg" class="img-fluid" instyle="border-top-left-radius: .375rem;border-top-right-radius: .375rem;">
 
 	               <?php 
 
@@ -303,9 +305,12 @@ foreach ($setting as $key => $value) {
 
 			<div class="card-body" style="padding: 0.75rem">
 
-				<h3 class="card-title">Pemilihan Penatua 2022-2026<br>Tahap I</h3>
+				<h3 class="card-title">Pemilihan Penatua <?=$tahun_pemilihan->periode;?><br>Tahap I</h3>
+				<p class="card-text text-danger">
+					*Proses dan Hasil Pemilihan masih proses Uji Coba kepada Anggota Jemaat
+				</p>
 
-				<p class="card-text text-danger small">
+				<p class="card-text text-danger small" style="display:none;">
 
 					<?php 
 
@@ -314,6 +319,7 @@ foreach ($setting as $key => $value) {
 					?>
 
 						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung.</label>
+
 
 					<?php
 						/*<label class="text-danger" style="border-bottom: 1px solid #ededed;"><b>Dalam Proses sosialisai</b>.<br>Proses Pemungutan Suara <b>belum dibuka</b></label>*/
