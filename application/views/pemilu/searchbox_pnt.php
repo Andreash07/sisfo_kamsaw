@@ -124,7 +124,7 @@
 
     <div class="form-group col-xs-12">
 
-      <a class="btn btn-warning pull-left" href="<?=base_url().$this->uri->segment(1).'/'.$this->uri->segment(2).'/print?'.$_SERVER['QUERY_STRING'];?>"><i class="fa fa-print"></i>&nbsp;&nbsp;Print</a>
+      <a class="btn btn-warning pull-left" href="<?=base_url().$this->uri->segment(1).'/'.$this->uri->segment(2).'/print?'.$_SERVER['QUERY_STRING'];?>" target="_BLANK"><i class="fa fa-print"></i>&nbsp;&nbsp;Print</a>
 
     	<input type="submit" class="btn btn-primary pull-right" value="Cari" name="search">
 

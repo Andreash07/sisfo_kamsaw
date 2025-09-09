@@ -2633,8 +2633,14 @@ class Pnppj extends CI_Controller {
 		if($this->input->get('status_pn1')){
 
 			$param_active.="status_pn1=".$this->input->get('status_pn1')."&";
+			if($this->input->get('status_pn1')==1){
+				$where.=" && D.status_pn1 ='".$this->input->get('status_pn1')."'";
+			}
+			else if($this->input->get('status_pn1')==-1){
+				#$where.=" && D.status_pn1 ='".$this->input->get('status_pn1')."'";
+				$where.=" && D.status_pn1 IN (0,".$this->input->get('status_pn1').")";
+			}
 
-			$where.=" && D.status_pn1 ='".$this->input->get('status_pn1')."'";
 
 		}
 
@@ -2657,8 +2663,15 @@ class Pnppj extends CI_Controller {
 
 
 		$group_by="  ";
+		switch ($type_report) {
+			case 'print':
+        		$field_order=" order by B.kwg_nama, A.no_urut";
+				break;
 
-        $field_order=" order by A.nama_lengkap ";
+			default: 
+        		$field_order=" order by A.nama_lengkap ";
+		}
+
 
         $order_by=" ASC ";
 
@@ -2692,9 +2705,10 @@ class Pnppj extends CI_Controller {
 
         $data_jemaat=$this->m_model->selectcustom($sql." ".$group_by." ".$field_order." ".$order_by);
 
-       	#die(nl2br($sql." ".$group_by." ".$field_order." ".$order_by));
+       #	die(nl2br($sql." ".$group_by." ".$field_order." ".$order_by));
 
         $data_jemaat_new=array();
+        $data_jemaat_new_print=array();
 
         $jemaatDapatDipilih=0;
 
@@ -2852,7 +2866,6 @@ class Pnppj extends CI_Controller {
 				}
 
 			}else{
-
 				$value->status_seleksi=$status_seleksi;
 
 				$data_jemaat_new[]=$value;
