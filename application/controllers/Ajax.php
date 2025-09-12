@@ -839,7 +839,7 @@ class Ajax extends CI_Controller {
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
 				join anggota_jemaat_peserta_pemilihan D on D.anggota_jemaat_id = A.id
-				where A.id >0 && D.tahun_pemilihan ='".$tahun_pemilihan."'
+				where A.id >0 && D.tahun_pemilihan ='".$tahun_pemilihan."' && D.status_peserta_pn1=1 
                 group by B.id
                 order by B.kwg_wil ASC";
 		$pesertaPemilihan=$this->m_model->selectcustom($q);
