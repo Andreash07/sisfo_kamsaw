@@ -68,10 +68,10 @@ $this->load->view('frontend/layouts/header');
 					    if($valuevoted->foto != null){
 					    	$foto_thumb=base_url().$valuevoted->foto_thumb;
 					    	$foto=base_url().$valuevoted->foto;
-					    	if(strpos($valuevoted->foto, 'https://') >=0 ){
-				            	$foto_thumb=$valuevoted->foto_thumb;
-				            	$foto=$valuevoted->foto;
-				          	}
+					    	#if(strpos($valuevoted->foto, 'https://') >=0 ){
+				            #	$foto_thumb=$valuevoted->foto_thumb;
+				            #	$foto=$valuevoted->foto;
+				          	#}
 					    }
 
 							$percent=$valuevoted->voted/$NumAngjem*100;
@@ -81,11 +81,11 @@ $this->load->view('frontend/layouts/header');
 								<td class="text-center" style=" vertical-align:middle;"><?=$keyvoted+1;?></td>
 								<td class="text-center" style="width: 20% !important; font-size: 12px; white-space:unset;  vertical-align:middle; padding: unset;">
 									<span class="avatar avatar-sm rounded-circle">
-										<img src="<?=$foto_thumb;?>" data-caption="<?=$title?><?=$valuevoted->nama_lengkap2;?>" alt="<?=$title?><?=$valuevoted->nama_lengkap2;?>" class="img-circle img-responsive" style="object-fit: cover; cursor: pointer; margin-right: 0px; display: inline;" href="<?=$foto;?>" data-fancybox="images<?=$valuevoted->id;?>" data-caption="<?=$title.$valuevoted->nama_lengkap2;?>">
+										<img src="<?=$foto_thumb;?>" data-caption="<?=$title?><?=$valuevoted->nama_lengkap;?>" alt="<?=$title?><?=$valuevoted->nama_lengkap;?>" class="img-circle img-responsive" style="object-fit: cover; cursor: pointer; margin-right: 0px; display: inline;" href="<?=$foto;?>" data-fancybox="images<?=$valuevoted->id;?>" data-caption="<?=$title.$valuevoted->nama_lengkap;?>">
                   </span>
 								</td>
 								<td style="width: 60% !important; font-size: 12px; white-space:unset;  vertical-align:top;">
-									<?=$title.$valuevoted->nama_lengkap2;?></td>
+									<?=$title.$valuevoted->nama_lengkap;?></td>
 								<td class="text-center">&nbsp;<?=$valuevoted->voted;?><br>(<?= round($percent,2);?>%)</td>
 							</tr>
 					<?php

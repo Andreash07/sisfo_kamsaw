@@ -383,6 +383,13 @@ from anggota_jemaat A
 join keluarga_jemaat B on (B.id = A.kwg_no)
 where A.status=1 && A.sts_anggota=1 && A.status_sidi=1 ".$where."
 order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
+        
+        $s="SELECT B.id, C.kwg_wil, C.kwg_nama, B.nama_lengkap, A.status_peserta_pn1, CASE when A.status_peserta_pn1=1 THEN 'Bisa Memilih' else '' END as Status_memilih, B.tgl_lahir, B.tgl_sidi, B.kwg_wil, B.tgl_meninggal, B.tgl_attestasi_masuk, C.id as kwg_id, B.status_sidi, B.telepon, C.kwg_telepon, B.sts_kawin, B.remarks
+            FROM `anggota_jemaat_peserta_pemilihan` A 
+            join anggota_jemaat B on B.id = A.anggota_jemaat_id
+            join keluarga_jemaat C on C.id = B.kwg_no
+            WHERE A.tahun_pemilihan='2025' && B.kwg_wil='".$wilayah."' && A.status_peserta_pn1=1
+            order by B.kwg_wil, C.kwg_nama ASC, B.no_urut;";
 
         $data['angjem']=$this->m_model->selectcustom($s);
 

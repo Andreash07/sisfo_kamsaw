@@ -163,7 +163,7 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
                   /*  <a id="btn_ajax_modal" data-toggle="modal" data-target="#exampleModal" href="<?=base_url();?>ajax/list_calon_penatua_review/?token=<?=md5('hasg2&^!#'.$this->session->userdata('sess_keluarga')->kwg_wil);?>&kwg_wil=<?=$this->session->userdata('sess_keluarga')->kwg_wil;?>" class="btn btn-warning btn-sm" onclick="event.preventDefault();" style="position:absolute; left:0; bottom:50px; box-shadow: 0px 0px 7px #666;">Nyok Lihat Calonnya</a>*/
                 ?>
 
-                    <div class="btn btn-danger btn-sm" href="#!" style="width: 100%; border-bottom-left-radius: 0;border-bottom-right-radius: 0;" onclick="event.preventDefault(); Pemiluclose('<b>Maaf Pemilihan Penatua Tahap 2 masih ditutup.</b><br><span class=\'text-warning\'>Akan dibuka pada 10 Januari 2022</span>', 'timer')">
+                    <div class="btn btn-danger btn-sm" href="#!" style="width: 100%; border-bottom-left-radius: 0;border-bottom-right-radius: 0;" onclick="event.preventDefault(); Pemiluclose('<b>Maaf Pemilihan Penatua Tahap 1 masih ditutup.</b><br><span class=\'text-warning\'>Akan dibuka pada <?=date('d M Y H:i:s', strtotime($open));?></span>', 'timer')">
 
                       <span style="font-size: 0.65rem; font-style: italic;">
 

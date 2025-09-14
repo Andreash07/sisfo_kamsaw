@@ -30,6 +30,8 @@ foreach ($setting as $key => $value) {
 			$close3=$value->end_at;
 			break;
 	}
+	$timestamp=date('Y-m-d H:i:s');
+	$timestamp_open=date('Y-m-d H:i:s');
 	if($value->locked == 0 && $value->tipe_pemilihan =='3'){
 		$timestamp_open=strtotime($open3);	
 		$timestamp=strtotime($close3);	
@@ -323,6 +325,20 @@ foreach ($setting as $key => $value) {
 
 					<?php
 						/*<label class="text-danger" style="border-bottom: 1px solid #ededed;"><b>Dalam Proses sosialisai</b>.<br>Proses Pemungutan Suara <b>belum dibuka</b></label>*/
+
+					}
+					else if(strtotime($open) <= strtotime(date('Y-m-d H:i:s')) && strtotime($close) <= strtotime(date('Y-m-d H:i:s'))  ){
+					?>
+						
+					<?php 
+					}
+					else{
+
+					?>
+					<label class="text-sm text-danger" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara belum dimulai.</label>
+					<label class="text-sm ">Dimulai pada <b><?=date('d M Y H:i:s', $timestamp_open) ;?></b></label>
+					<br>
+					<?php
 
 					}
 

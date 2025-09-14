@@ -35,8 +35,8 @@
 				$value->kwg_nama='';
 			}
 
-			$tglCutoff="2022-04-03";
-			$tglCutoffMemilih="2021-08-31";
+			$tglCutoff="2026-04-12";
+			$tglCutoffMemilih="2025-08-31";
 			if( $value->tgl_lahir == '0000-00-00'){
 				$umurLahir=0;
 				$umurLahir_lbl="<i style='color:white; background-color:red;'>-</i>";
