@@ -50,10 +50,8 @@ $this->load->view('layout/header');
 
 	            </div>
 
-              	<div class="x_content">
-
-	                <div id="mainb" style="height:350px;"><i class="fa fa-circle-o-notch fa-spin fa-4x" style="margin-left:40%;"></i></div>
-
+          		<div class="x_content">
+          			<div id="mainb" style="height:350px;"><i class="fa fa-circle-o-notch fa-spin fa-4x" style="margin-left:40%;"></i></div>
 	            </div>
 
       		</div>
@@ -67,6 +65,9 @@ $this->load->view('layout/header');
               <div class="x_title">
 
                 <h2>Suara Pemilihan Penatua I</h2>
+                <button class="btn btn-warning btn-sm" style="position:absolute; right:5px;" onclick="copyDiv('div_desc_suaraglobal')"title="Copy ke Clipboard">
+						      <span class="fa fa-clipboard " style="color:white; "></span>
+						    </button>
 
                 <div class="clearfix"></div>
 
@@ -75,7 +76,15 @@ $this->load->view('layout/header');
               <div class="x_content">
 
                 <div id="echart_pie_global" style="height:350px;"><i class="fa fa-circle-o-notch fa-spin fa-4x" style="margin-left:40%;"></i></div>
-
+                <div style="margin-top: 1rem; padding-left: 1rem;  position: absolute; z-index: -99999; bottom: 0;" id="div_desc_suaraglobal">
+									*<b id="peserta_pemilih"></b> Peserta Pemilihan* dengan total <b id="total_suara_global"></b><br>
+									per <?=date('d M Y');?> Pkl. <?=date('H:i');?> WIB <br><br>
+									Total Peserta yang sudah menggunakan hak suaranya: *<b id="total_peserta_memilih"></b> Peserta* (*<b id="persen_peserta_memilih"></b>* dari *<b id="peserta_pemilih2"></b>*)<br><br>
+									Total Suara Masuk: *<b id="total_suara_masuk"></b> Suara* (*<b id="persen_suara_masuk"></b>%* dari <b id="total_suara_global2"></b>) <br>
+									- Suara Sah (Dikunci): *<b id="suara_sah"></b> Suara (<b id="persen_suara_sah"></b>%)*<br>
+									- Suara Tidak Sah (Belum Dikunci): *<b id="suara_tidak_sah"></b> Suara (<b id="persen_suara_tidak_sah"></b>%)*<br>
+									- Suara Belum digunakan: *<b id="suara_belum_digunakan"></b> Suara (<b id="persen_suara_belum_digunakan"></b>%)*
+								</div>
               </div>
 
             </div>
@@ -103,6 +112,9 @@ $this->load->view('layout/header');
 	              <div class="x_title">
 
 	                <h2>Wil. <?=$value->wilayah;?></h2>
+	                <button class="btn btn-warning btn-sm" style="position:absolute; right:5px;" onclick="copyDiv('div_desc_wil<?= $value->wilayah; ?>')"title="Copy ke Clipboard">
+							      <span class="fa fa-clipboard " style="color:white; "></span>
+							    </button>
 
 	                <div class="clearfix"></div>
 
@@ -111,7 +123,15 @@ $this->load->view('layout/header');
 	              <div class="x_content">
 
 	                <div id="echart_pie<?=$value->wilayah;?>" style="height:350px;"><i class="fa fa-circle-o-notch fa-spin fa-4x" style="margin-left:40%;"></i></div>
-
+	                <div style="margin-top: 1rem; padding-left: 1rem; position: absolute; z-index: -99999; bottom: 0;" id="div_desc_wil<?= $value->wilayah; ?>">
+										Teritorial <?= $value->wilayah; ?>: *<b id="peserta_wil_<?= $value->wilayah; ?>"></b> Peserta Pemilihan* dengan total <b id="total_suara_global_wil<?= $value->wilayah; ?>"></b> <br>
+										per <?=date('d M Y');?> Pkl. <?=date('H:i');?> WIB <br><br>
+										Total Peserta yang sudah menggunakan hak suaranya: *<b id="jumlah_pemilih_wil_<?= $value->wilayah; ?>"></b> Peserta* (*<b id="persen_suara_wil_<?= $value->wilayah; ?>"></b>%* dari *<b id="peserta2_wil_<?= $value->wilayah; ?>"></b>*) <br><br>
+										Total Suara Masuk: *<b id="total_suara_masuk_wil<?= $value->wilayah; ?>"></b> Suara* (*<b id="persen_suara_masuk_wil<?= $value->wilayah; ?>"></b>%* dari *<b id="total_suara_global2_wil<?= $value->wilayah; ?>"></b>*) dengan rincian sbb:<br>
+										- Suara Sah (Dikunci): *<b id="suara_dikunci_wil_<?= $value->wilayah; ?>"></b> Suara (<b id="persen_dikunci_wil_<?= $value->wilayah; ?>"></b>%)*<br>
+										- Suara Tidak Sah (Belum Dikunci): *<b id="suara_tidak_dikunci_wil_<?= $value->wilayah; ?>"></b> Suara (<b id="persen_tidak_dikunci_wil_<?= $value->wilayah; ?>"></b>%)*<br>
+										- Suara Belum digunakan: *<b id="suara_belum_digunakan_wil_<?= $value->wilayah; ?>"></b> Suara (<b id="persen_belum_digunakan_wil_<?= $value->wilayah; ?>"></b>%)*
+									</div>
 	              </div>
 
 	            </div>
@@ -587,6 +607,7 @@ $this->load->view('layout/footer');
 
 
 		var peserta_pemilihan=[]
+		var num_peserta_pemilihan_ori=[]
 
 		//max_peserta_pemilihan=0
 
@@ -600,6 +621,7 @@ $this->load->view('layout/footer');
 		var num_pesertaPemilihan_belumkunci
 
 		var wil=[1,2,3,4,5,6,7]
+		kuota_suara=8
 
 		dataMap={}
 		dataMap['tahun_pemilihan']=$('#stat_tahun_pemilihan').val();
@@ -610,9 +632,10 @@ $this->load->view('layout/footer');
 
 			
 
-			for(var i in json.num_pesertaPemilihan)
-
-    			peserta_pemilihan.push(json.num_pesertaPemilihan[i]*8);
+			for(var i in json.num_pesertaPemilihan){
+    			peserta_pemilihan.push(json.num_pesertaPemilihan[i]*kuota_suara);
+    			num_peserta_pemilihan_ori.push(json.num_pesertaPemilihan[i]); //ini murni pesertanya belum di * kuota suara
+			}
 
 
 
@@ -646,14 +669,59 @@ $this->load->view('layout/footer');
 				//console.log(num_pesertaPemilihan_dikunci[value])
 				//console.log(num_pesertaPemilihan_belumkunci)
 				pieChart('echart_pie'+value, peserta_pemilihan[iarray], suaraDikunci[iarray], suaraBelumDikunci[iarray], 'Wil. '+value, num_pesertaPemilihan_dikunci[value], num_pesertaPemilihan_belumkunci[value] )
+				//console.log(value)
+				//console.log(num_peserta_pemilihan_ori)
+				//redaksi
+				$('#peserta_wil_' + value).text(num_peserta_pemilihan_ori[iarray].toLocaleString('id-ID'));
+				$('#peserta2_wil_' + value).text(num_peserta_pemilihan_ori[iarray].toLocaleString('id-ID'));
+				$('#total_suara_global_wil' + value).text('*'+peserta_pemilihan[iarray].toLocaleString('id-ID')+' Suara (x'+kuota_suara+' @1Peserta)*');
+				$('#total_suara_global2_wil' + value).text(peserta_pemilihan[iarray].toLocaleString('id-ID'));
 
+				$('#jumlah_pemilih_wil_' + value).text(num_pesertaMemilih.toLocaleString('id-ID'));
+				$('#persen_suara_wil_' + value).text(persent_pesertaMemilih.toLocaleString('id-ID'));
+				
+				$('#total_suara_masuk_wil' + value).text((suaraDikunci[iarray]+suaraBelumDikunci[iarray]).toLocaleString('id-ID'));
+				$('#persen_suara_masuk_wil' + value).text(((suaraDikunci[iarray]+suaraBelumDikunci[iarray]) / peserta_pemilihan[iarray] * 100).toFixed(2));
+
+				persen_dikunci = (suaraDikunci[iarray] / peserta_pemilihan[iarray] * 100).toFixed(2)
+				$('#suara_dikunci_wil_' + value).text(suaraDikunci[iarray].toLocaleString('id-ID'));
+				$('#persen_dikunci_wil_' + value).text(persen_dikunci);
+
+				persen_tidak_dikunci = (suaraBelumDikunci[iarray] / peserta_pemilihan[iarray] * 100).toFixed(2)
+				$('#suara_tidak_dikunci_wil_' + value).text(suaraBelumDikunci[iarray].toLocaleString('id-ID'));
+				$('#persen_tidak_dikunci_wil_' + value).text(persen_tidak_dikunci);
+
+				persen_belum_digunakan = (belummemlih / peserta_pemilihan[iarray] * 100).toFixed(2)
+				$('#suara_belum_digunakan_wil_' + value).text(belummemlih.toLocaleString('id-ID'));
+				$('#persen_belum_digunakan_wil_' + value).text(persen_belum_digunakan);
+
+				$('#echart_pie'+value).append('<div class="col-xs-12 text-center"><i class="text-sm text-danger">Pie Chart berdasarkan total suara '+peserta_pemilihan[iarray].toLocaleString('id-ID')+'</i></div>')
 			})
 
 
+			pieChart('echart_pie_global', json.num_pesertaPemilihan_global*kuota_suara, json.num_suaraDikunci_global, json.num_BelumDikunci_global, 'Perolehan Suara Total', json.pesertaPemilihan_dikunci_global, json.pesertaPemilihan_belumkunci_global)
 
-			pieChart('echart_pie_global', json.num_pesertaPemilihan_global*8, json.num_suaraDikunci_global, json.num_BelumDikunci_global, 'Perolehan Suara Total', json.pesertaPemilihan_dikunci_global, json.pesertaPemilihan_belumkunci_global)
+			total_suara_global=json.num_pesertaPemilihan_global*kuota_suara;
+
+			$('#peserta_pemilih').text(json.num_pesertaPemilihan_global.toLocaleString('id-ID'));
+			$('#peserta_pemilih2').text(json.num_pesertaPemilihan_global.toLocaleString('id-ID'));
+			$('#total_suara_global').text('*'+total_suara_global.toLocaleString('id-ID')+' Suara (x'+kuota_suara+' @1Peserta)*');
+			$('#total_suara_global2').text('*'+total_suara_global.toLocaleString('id-ID')+'*');
+			$('#total_peserta_memilih').text((json.pesertaPemilihan_dikunci_global+json.pesertaPemilihan_belumkunci_global).toLocaleString('id-ID'));
+			$('#persen_peserta_memilih').text(persent_pesertaMemilih+'%');
+
+			$('#total_suara_masuk').text((json.num_suaraDikunci_global+json.num_BelumDikunci_global).toLocaleString('id-ID'));
+			$('#persen_suara_masuk').text(persent_suaraMemilih);
+			$('#suara_sah').text(json.num_suaraDikunci_global.toLocaleString('id-ID'));
+			$('#persen_suara_sah').text((json.num_suaraDikunci_global / total_suara_global * 100).toFixed(2));
+			//alert(json.num_suaraDikunci_global+' / '+json.num_pesertaPemilihan_global*kuota_suara+'*100')
+			$('#suara_tidak_sah').text(json.num_BelumDikunci_global.toLocaleString('id-ID'));
+			$('#persen_suara_tidak_sah').text((json.num_BelumDikunci_global / total_suara_global * 100).toFixed(2));
+			$('#suara_belum_digunakan').text(belummemlih.toLocaleString('id-ID'));
+			$('#persen_suara_belum_digunakan').text((belummemlih / total_suara_global * 100).toFixed(2));
 
 
+			$('#echart_pie_global').append('<div class="col-xs-12 text-center"><i class="text-sm text-danger">Pie Chart berdasarkan total suara '+total_suara_global.toLocaleString('id-ID')+'</i></div>')
 
 
 
@@ -806,6 +874,7 @@ $this->load->view('layout/footer');
 			  	});
 
 			}
+			$('#mainb').append('<div class="col-xs-12 text-center"><i class="text-sm text-danger">&nbsp;</div>')
 
 		}
 
@@ -845,6 +914,8 @@ $this->load->view('layout/footer');
 			  	num_pesertaMemilih=parseInt(pesertaDikunci)+parseInt(pesertaBelumDikunci)
 			  	persent_pesertaMemilih=(num_pesertaMemilih/real_peserta*100).toFixed(2);
 			  	lbl_persent_pesertaMemilih=num_pesertaMemilih+' ('+String(persent_pesertaMemilih)+' %)';
+			  	
+			  	persent_suaraMemilih=((parseInt(suaradikunci)+parseInt(suarabelumdikunci))/peserta*100).toFixed(2);
 			  //}
 
 			  echartPie.setOption({
@@ -1039,6 +1110,17 @@ $this->load->view('layout/footer');
 		}
 
 	})
+
+function copyDiv(domId) {
+    var content = document.getElementById(domId).innerText;
+
+    navigator.clipboard.writeText(content).then(function() {
+        // Bisa diganti pakai alert Bootstrap
+        alert("Teks berhasil disalin ke clipboard!");
+    }, function(err) {
+        console.error("Gagal menyalin: ", err);
+    });
+}
 
 </script>
 
