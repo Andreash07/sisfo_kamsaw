@@ -23,3 +23,5 @@ $this->load->view('layout/header');
     })
   })
 </script>
+
+<script type="text/javascript" src="//cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>

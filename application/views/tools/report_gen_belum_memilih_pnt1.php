@@ -13,6 +13,7 @@ $this->load->view('layout/header');
 		border: 1px #000 solid;
 	}
 </style>
+<style type="text/css" rel="//cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" ></style>
 <div class="container-fluid">
 	
 <?php 
@@ -30,7 +31,7 @@ Jumlah Peserta Belum Menggunakan Hak Suaranya <b id="golput">0</b> (Termasuk Kon
 <br>
 <br>
 Tgl Cut Off: <?=$tglCutoffMemilih;?>
-<table class="table table-striped" cellpadding="0" cellmargin="0">
+<table class="table table-striped" cellpadding="0" cellmargin="0" id="myTable">
 	<thead>
 		<tr>
 			<th cellpadding="0">#</th>
@@ -67,7 +68,7 @@ Tgl Cut Off: <?=$tglCutoffMemilih;?>
 				//check dulu suara sudah dilock atau belum
 				//print_r($sudah_vote[$value->id]);die();
 				if($sudah_vote[$value->id]->locked==0){
-					$status_vote='<span style="background:gray; color:#fff;">Belum dilock</span>';
+					$status_vote='<span style="background:gray; color:#fff;">Belum dikunci</span>';
 					$tidaksah=$tidaksah+1;
 				}
 				else{
@@ -271,6 +272,11 @@ Tgl Cut Off: <?=$tglCutoffMemilih;?>
 	document.getElementById("tidaksah").innerHTML = '<?=$tidaksah;?>';
 	document.getElementById("konvensional").innerHTML = '<?=$numkonvensional;?>';
 </script>
-
-
+<script type="text/javascript">
+	$(document).ready(function(){
+		let table = new DataTable('#myTable',{
+			pageLength: 50
+		});
+	})
+</script>
 </div>
