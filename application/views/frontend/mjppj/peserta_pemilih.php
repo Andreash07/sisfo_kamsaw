@@ -46,7 +46,7 @@
           // code...
           #print_r($valueVoted);
           if($valueVoted->locked != 1){
-            $voted_sts='<label class="text-warning text-sm"> Pengingat: Suara untuk Calon PPJ belum di <b>Kunci Pilihan</b> </label>';
+            $voted_sts='<label class="text-warning text-sm"> Pengingat: Suara untuk Calon PNT (I) belum di <b>Kunci Pilihan</b> </label>';
             $belum_kunci++;
           }
           else{
@@ -66,7 +66,7 @@
         }
         else{
           if($i_lock == 8){
-            $voted_sts='<label class="text-success text-sm"> Hatur Nuhun, Calon PPJ pilihan sudah di <b>Kunci Pilihan</b>! </label>';
+            $voted_sts='<label class="text-success text-sm"> Hatur Nuhun, Calon PNT (I) pilihan sudah di <b>Kunci Pilihan</b>! </label>';
           }
           else{
             $voted_sts='<label class="text-warning text-sm"> Pengingat: Suara untuk '.$sisa_suara.' Calon Penatua belum di <b>Kunci Pilihan</b> </label>';

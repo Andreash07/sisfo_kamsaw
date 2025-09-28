@@ -658,7 +658,7 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
     }
 
     function report_belum_memilih_pnt1($wilayah=null){
-        die('Belum di mulai!');
+        #die('Belum di mulai!');
         $where="";
         if(!$this->input->post('token') && !$this->uri->segment(3) && $wilayah==null){
             $this->load->view('tools/login_report');
@@ -707,10 +707,16 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
 
 
         $data=array();
-        $s="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks
+    /*$s="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks
 from anggota_jemaat A 
 join keluarga_jemaat B on (B.id = A.kwg_no)
 where A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-10-21 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && A.status_sidi=1 ".$where."
+order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";*/
+$s="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks
+from anggota_jemaat A 
+join keluarga_jemaat B on (B.id = A.kwg_no)
+join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id 
+where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_pn1=1 ".$where."
 order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
 
         $data['angjem']=$this->m_model->selectcustom($s);
@@ -722,6 +728,17 @@ join votes_tahap1 C on (C.id_pemilih = A.id)
 where A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-10-21 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && A.status_sidi=1 && C.locked in (1,0) ".$where."
 group by C.id_pemilih
 order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
+
+$s1="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks, C.locked, C.sn_surat_suara
+from anggota_jemaat A 
+join keluarga_jemaat B on (B.id = A.kwg_no)
+join votes_tahap1 C on (C.id_pemilih = A.id)
+join wilayah E on E.id = A.kwg_wil
+where C.locked in (1,0) && C.tahun_pemilihan='".$this->tahun_pemilihan."' ".$where."
+group by C.id_pemilih
+order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
+
+
 
         $sudah_vote=$this->m_model->selectcustom($s1);
         $data['sudah_vote']=array();
@@ -743,6 +760,15 @@ join pemilih_konvensional C on (C.anggota_jemaat_id = A.id)
 where A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2021-10-21 00:00:00' || A.last_modified_dorkas is null )) || (A.sts_anggota = 0 && A.last_modified_dorkas > '2021-10-21 00:00:00' && A.last_modified_dorkas < '2021-10-21 00:00:00') ) && A.status_sidi=1 && C.tipe_pemilihan_id in (1) ".$where."
 group by C.anggota_jemaat_id
 order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
+
+$s2="SELECT A.id, B.kwg_nama, A.nama_lengkap, A.tgl_lahir, A.tgl_sidi, A.kwg_wil, A.tgl_meninggal, A.tgl_attestasi_masuk, B.id as kwg_id, A.status_sidi, A.telepon, B.kwg_telepon, A.sts_kawin, A.remarks
+from anggota_jemaat A 
+join keluarga_jemaat B on (B.id = A.kwg_no)
+join pemilih_konvensional C on (C.anggota_jemaat_id = A.id)
+join anggota_jemaat_peserta_pemilihan D on D.anggota_jemaat_id = A.id 
+where C.tipe_pemilihan_id in (1) && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && D.tahun_pemilihan ='".$this->tahun_pemilihan."' ".$where."
+group by C.anggota_jemaat_id
+order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; 
 
         $konvensional=$this->m_model->selectcustom($s2);
         $data['konvensional']=array();

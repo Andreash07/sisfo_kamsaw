@@ -8,7 +8,8 @@ $Tot_masuk=0;
 
 $Tot_banyaksuara=0;
 
-$slot=6;
+$slot=10;
+#$slot=6;//tahap 2
 
 
 
@@ -101,7 +102,7 @@ if(isset($voted_wil) && count($voted_wil) > 0){
 
             <div class="w_left w_55">
 
-              <span><?=$keyvoted+1;?>. <?=$title;?><?=$valuevoted->nama_lengkap2;?></span>
+              <span><?=$keyvoted+1;?>. <?=$title;?><?=$valuevoted->nama_lengkap;?></span>
 
             </div>
 
