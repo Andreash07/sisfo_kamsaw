@@ -13,6 +13,8 @@ $close2="2022-01-26 23:59:59";
 $close3="2022-01-26 23:59:59";
 //$close="2022-01-26 22:41:30";
 $label="Penatua & PPJ";
+$timestamp=date('Y-m-d H:i:s');
+$timestamp_open=date('Y-m-d H:i:s');
 foreach ($setting as $key => $value) {
 	// code...
 	switch ($value->tipe_pemilihan) {
@@ -30,12 +32,12 @@ foreach ($setting as $key => $value) {
 			$close3=$value->end_at;
 			break;
 	}
-	$timestamp=date('Y-m-d H:i:s');
-	$timestamp_open=date('Y-m-d H:i:s');
+
+	#print_r( $value);
 	if($value->locked == 0 && $value->tipe_pemilihan =='3'){
-		$timestamp_open=strtotime($open3);	
-		$timestamp=strtotime($close3);	
-		$label="PPJ";
+		#$timestamp_open=strtotime($open3);	
+		#$timestamp=strtotime($close3);	
+		#$label="PPJ";
 	}
 	if($value->locked == 0 && $value->tipe_pemilihan =='1'){
 		$timestamp=strtotime($close);	
@@ -133,6 +135,7 @@ foreach ($setting as $key => $value) {
 	                  }
 	                  else{
 	                  	$sts_open=0;
+	                  	#echo $timestamp_open;
 	                ?>
 
 	                    <div class="btn btn-danger btn-sm" href="#!" style="width: 100%; border-bottom-left-radius: 0;border-bottom-right-radius: 0;" onclick="event.preventDefault(); Pemiluclose('<b>Maaf Pemilihan <?=$label;?> sudah ditutup.</b>')">
@@ -308,11 +311,11 @@ foreach ($setting as $key => $value) {
 			<div class="card-body" style="padding: 0.75rem">
 
 				<h3 class="card-title">Pemilihan Penatua <?=$tahun_pemilihan->periode;?><br>Tahap I</h3>
-				<p class="card-text text-danger">
+				<p class="card-text text-danger" style="display:none;">
 					*Proses dan Hasil Pemilihan masih proses Uji Coba kepada Anggota Jemaat
 				</p>
 
-				<p class="card-text text-danger small" style="display:none;">
+				<p class="card-text text-danger small" style="indisplay:none;">
 
 					<?php 
 
