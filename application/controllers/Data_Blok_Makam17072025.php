@@ -144,7 +144,6 @@ class Data_Blok_Makam extends CI_Controller
 
     $pokok_iuran_all=$this->m_model->selectas('id > 0',null,'kpkp_pokok_iuran_makam');
     $data['pokok_iuran_all']=$pokok_iuran_all;
-
     //$penghuni_makam=$this->m_model->selectas2('kpkp_blok_makam_id', $recid,'deleted_at is NULL',NULL, 'kpkp_penghuni_makam', 'id', 'ASC');
     $penghuni_makam=$this->m_model->selectcustom("select * from kpkp_penghuni_makam where kpkp_blok_makam_id='".$recid."' && deleted_at is NULL order by sts DESC, id ASC");
     $data['penghuni_makam']=$penghuni_makam;
@@ -332,33 +331,12 @@ class Data_Blok_Makam extends CI_Controller
     $pokok_iuran=str_replace('.', '', $this->input->post('pokok_iuran') ) ;
 
     $pilih_perhitungan_saldo=$this->input->post('pilih_perhitungan_saldo');
-
-    //get pokok iuran all
-    $pokok_iuran_all=$this->m_model->selectas('id> 0', null, 'kpkp_pokok_iuran_makam', 'tahun_iuran', 'ASC');
-    $current_Year=date('Y');
-    $sts_keanggotaan_makam=$this->input->post('sts_keanggotaan_makam');
-
-    if($this->input->post('sts_keanggotaan_makam')==0 || $this->input->post('sts_keanggotaan_makam')=='' ){
-      $this->session->set_flashdata('sts_add', '-1');
-      $this->session->set_flashdata('Title_add', 'Gagal Aktifasi!');
-      $this->session->set_flashdata('msg_add', 'Belum ada penguhuni dari makam ini!');
-      $this->session->set_flashdata('class', 'iziToast-danger');
-
-      redirect(base_url().'Data_Blok_Makam/detail?id='.$kpkp_blok_makam_id);
-      return;
-    }
-
     if($pilih_perhitungan_saldo==1){
       //ini bearti berdasarkan tahun pembayaran terakhir
       $tahun_pembayaran=$this->input->post('tahun_terakhir');
-      #$selisih_tahun_berajalan=$tahun_pembayaran - date('Y');
+      $selisih_tahun_berajalan=$tahun_pembayaran - date('Y');
       //echo $pokok_iuran." "; echo($selisih_tahun_berajalan); die();
-      #$saldo_awal=$selisih_tahun_berajalan*$pokok_iuran;
-
-      #perubahan perhitungan karena ada perubahan nominal pokok iuran
-      $countTahunToSaldo=countTahunToSaldo($tahun_pembayaran, $pokok_iuran_all, $sts_keanggotaan_makam, $current_Year);
-      $saldo_awal=$countTahunToSaldo['total_saldo'];
-
+      $saldo_awal=$selisih_tahun_berajalan*$pokok_iuran;
       $param['saldo']=$saldo_awal;
       $param['tahun_tercover']=$tahun_pembayaran;
       $param['tgl_terakhir_bayar']=null;
@@ -462,10 +440,8 @@ class Data_Blok_Makam extends CI_Controller
       $json=array('sts'=>1, 'title'=>'Wow.. ','msg'=>"Status Makam Berhasil di perbarui!", 'class'=>"iziToast-success");
     }
     echo json_encode($json);
-
-
-
   }
+
 
   public function calculator(){
     $data=array();
@@ -485,27 +461,5 @@ class Data_Blok_Makam extends CI_Controller
     }
 
     $this->load->view('kpkp/calculator', $data);
-  }
-
-  public function calculator_tahun(){
-    $data=array();
-    $param=array();
-    if($this->input->get('tahun')){
-      $sts_keanggotaan=$this->input->get('sts_keanggotaan');
-      $data['sts_keanggotaan']=$sts_keanggotaan;
-
-      $tahun=$this->input->get('tahun');
-      $data['tahun']=$tahun;
-
-      $pokok_iuran=$this->m_model->selectas('status','1','kpkp_pokok_iuran_makam');
-      $data['pokok_iuran']=$pokok_iuran[0];
-
-      $pokok_iuran_all=$this->m_model->selectas('id > 0',null,'kpkp_pokok_iuran_makam', 'tahun_iuran', 'ASC');
-      $data['pokok_iuran_all']=$pokok_iuran_all;
-
-    
-    }
-
-    $this->load->view('kpkp/calculator_tahun', $data);
   }
 }

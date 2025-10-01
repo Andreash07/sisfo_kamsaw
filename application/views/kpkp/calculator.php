@@ -15,6 +15,7 @@
 
 <?php 
 if(isset($nominal)){
+    echo $nominal;
 ?>
 <?php
 $current_Year=date('Y');
@@ -55,16 +56,16 @@ else{
   <ol>
     <li><?=$current_Year+$num_tahun_new;?> <----> <?=$saldo_positif;?> <----> <?=$total_biayaKPKP;?></li>
   <?php
-  $last_current_year=$current_Year;
+    #$last_current_year=$current_Year;
+    $total_biayaKPKP=0;
     while ($saldo_positif>0) {
         // code...
-        $total_biayaKPKP=0;
         //cek tahun iuran pokok yg berlaku dulu
         foreach ($arr_pokok_iuran as $key1 => $value1) {
-        print_r($valuez1); die();
+        #print_r($value1); die();
             // code...
-          echo $value1->tahun_iuran.' <--->'.$last_current_year;
-            if($last_current_year>=$value1->tahun_iuran){
+        #echo $value1->tahun_iuran.' <--->'.$last_current_year;
+            if($current_Year>=$value1->tahun_iuran){
                 if($sts_keanggotaan==1){
                     $total_biayaKPKP=$value1->nilai_iuran_angjem;
                 }else{
@@ -75,11 +76,11 @@ else{
         }
         $saldo_positif=$saldo_positif-$total_biayaKPKP;
         #if($saldo_positif>=0){
-            $num_tahun_new--;
-            $last_current_year=$last_current_year-1;
+            $current_Year--;
+            #$last_current_year=$last_current_year-1;
         #}
     ?>
-      <li><?=$current_Year+$num_tahun_new;?> <----> <?=$saldo_positif;?>  <----> <?=$total_biayaKPKP;?></li>
+      <li><?=$current_Year;?> <----> <?=$saldo_positif;?>  <----> <?=$total_biayaKPKP;?></li>
     <?php 
     }
     #pengecekan mundur seleai baru hitung tahunnya

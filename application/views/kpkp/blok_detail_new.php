@@ -176,9 +176,6 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
               <div class="x_content text-center">
                 <?php
                 if ($makam->sts_dompet_digital == 1) {
-                  #$hitung_bulan_iuran_makam=countTahunTercover_new($makam->saldo, $pokok_iuran_all, $makam->sts_keanggotaan_makam, date('Y'));
-                  #$hitung_bulan_iuran_makam=countTahunTercover($makam->saldo, $pokok_iuran_all, $makam->sts_keanggotaan_makam, date('Y'));
-
                   $sts_keanggotaan_penghuni_makam="Non GKP Kampung Sawah";
                   if ($makam->sts_keanggotaan_makam == 1) {
                     $pokok_iuran_summary = $pokok_iuran->nilai_iuran_angjem;
@@ -186,8 +183,6 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
                   } else {
                     $pokok_iuran_summary = $pokok_iuran->nilai_iuran_non;
                   }
-                  #$num_tahun_tercover = floor($makam->saldo / $pokok_iuran_summary);
-                  #$tahun_tercover = date('Y', strtotime($num_tahun_tercover . 'year'));
                   $num_tahun_tercover = floor($makam->saldo / $pokok_iuran_summary);
                   $tahun_tercover = date('Y', strtotime($num_tahun_tercover . 'year'));
 
@@ -359,7 +354,7 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
                 foreach ($ls_ahli_waris as $key1 => $value1) {
                   // code...
               ?> 
-                <option value="<?=$value1['nama_ahli_waris'];?>">Transfer - <?=$value1['nama_ahli_waris'];?> (<?=$value1['gereja_asal_ahli_waris'];?>)</option>
+                <option value="<?=$value1['nama_ahli_waris'];?>"><?=$value1['nama_ahli_waris'];?> (<?=$value1['gereja_asal_ahli_waris'];?>)</option>
               <?php
                 }
               ?>

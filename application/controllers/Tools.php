@@ -1871,5 +1871,41 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
         }
     }
 
+
+    public function pembetulan_saldo_awal($value='')
+    {
+        $data=array();
+        $s="select A.*, B.id as kpkp_bayar_tahunan_id, B.nominal as nominal_mutasi
+                from kpkp_blok_makam A
+                join kpkp_bayar_tahunan B on B.kpkp_blok_makam_id = A.id  
+                where A.tgl_terakhir_bayar is NULL && B.type=0";
+        $q=$this->m_model->selectcustom($s);
+
+        $pokok_iuran_all=$this->m_model->selectas('id> 0', null, 'kpkp_pokok_iuran_makam', 'tahun_iuran', 'ASC');
+        $current_Year=date('Y');
+        echo "<ol>";
+        foreach ($q as $key => $value) {
+            // code...
+            //mulai hitung ulang hanya yg untuk belum pernah ada pembayaran
+            $countTahunToSaldo=countTahunToSaldo($value->tahun_tercover, $pokok_iuran_all, $value->sts_keanggotaan_makam, $current_Year);
+            $sts_anggota_makam="GKP Kampung Sawah";
+            if($value->sts_keanggotaan_makam>1){
+                $sts_anggota_makam="Non";
+            }
+            else if($value->sts_keanggotaan_makam=0){
+                $sts_anggota_makam="Belum diketahui";
+            }
+            if($countTahunToSaldo['total_saldo'] != $value->saldo){
+                echo "<li>";
+                echo  $value->blok.''.$value->kavling.' ('.$sts_anggota_makam.') '.$value->tahun_tercover.': '.number_format($value->saldo, 2, ',', '.').' <-----> '.number_format($countTahunToSaldo['total_saldo'], 2, ',', '.');
+                echo "</li>";
+
+                #$u=$this->m_model->updateas('id',$value->id, array('saldo'=>$countTahunToSaldo['total_saldo']), 'kpkp_blok_makam');
+                #$u1=$this->m_model->updateas('id',$value->kpkp_bayar_tahunan_id, array('nominal'=>$countTahunToSaldo['total_saldo']), 'kpkp_bayar_tahunan');
+            }
+        }
+        echo "</ol>";
+
+    }
 }
 
