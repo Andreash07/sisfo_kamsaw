@@ -299,6 +299,7 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
                         <td class="text-right"><?=number_format($value7->nominal,0,",",".");?></td>
                         <td class="text-center">
                           <div class="btn btn-warning btn-xs" title="Perbaikan Mutasi" id="btn_edit-Mutasi<?=$value7->id;?>" form="<?=base_url().'pemakaman/form_perbaikan?id='.$value7->id;?>"><i class="fa fa-pencil"></i></div>
+                          <a class="btn btn-danger btn-xs" title="Hapus Transaksi ini (<?=convert_tgl_dMY($value7->tgl_bayar);?> | <?=number_format($value7->nominal,0,",",".");?>)" id="btn_delet-Mutasi<?=$value7->id;?>" href="<?=base_url().'Data_Blok_Makam/delete_trx?token='.md5('jkla178$@'.$value7->id);?>"><i class="fa fa-trash"></i></a>
                         </td>
                       </tr>
                   <?php 
@@ -314,7 +315,7 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
 
                       ?>
                           ada perbedaan Total Mutasi Iuran<br>
-                          <div class="btn btn-danger" id="btn_approve_perbaikan" kk_id="<?=$value7->kpkp_blok_makam_id;?>" href="<?=base_url().'Data_Blok_Makam/approve';?>" total_mutasi='<?=$total_mutasi;?>'>Setujui Perbaikan</div>
+                          <div class="btn btn-danger" id="btn_approve_perbaikan" makam_id="<?=$makam->id;?>" href="<?=base_url().'Data_Blok_Makam/approve';?>" total_mutasi='<?=$total_mutasi;?>'>Setujui Perbaikan</div>
                       <?php
                         }
                       ?>
@@ -658,6 +659,22 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
     $('#form_ubah_penghuni_makam').submit()
   }
 
+  $(document).on('click touchstart', '[id^=btn_delet-Mutasi]', function() {
+    konfirm = confirm("Apakah Anda yakin "+$(this).attr('title')+" dari mutasi transaksi makam ini?")
+    if (konfirm == false) {
+      iziToast.error({
+        title: 'Proses Dibatalkan!',
+        message: 'Data Transaksi '+$(this).attr('title')+' tidak dihapus',
+        position: "topRight",
+        class: "",
+
+      });
+      return false;
+    }
+    window.location.href = $(this).attr('href');
+  })
+
+
   $(document).on('click touchstart', '[id=delete_penghuni_makam]', function() {
     konfirm = confirm("Apakah Anda yakin ingin menghapus " + $(this).attr('nama_penghuni') + ' dari makam ini?')
     if (konfirm == false) {
@@ -714,6 +731,22 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
       $('#nominal').removeAttr('disabled')
       $('#nominal').val('')
     }
+  })
+
+  $(document).on('click', '[id=btn_approve_perbaikan]', function(e){
+    e.preventDefault()
+    conf=confirm('Apakah anda yakin melakukan perbaikan Saldo KPKP Makam ini?')
+    if(conf==false){
+      return;
+    }
+    dataMap={}
+    dataMap['makam_id']=$(this).attr('makam_id')
+    dataMap['nominal_baru']=$(this).attr('total_mutasi')
+    url=$(this).attr('href')
+    $.post(url, dataMap,function(data){
+      alert('Perbaikan saldo KPKP Makam ini berhasil!')
+      location.reload();
+    })
   })
 
 

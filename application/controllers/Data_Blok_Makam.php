@@ -508,4 +508,30 @@ class Data_Blok_Makam extends CI_Controller
 
     $this->load->view('kpkp/calculator_tahun', $data);
   }
+
+
+  public function delete_trx(){
+    $data=array();
+    $token=$this->input->get('token');
+    $del="delete from kpkp_bayar_tahunan where md5(CONCAT('jkla178$@',id)) = '".$token."'";
+    $qdel=$this->m_model->querycustom($del);
+
+    $this->session->set_flashdata('sts_add', '1');
+    $this->session->set_flashdata('Title_add', 'Berhasil!');
+    $this->session->set_flashdata('msg_add', 'Data Transaksi Makam ini dihapus!');
+    $this->session->set_flashdata('class', 'iziToast-success');
+    redirect($_SERVER['HTTP_REFERER']);
+  }
+
+  public function approve(){
+    $data=array();
+    $recid=$this->input->post('makam_id');
+    $param['saldo']=$this->input->post('nominal_baru');
+    $param['update_at']=date('Y-m-d H:i:s');
+    $param['update_by']=$this->session->userdata('userdata')->id;
+    #saldo ke tahun
+    #$param[tahun]
+      //$param['keluarga_jemaat_id']=$this->input->post('kk_id');
+    $u=$this->m_model->updateas('id', $recid, $param, 'kpkp_blok_makam');
+  }
 }
