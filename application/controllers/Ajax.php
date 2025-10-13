@@ -860,7 +860,7 @@ class Ajax extends CI_Controller {
 		$data['max_peserta_pemilihan']=max($data['num_pesertaPemilihan']);
 		$data['min_peserta_pemilihan']=min($data['num_pesertaPemilihan']);
 
-		$q1="select B.id, B.kwg_nama, B.kwg_alamat, B.kwg_wil, B.kwg_no as no_kk, C.hub_keluarga, COUNT(A.id) as peserta
+		$q1="select B.id, B.kwg_nama, B.kwg_alamat, A.kwg_wil, B.kwg_no as no_kk, C.hub_keluarga, COUNT(A.id) as peserta
 				from keluarga_jemaat B
 				join anggota_jemaat A on B.id = A.kwg_no
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg

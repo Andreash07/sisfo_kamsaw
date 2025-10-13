@@ -14,7 +14,6 @@ $slot=10;
 
 
 if(isset($voted_wil) && count($voted_wil) > 0){
-
 	foreach ($voted_wil as $keyvoted => $valuevoted) {
 
 		# code...
@@ -193,6 +192,70 @@ if(isset($voted_wil) && count($voted_wil) > 0){
 	<?php
 
 	}
+
+	?>
+<!-- Start Copyan table wilayah-->
+<table id="table_perolehansuaraWil<?=$wilayahtable;?>" class="table table-border">
+	<tr>
+		<th >Peringkat</th>
+		<th >Calon</th>
+		<th></th>
+		<th >Suara</th>
+		<th></th>
+	</tr>
+	<tr>
+		<th></th>
+		<th></th>
+		<th>Online</th>
+		<th>Konvensional</th>
+		<th>Total</th>
+	</tr>
+<?php
+#ini untuk bahan copyan table
+	$tot_voted=0;
+	foreach ($voted_wil as $keyvoted => $valuevoted) {
+		#print_r($valuevoted); die();
+		$percent=$valuevoted->voted/$NumAngjem*100;
+		$title="Ibu ";
+    if($valuevoted->sts_kawin==1){
+      $title="Sdri. ";
+    }
+    if(mb_strtolower($valuevoted->jns_kelamin)=='l'){
+      $color_gender="bg-gradient-blue";
+      $ico_gender='<i class="fa fa-male" style="font-size:12pt;"></i>';
+      $title="Bp. ";
+      if($valuevoted->sts_kawin==1){
+        $title="Sdr. ";
+      }
+    }
+    $online=0;
+    if($valuevoted->voted_konvensional == null){
+    	$valuevoted->voted_konvensional=0;
+    }
+    $online=$valuevoted->voted-$valuevoted->voted_konvensional;
+    $tot_voted=$tot_voted+$valuevoted->voted;
+?>
+	<tr>
+	<td><?=$keyvoted+1;?></td>
+	<td><?=$title;?><?=$valuevoted->nama_lengkap;?></td>
+	<td><?=$online;?></td>
+	<td><?=$valuevoted->voted_konvensional;?></td>
+	<td><?=$valuevoted->voted;?> (<?=round($percent,2);?>%)</td>
+	</tr>
+
+
+<?php
+	}
+
+?>
+<tr>
+	<th colspan="4">Total</th>
+	<th><?=$tot_voted;?></th>
+</tr>
+</table>
+<!-- End Copyan table wilayah-->
+
+<?php
 
 }
 

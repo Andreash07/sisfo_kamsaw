@@ -273,6 +273,10 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
                     $total_mutasi=0;
                     foreach ($kpkp_bayar_tahunan as $key7 => $value7) {
                       // code...
+
+                      if(!is_numeric($value7->nominal)){
+                        $value7->nominal=0;
+                      }
                       $tipe_transaksi='Saldo Awal';
                       $note="";
                       if($value7->type==1){

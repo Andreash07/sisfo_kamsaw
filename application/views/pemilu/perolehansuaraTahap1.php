@@ -24,10 +24,13 @@ $this->load->view('layout/header');
           <div class="x_panel tile">
             <div class="x_title">
               <h2>Wilayah <?=$value->id;?> (Tahap 1)</h2>
+              <button class="btn btn-warning btn-sm" style="position:absolute; right:5px;" onclick="copyDiv('table_perolehansuaraWil<?=$value->id;?>')"title="Copy ke Clipboard">
+						      <span class="fa fa-clipboard " style="color:white; "></span>
+					    </button>
               <div class="clearfix"></div>
             </div>
             <div class="x_content fixed_height_320" style="overflow-y: auto;" id="div_perolehansuaraWilayah<?=$value->id;?>">
-            	<?php $this->load->view('pemilu/perolehansuaraWilayah', array('voted_wil'=>$voted_wil[$value->id], 'NumAngjem'=>$NumAngjem));?>
+            	<?php $this->load->view('pemilu/perolehansuaraWilayah', array('wilayahtable'=>$value->id, 'voted_wil'=>$voted_wil[$value->id], 'NumAngjem'=>$NumAngjem));?>
             </div>
           	<div class="clearfix"></div>
           </div>
@@ -133,4 +136,17 @@ $this->load->view('layout/footer');
 			$('#div_perolehansuaraWilayah'+wilayah).html(data)
 		})
 	}
+
+
+	function copyDiv(domId) {
+    var content = document.getElementById(domId).innerText;
+
+    navigator.clipboard.writeText(content).then(function() {
+        // Bisa diganti pakai alert Bootstrap
+        alert("Teks berhasil disalin ke clipboard!");
+    }, function(err) {
+        console.error("Gagal menyalin: ", err);
+    });
+}
+
 </script>
