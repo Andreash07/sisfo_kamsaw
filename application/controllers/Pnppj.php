@@ -69,6 +69,12 @@ class Pnppj extends CI_Controller {
 
 
 	public function index(){
+		if(!$this->session->userdata('sess_keluarga')){
+			redirect(base_url().'login/keluarga');
+
+			die("User Invalid, Access Denied!");
+
+		}
 
 		$data=array();
 		$stahun_pemilihan="SELECT * FROM `tahun_pemilihan` ORDER BY `tahun` DESC limit 1";
@@ -666,6 +672,83 @@ class Pnppj extends CI_Controller {
 
 
 		$this->load->view('frontend/mjppj/perolehansuarapemilu1', $data);
+
+	}
+
+
+	public function hasilpemilu1(){
+
+		$data=array();
+
+		//$data['ls_wil']=lsWil();
+		if($this->input->get('wil') && $this->input->get('wil') !=0){
+			$data['kwg_wil']=$this->input->get('wil');
+
+		}else{
+			//default dari login user
+			$data['kwg_wil']=1;
+		}
+		#$this->tahun_pemilihan='2021';
+		$q="select A.kwg_wil, COUNT(A.id) as num_angjem
+
+				from anggota_jemaat A 
+
+				where (A.tgl_meninggal is null || A.tgl_meninggal ='0000-00-00') && A.sts_anggota=1 && A.status=1 && A.status_sidi=1 && A.kwg_wil='".$data['kwg_wil']."'
+
+				group by A.kwg_wil";
+		#diatas  yg lama pemilihan tahun 2021, belum dinamis
+
+
+		$q="select B.kwg_wil, COUNT(A.id) as num_angjem
+
+				from anggota_jemaat A
+				join keluarga_jemaat B on B.id = A.kwg_no
+
+				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id 
+
+				where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_pn1=1 && B.kwg_wil='".$data['kwg_wil']."'
+
+				group by B.kwg_wil";
+
+		$r=$this->m_model->selectcustom($q); #die(nl2br($q));
+
+		foreach ($r as $key => $value) {
+
+			# code...
+
+			$data['num_angjem'][$value->kwg_wil]=$value;
+
+
+
+		}
+
+		$slot_vote=8;
+
+		$data['max_suara_masuk']=$data['num_angjem'][$value->kwg_wil]->num_angjem*$slot_vote;
+
+
+
+		$data['slot_vote']=$slot_vote;
+
+
+
+		$data['voted_wil'][$data['kwg_wil']]=$this->get_pemilu1_perwil($data['kwg_wil'], $this->tahun_pemilihan);
+
+		$qpeserta="select B.kwg_wil, COUNT(A.id) as peserta_pemilihan
+
+				from anggota_jemaat A
+				join keluarga_jemaat B on B.id = A.kwg_no
+
+				join (select * from votes_tahap1 where tahun_pemilihan ='".$this->tahun_pemilihan."' group by id_pemilih) C on C.id_pemilih = A.id 
+
+				where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && B.kwg_wil='".$data['kwg_wil']."' 
+
+				group by B.kwg_wil"; #
+
+		$rpeserta=$this->m_model->selectcustom($qpeserta); #die(nl2br($qpeserta));
+		$data['peserta']=$rpeserta[0];
+
+		$this->load->view('frontend/mjppj/hasilperolehanpemilu1', $data);
 
 	}
 
