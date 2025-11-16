@@ -277,6 +277,7 @@ class Pnppj extends CI_Controller {
 		$data=array();
 
 		$data['keluarga']=$this->session->userdata('sess_keluarga')->kwg_nama;
+		$data['tahun_pemilihan']=$this->tahun_pemilihan;
 
 		$sql="select A.*, B.status_kawin
 
@@ -284,10 +285,45 @@ class Pnppj extends CI_Controller {
 
 				left join ags_sts_kawin B on B.id = A.sts_kawin
 				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id
+				where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && C.id >0 && C.id is not null && C.tahun_pemilihan='".$this->tahun_pemilihan."' && C.status_peserta_pn2=1 && A.sts_anggota=1 && A.status=1 && A.status_sidi=1
+				order by A.hub_kwg ASC, A.no_urut ASC ";
 
-				where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && C.id >0 && C.id is not null && C.tahun_pemilihan='".$this->tahun_pemilihan."' && C.status_peserta_pn2=1 && A.sts_anggota=1 && A.status=1 && A.status_sidi=1";
+				#where  A.kwg_no='".$this->session->userdata('sess_keluarga')->id."' && A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1";
 
-		$data['anggota_sidi']=$this->m_model->selectcustom($sql);
+		$data['anggota_sidi']=$this->m_model->selectcustom($sql); 
+		#die(nl2br($sql));
+
+		$ls_id_pemilih=array();
+		$ls_id_pemilih[]=0;
+		foreach ($data['anggota_sidi'] as $key => $value) {
+			// code...
+			$ls_id_pemilih[]=$value->id;
+		}
+
+		$spemilih_voting="select * from votes_tahap2 where id_pemilih in (".implode(', ', $ls_id_pemilih).") && tahun_pemilihan = '".$this->tahun_pemilihan."'";
+		$qpemilih_voting=$this->m_model->selectcustom($spemilih_voting);
+
+		$data['pemilih_voting']=array();
+		foreach ($qpemilih_voting as $key => $value) {
+			// code...
+			$data['pemilih_voting'][$value->id_pemilih][]=$value;
+		}
+
+
+		$sulasan="select * from ulasan_user where user_id in (".implode(', ', $ls_id_pemilih).") && module='Pemilihan PNT Tahap 1 ".$this->tahun_pemilihan."' ";
+		$qulasan=$this->m_model->selectcustom($sulasan); #die($sulasan);
+		$data['ulasan']=array();
+		foreach ($qulasan as $key => $value) {
+			// code...
+			$data['ulasan'][$value->user_id]=$value;
+		}
+
+
+
+
+
+		$slockpemilihan=$this->m_model->selectas2('tahun_pemilihan', $this->tahun_pemilihan, 'tipe_pemilihan', 1, 'lock_pemilihan');
+		$data['lockpemilihan']=$slockpemilihan;
 
 
 
@@ -1432,7 +1468,7 @@ class Pnppj extends CI_Controller {
 
 		$param['created_by']=$this->session->userdata('userdata')->username;
 
-		$check=$this->m_model->selectas('anggota_jemaat_id', $param['anggota_jemaat_id'], 'jemaat_terpilih1');
+		$check=$this->m_model->selectas2('tahun_pemilihan', $param['tahun_pemilihan'], 'anggota_jemaat_id', $param['anggota_jemaat_id'], 'jemaat_terpilih1');
 
 		if(count($check)>0){
 
@@ -1494,7 +1530,7 @@ class Pnppj extends CI_Controller {
 
 
 
-		$check=$this->m_model->selectas('anggota_jemaat_id', $param['anggota_jemaat_id'], 'jemaat_terpilih1');
+		$check=$this->m_model->selectas2('tahun_pemilihan', $param['tahun_pemilihan'], 'anggota_jemaat_id', $param['anggota_jemaat_id'], 'jemaat_terpilih1');
 
 		if(count($check)>0){
 
@@ -2335,7 +2371,9 @@ class Pnppj extends CI_Controller {
 				join jemaat_terpilih1 D on D.anggota_jemaat_id = A.id
 				left join ags_sts_kawin B on B.id = A.sts_kawin
 				left join votes_tahap2 C on C.id_calon2 = A.id && C.id_pemilih='".$id_pemilih."' && C.tahun_pemilihan='".$tahun_pemilihan."'
-				where  A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && D.status = 1 && A.kwg_wil = '".$wil_pemilih."' ".$where." ".$group_by." ".$field_order."
+				where  D.status = 1 && A.kwg_wil = '".$wil_pemilih."' ".$where." ".$group_by." ".$field_order."
+
+				#A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && 
 				) Z
 
 				UNION ALL
@@ -2347,7 +2385,11 @@ class Pnppj extends CI_Controller {
 				join jemaat_terpilih1 D on D.anggota_jemaat_id = A.id
 				left join ags_sts_kawin B on B.id = A.sts_kawin
 				left join votes_tahap2 C on C.id_calon2 = A.id && C.id_pemilih='".$id_pemilih."' && C.tahun_pemilihan='".$tahun_pemilihan."'
-				where  A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && D.status = 1 && A.kwg_wil != '".$wil_pemilih."' ".$where." ".$group_by." ".$field_order.") Z
+				where D.status = 1 && A.kwg_wil != '".$wil_pemilih."' ".$where." ".$group_by." ".$field_order."
+
+				# A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && 
+				) Z
+				
 				) Y, (SELECT @rownum := 0) r) W
 				order by W.voted DESC, W.num_row ASC
 				
@@ -2358,6 +2400,7 @@ class Pnppj extends CI_Controller {
         //die($sql." ".$group_by." ".$field_order." ".$order_by." ".$limit);
         //$get_data=$this->m_model->selectcustom($sql." ".$group_by." ".$field_order." ".$order_by." ".$limit);
         $get_data=$this->m_model->selectcustom($sql." ".$limit);
+        #die(nl2br($sql." ".$limit));
         return $get_data;
 	}
 
@@ -2536,9 +2579,9 @@ class Pnppj extends CI_Controller {
 
 				join ags_hub_kwg C on C.id = A.hub_kwg
 
-				where  A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && D.status = 1
+				where D.status = 1
 
-				"; 
+				"; # A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && 
 
 		$group_by=" group by A.id ";
 
@@ -2550,7 +2593,7 @@ class Pnppj extends CI_Controller {
        // die($sql." ".$where." ".$group_by." ".$field_order." ".$order_by." ".$limit);
         $get_data=$this->m_model->selectcustom($sql." ".$where." ".$group_by." ".$field_order." ".$order_by." ".$limit);
 
-        //die($sql." ".$where." ".$group_by." ".$field_order." ".$order_by." ".$limit);
+        #die(nl2br($sql." ".$where." ".$group_by." ".$field_order." ".$order_by." ".$limit));
 
         return $get_data;
 

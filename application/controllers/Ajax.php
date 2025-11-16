@@ -320,7 +320,7 @@ class Ajax extends CI_Controller {
 		$data=array();
 		
 		$data['tahun_pemilihan']=array();
-		$tahun_pemilihan=$this->m_model->selectcustom('SELECT * FROM `tahun_pemilihan` order by tahun ASC');
+		$tahun_pemilihan=$this->m_model->selectcustom('SELECT * FROM `tahun_pemilihan` order by tahun DESC limit 1');
 		$data['tahun_pemilihan_semua']=$tahun_pemilihan;
 		foreach ($tahun_pemilihan as $key => $value) {
 			// code...
@@ -475,13 +475,15 @@ class Ajax extends CI_Controller {
 				join jemaat_terpilih1 D on D.anggota_jemaat_id = A.id
 				left join ags_sts_kawin B on B.id = A.sts_kawin
 				left join votes_tahap2 C on C.id_calon2 = A.id && C.id_pemilih='".$id_pemilih."' && C.tahun_pemilihan='".$tahun_pemilihan."'
-				where  A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && D.status = 1
+				where  A.sts_anggota=1 && A.status=1  && A.status_sidi=1 && D.status = 1
 				";
+				#where  A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && D.status = 1
 
 		$group_by=" group by A.id ";
         //$field_order=" order by voted DESC, A.nama_lengkap  ";
         //$field_order=" order by voted DESC, D.persen_vote DESC, D.last_vote ASC";
-        $field_order=" order by A.kwg_wil ASC, voted DESC, D.persen_vote DESC, D.last_vote ASC";
+        $field_order=" order by A.kwg_wil ASC,  D.persen_vote DESC"; #voted DESC, D.last_vote ASC,
+        #$field_order=" order by A.kwg_wil ASC, A.nama_lengkap ASC";
 
 		$sql="select  W.num_row, W.nama_lengkap, W.jns_kelamin, W.tgl_lahir, W.kwg_no, W.foto, W.foto_thumb, W.status_kawin, W.terpilih1, W.status_acc, W.voted2, W.kwg_wil, W.voted, W.locked, W.sts_kawin, W.id from
 			(select @rownum := @rownum + 1 AS num_row,  Y.nama_lengkap, Y.jns_kelamin, Y.tgl_lahir, Y.kwg_no, Y.foto, Y.foto_thumb, Y.status_kawin, Y.terpilih1, Y.status_acc, Y.voted2, Y.kwg_wil, Y.voted, Y.locked, Y.sts_kawin, Y.id from (
@@ -491,7 +493,7 @@ class Ajax extends CI_Controller {
 				join jemaat_terpilih1 D on D.anggota_jemaat_id = A.id
 				left join ags_sts_kawin B on B.id = A.sts_kawin
 				left join votes_tahap2 C on C.id_calon2 = A.id && C.id_pemilih='".$id_pemilih."' && C.tahun_pemilihan='".$tahun_pemilihan."'
-				where  A.sts_anggota=1 && A.status=1  && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && D.status = 1 && A.kwg_wil = '".$wil_pemilih."' ".$where." ".$group_by." ".$field_order."
+				where  A.sts_anggota=1 && A.status=1  && A.status_sidi=1 && D.status = 1 && A.kwg_wil = '".$wil_pemilih."' && D.tahun_pemilihan='".$tahun_pemilihan."' ".$where." ".$group_by." ".$field_order."
 				) Z
 
 				UNION ALL
@@ -503,13 +505,13 @@ class Ajax extends CI_Controller {
 				join jemaat_terpilih1 D on D.anggota_jemaat_id = A.id
 				left join ags_sts_kawin B on B.id = A.sts_kawin
 				left join votes_tahap2 C on C.id_calon2 = A.id && C.id_pemilih='".$id_pemilih."' && C.tahun_pemilihan='".$tahun_pemilihan."'
-				where  A.sts_anggota=1 && A.status=1 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25 && D.status = 1 && A.kwg_wil != '".$wil_pemilih."' ".$where." ".$group_by." ".$field_order.") Z
+				where  A.sts_anggota=1 && A.status=1 && A.status_sidi=1 && D.status = 1 && A.kwg_wil != '".$wil_pemilih."' && D.tahun_pemilihan='".$tahun_pemilihan."' ".$where." ".$group_by." ".$field_order.") Z
 				) Y, (SELECT @rownum := 0) r) W
 				order by W.voted DESC, W.num_row ASC
 				
 				"; 
 				//&& DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 <=65
-		//die($sql);
+		#die(nl2br($sql));
         $order_by="  ";
         //die($sql." ".$group_by." ".$field_order." ".$order_by." ".$limit);
         //$get_data=$this->m_model->selectcustom($sql." ".$group_by." ".$field_order." ".$order_by." ".$limit);

@@ -1900,8 +1900,8 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC"; //die($s2);
                 echo  $value->blok.''.$value->kavling.' ('.$sts_anggota_makam.') '.$value->tahun_tercover.': '.number_format($value->saldo, 2, ',', '.').' <-----> '.number_format($countTahunToSaldo['total_saldo'], 2, ',', '.');
                 echo "</li>";
 
-                #$u=$this->m_model->updateas('id',$value->id, array('saldo'=>$countTahunToSaldo['total_saldo']), 'kpkp_blok_makam');
-                #$u1=$this->m_model->updateas('id',$value->kpkp_bayar_tahunan_id, array('nominal'=>$countTahunToSaldo['total_saldo']), 'kpkp_bayar_tahunan');
+                $u=$this->m_model->updateas('id',$value->id, array('saldo'=>$countTahunToSaldo['total_saldo']), 'kpkp_blok_makam');
+                $u1=$this->m_model->updateas('id',$value->kpkp_bayar_tahunan_id, array('nominal'=>$countTahunToSaldo['total_saldo']), 'kpkp_bayar_tahunan');
             }
         }
         echo "</ol>";

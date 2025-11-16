@@ -1180,7 +1180,7 @@ function singkat_nama($string=null, $limit=21, $add=''){
                 $cut_position=strlen($arr_nama[$key]);
             }
         }else{
-            if($tot_len<19){
+            if($tot_len<17){
                 $add_whitespace="<br>";
             }
         }
@@ -1219,7 +1219,7 @@ function countTahunTercover($total_biayaKPKP, $saldo_akhir, $current_Year=null){
     return $data;
 }
 
-function countTahunTercover_new($saldo, $pokok_iuran, $sts_keanggotaan, $current_Year){
+function countTahunTercover_new($saldo, $pokok_iuran_all, $sts_keanggotaan, $current_Year){
     $current_Year=$current_Year;
     $sts_keanggotaan=$sts_keanggotaan;
     $saldo=$saldo;
@@ -1253,19 +1253,13 @@ function countTahunTercover_new($saldo, $pokok_iuran, $sts_keanggotaan, $current
         $saldo_positif=$saldo*-1;
         #ini num tahunnya berdasarkan hitungna mundur dari pengurangan saldo yg ada. berdasarkan pokok iuran KPKP yg berlaku.
         $num_tahun_new=0;
-
-      /*?>
-      <ol>
-        <li><?=$current_Year+$num_tahun_new;?> <----> <?=$saldo_positif;?> <----> <?=$total_biayaKPKP;?></li>
-      <?php*/
         $total_biayaKPKP=0;
         while ($saldo_positif>0) {
             // code...
             //cek tahun iuran pokok yg berlaku dulu
             foreach ($arr_pokok_iuran as $key1 => $value1) {
-            #print_r($value1); die();
                 // code...
-                if($current_Year>$value1->tahun_iuran){
+                if($current_Year>=$value1->tahun_iuran){
                     if($sts_keanggotaan==1){
                         $total_biayaKPKP=$value1->nilai_iuran_angjem;
                     }else{
@@ -1275,18 +1269,15 @@ function countTahunTercover_new($saldo, $pokok_iuran, $sts_keanggotaan, $current
                 }
             }
             $saldo_positif=$saldo_positif-$total_biayaKPKP;
+            $num_tahun_new--;
             $current_Year--;
-        /*?>
-          <li><?=$current_Year;?> <----> <?=$saldo_positif;?>  <----> <?=$total_biayaKPKP;?></li>
-        <?php*/ 
         }
         #pengecekan mundur seleai baru hitung tahunnya
         $data['tahun_tercover']=date("Y",strtotime($num_tahun_new." year"));
         $data['num_tahun_tercover']=$num_tahun_new;
-    /*?>
-      </ol>
-    <?php*/
     }
+    #echo $num_tahun_new;
+    return($data);
 }
 
 

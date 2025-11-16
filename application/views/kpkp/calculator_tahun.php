@@ -1,6 +1,6 @@
 <form action="<?=base_url();?>Data_Blok_Makam/calculator_tahun" method="GET">
   <div class="form-group">
-    <label>Tahun</label>
+    <label>Tahun Tertampung</label>
     <input name="tahun" value=<?=$this->input->get('tahun');?>>
   </div>
   <div class="form-group">

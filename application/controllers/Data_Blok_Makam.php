@@ -457,6 +457,16 @@ class Data_Blok_Makam extends CI_Controller
     $recid=$this->input->post('recid');
 
     $u=$this->m_model->updateas('id', $recid, $param, 'kpkp_penghuni_makam');
+
+    // lalu update sts anggota penghuni makam kpkp_blok_makam
+    $param2=array();
+    $param2['keanggotaan_makam']=$this->input->post('asal_gereja');
+    $param2['sts_keanggotaan_makam']=$this->input->post('sts_keanggotaan_makam');
+    $param2['update_at']=date('Y-m-d H:i:s');
+    $param2['update_by']=$this->session->userdata('userdata')->id;
+    $kpkp_blok_makam_id=$this->input->post('kpkp_blok_makam_id');
+    $u2=$this->m_model->updateas('id', $kpkp_blok_makam_id, $param2, 'kpkp_blok_makam');
+
     $json=array('sts'=>0, 'title'=>'Oopps Maaf.. ','msg'=>"Status Makan Gagal diupdate" , 'class'=>"iziToast-danger");
     if($u){
       $json=array('sts'=>1, 'title'=>'Wow.. ','msg'=>"Status Makam Berhasil di perbarui!", 'class'=>"iziToast-success");
@@ -534,4 +544,29 @@ class Data_Blok_Makam extends CI_Controller
       //$param['keluarga_jemaat_id']=$this->input->post('kk_id');
     $u=$this->m_model->updateas('id', $recid, $param, 'kpkp_blok_makam');
   }
+
+  function form_perbaikan(){
+      $data=array();
+      $param=array();
+
+      $recid=$this->input->get('id');
+      $s="select * from kpkp_bayar_tahunan where id='".$recid."'";
+      $q=$this->m_model->selectcustom($s);
+      $data['recid']=$recid;
+      $data['data']=$q;
+      $this->load->view('kpkp/form_perbaikan', $data);
+    }
+
+    function submit_perbaikan(){
+      $data=array();
+      $param=array();
+      $recid=$this->input->get('id');
+      foreach ($this->input->post() as $key => $value) {
+        // code...
+        $param[$key]=$value;
+      }
+      $u=$this->m_model->updateas('id', $recid, $param, 'kpkp_bayar_tahunan');
+    }
+
+
 }

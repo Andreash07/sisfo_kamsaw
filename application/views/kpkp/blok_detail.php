@@ -153,7 +153,7 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
                             $num_penghuni_aktif++;
                           }
                       ?>  
-                        <select class="form-control" name="sts_penghuniMakan<?=$value->id;?>" id="sts_penghuniMakan<?=$value->id;?>" inhref="<?=base_url();?>Data_Blok_Makam/update_sts" recid="<?=$value->id;?>">
+                        <select class="form-control" name="sts_penghuniMakan<?=$value->id;?>" id="sts_penghuniMakan<?=$value->id;?>" inhref="<?=base_url();?>Data_Blok_Makam/update_sts" recid="<?=$value->id;?>" asal_gereja="<?=$value->asal_gereja;?>" sts_keanggotaan_makam="<?=$value->sts_keanggotaan;?>" kpkp_blok_makam_id="<?=$value->kpkp_blok_makam_id;?>">
                           <option value="0" <?php if($value->sts==0){echo "selected";}?>>Tidak Aktif</option>
                           <option value="1" <?php if($value->sts==1){echo "selected";}?>>Aktif</option>
                         </select>
@@ -177,7 +177,7 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
                 <?php
                 if ($makam->sts_dompet_digital == 1) {
                   #$hitung_bulan_iuran_makam=countTahunTercover_new($makam->saldo, $pokok_iuran_all, $makam->sts_keanggotaan_makam, date('Y'));
-                  #$hitung_bulan_iuran_makam=countTahunTercover($makam->saldo, $pokok_iuran_all, $makam->sts_keanggotaan_makam, date('Y'));
+                  $hitung_bulan_iuran_makam=countTahunTercover_new($makam->saldo, $pokok_iuran_all, $makam->sts_keanggotaan_makam, date('Y'));
 
                   $sts_keanggotaan_penghuni_makam="Non GKP Kampung Sawah";
                   if ($makam->sts_keanggotaan_makam == 1) {
@@ -217,7 +217,7 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tahun_terbayarkan_dis">Tahun Terbayarkan<span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input class="form-control col-md-7 col-xs-12" type="text" id="tahun_terbayarkan_dis" name="tahun_terbayarkan_dis" required="required" value="<?= $tahun_tercover; ?> (<?=$num_tahun_tercover;?> Tahun)" disabled>
+                        <input class="form-control col-md-7 col-xs-12" type="text" id="tahun_terbayarkan_dis" name="tahun_terbayarkan_dis" required="required" value="<?= $hitung_bulan_iuran_makam['tahun_tercover']; ?> (<?=$hitung_bulan_iuran_makam['num_tahun_tercover'];?> Tahun)" disabled>
                       </div>
                     </div>
                     <div class="form-group">
@@ -302,7 +302,7 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
                         </td>
                         <td class="text-right"><?=number_format($value7->nominal,0,",",".");?></td>
                         <td class="text-center">
-                          <div class="btn btn-warning btn-xs" title="Perbaikan Mutasi" id="btn_edit-Mutasi<?=$value7->id;?>" form="<?=base_url().'pemakaman/form_perbaikan?id='.$value7->id;?>"><i class="fa fa-pencil"></i></div>
+                          <div class="btn btn-warning btn-xs" title="Perbaikan Mutasi" id="btn_edit-Mutasi<?=$value7->id;?>" form="<?=base_url().'Data_Blok_Makam/form_perbaikan?id='.$value7->id;?>"><i class="fa fa-pencil"></i></div>
                           <a class="btn btn-danger btn-xs" title="Hapus Transaksi ini (<?=convert_tgl_dMY($value7->tgl_bayar);?> | <?=number_format($value7->nominal,0,",",".");?>)" id="btn_delet-Mutasi<?=$value7->id;?>" href="<?=base_url().'Data_Blok_Makam/delete_trx?token='.md5('jkla178$@'.$value7->id);?>"><i class="fa fa-trash"></i></a>
                         </td>
                       </tr>
@@ -588,6 +588,24 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
   </div>
 </div>
 
+<div class="modal-perbaikanMutasi modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Form Perbaikan Mutasi</h4>
+      </div>
+      <div class="modal-body" id="div_form_perbaikan">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-warning" id="btn_save_perbaikan" form="form_perbaikan">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <script type="text/javascript">
   $(document).ready(function() {
@@ -607,6 +625,9 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
     dataMap = {}
     dataMap['sts'] = sts
     dataMap['recid'] = recid
+    dataMap['sts_keanggotaan_makam'] = $(this).attr('sts_keanggotaan_makam')
+    dataMap['asal_gereja'] = $(this).attr('asal_gereja')
+    dataMap['kpkp_blok_makam_id'] = $(this).attr('kpkp_blok_makam_id')
     href = $(this).attr('inhref')
     $.post(href, dataMap, function(data) {
       json=$.parseJSON(data)
@@ -749,6 +770,28 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
     url=$(this).attr('href')
     $.post(url, dataMap,function(data){
       alert('Perbaikan saldo KPKP Makam ini berhasil!')
+      location.reload();
+    })
+  })
+
+  $(document).on('click', '[id^=btn_edit-Mutasi]', function(e){
+    e.preventDefault()
+    $('.modal-perbaikanMutasi').modal('show')
+    dataMap={}
+    url=$(this).attr('form')
+    $.get(url, dataMap,function(data){
+      $('#div_form_perbaikan').html(data)
+    })
+  })
+
+  $(document).on('click', '[id=btn_save_perbaikan]', function(e){
+    e.preventDefault()
+    dataMap={}
+    dataMap=$('#form_perbaikan').serialize()
+    url=$('#form_perbaikan').attr('action')
+    $.post(url, dataMap, function(data){
+      $('.modal-perbaikanMutasi').modal('hide') 
+      alert('Perbaikan transaksi berhasil!')
       location.reload();
     })
   })

@@ -25,6 +25,8 @@ foreach ($setting as $key => $value) {
 			break;
 		case '2':
 			// code...
+			$open2=$value->start_at;
+			$close2=$value->end_at;
 			break;
 		case '3':
 			// code...
@@ -32,7 +34,6 @@ foreach ($setting as $key => $value) {
 			$close3=$value->end_at;
 			break;
 	}
-
 	#print_r( $value);
 	if($value->locked == 0 && $value->tipe_pemilihan =='3'){
 		#$timestamp_open=strtotime($open3);	
@@ -80,7 +81,7 @@ foreach ($setting as $key => $value) {
 	            <!-- Card body -->
 
 	            <div class="card-body" style="padding:unset; position:relative;">
-	                <img src="<?=base_url();?>/assets/images/poster-mobile-pnt-01_compressed2630.jpeg" class="img-fluid" instyle="border-top-left-radius: .375rem;border-top-right-radius: .375rem;">
+	                <img src="<?=base_url();?>/assets/images/poster-mobile-pnt2-01_26-30.jpg" class="img-fluid" instyle="border-top-left-radius: .375rem;border-top-right-radius: .375rem;">
 
 	               <?php 
 
@@ -319,7 +320,7 @@ foreach ($setting as $key => $value) {
 
 					<?php 
 
-					if(strtotime($open) <= strtotime(date('Y-m-d H:i:s'))  ){
+					if(strtotime($open) <= strtotime(date('Y-m-d H:i:s')) &&  strtotime($close) >= strtotime(date('Y-m-d H:i:s'))){
 
 					?>
 
@@ -329,6 +330,13 @@ foreach ($setting as $key => $value) {
 					<?php
 						/*<label class="text-danger" style="border-bottom: 1px solid #ededed;"><b>Dalam Proses sosialisai</b>.<br>Proses Pemungutan Suara <b>belum dibuka</b></label>*/
 
+					}
+					else if(strtotime($open) < strtotime(date('Y-m-d H:i:s')) && strtotime($close) < strtotime(date('Y-m-d H:i:s'))  ){
+					?>
+						<label class="text-danger" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sudah ditutup.</label>
+						<br>
+						<label class="text-warning">Hasil pemilihan akan keluar setelah proses verifikasi selesai dilakukan.</label>
+					<?php
 					}
 					else if(strtotime($open) <= strtotime(date('Y-m-d H:i:s')) && strtotime($close) <= strtotime(date('Y-m-d H:i:s'))  ){
 					?>
@@ -404,11 +412,6 @@ foreach ($setting as $key => $value) {
 
 				?>
 
-				<br>
-
-				<br>
-
-				<br>
 
 				<?php
 
@@ -428,7 +431,7 @@ foreach ($setting as $key => $value) {
 
 		<?php 
 
-		/*if(isset($setting['2']) && ($setting['2']->show == 1)){
+		if(isset($setting['2']) && ($setting['2']->show == 1)){
 
 				//ini berati sedang di buka pemilihannya
 
@@ -446,15 +449,20 @@ foreach ($setting as $key => $value) {
 
 					<?php 
 
-					if( ($setting['2']->locked==0 || strtotime($open)<strtotime(date('Y-m-d H:i:s'))) && strtotime($close)>strtotime(date('Y-m-d H:i:s')) ){
+					if( (strtotime($open2)>strtotime(date('Y-m-d H:i:s'))) && strtotime($close2)>strtotime(date('Y-m-d H:i:s')) ){
 
 					//	<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (30 Ags - 9 Sep '21) .</label>
 
 					//<label class="text-danger" style="border-bottom: 1px solid #ededed;"><b>Dalam Proses sosialisai</b>.<br>Proses Pemungutan Suara <b>belum dibuka</b></label>
 					?>
-						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (10 Jan - 26 Jan '22) .</label>
+						<label class="text-danger" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara belum dimulai akan dimulai pada <?=date('d M y', strtotime($open2));?> - <?=date('d M y', strtotime($close2));?>.</label>
 					<?php
 
+					}
+					else if( ( strtotime($open2)<strtotime(date('Y-m-d H:i:s'))) && strtotime($close2)>strtotime(date('Y-m-d H:i:s')) ){
+					?>
+						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (<?=date('d M y', strtotime($open2));?> - <?=date('d M y', strtotime($close2));?>) .</label>
+					<?php
 					}
 
 					?>
@@ -493,7 +501,7 @@ foreach ($setting as $key => $value) {
 
 				<?php 
 
-				if((($setting['2']->locked==0 && !isset($offline[2]) ) || strtotime($open)<strtotime(date('Y-m-d H:i:s'))) && strtotime($close)>strtotime(date('Y-m-d H:i:s'))){
+				if((($setting['2']->locked==0 && !isset($offline[2]) ) ) ){
 
 					//ini beari masih di buka untuk pemungutan suara
 
@@ -525,7 +533,7 @@ foreach ($setting as $key => $value) {
 
 		<?php
 
-		}*/
+		}
 
 		?>
 

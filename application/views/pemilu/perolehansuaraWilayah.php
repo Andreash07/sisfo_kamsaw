@@ -92,8 +92,9 @@ if(isset($voted_wil) && count($voted_wil) > 0){
         $title="Sdr. ";
       }
     }
-
-//$this->m_model->updateas('id', $valuevoted->id_terpilih, array('persen_vote'=>$percent,'last_vote'=>$valuevoted->last_vote), 'jemaat_terpilih1');
+if($valuevoted->id_terpilih !=null){
+	$this->m_model->updateas('id', $valuevoted->id_terpilih, array('persen_vote'=>$percent,'last_vote'=>$valuevoted->last_vote), 'jemaat_terpilih1');
+}
 
 	?>
 
@@ -109,7 +110,7 @@ if(isset($voted_wil) && count($voted_wil) > 0){
 
               <div class="progress" style="margin-bottom: 0px;">
 
-                <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="<?=$percent;?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=$percent;?>%;">
+                <div id_terpilih="<?=$valuevoted->id_terpilih;?>" class="progress-bar bg-blue" role="progressbar" aria-valuenow="<?=$percent;?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=$percent;?>%;">
 
                   <span class="sr-only"><?=$valuevoted->voted;?></span>
 
