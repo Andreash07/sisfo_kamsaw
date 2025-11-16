@@ -24,10 +24,11 @@ if(isset($_GET['tahun'])){
 
 else{
 
-	$tahun_pemilihan=2021;
+	#$tahun_pemilihan=2021;
+	$tahun_pemilihan=2025;
 
 }
-
+$periode='2026 - 2030';
 
 
 
@@ -102,9 +103,9 @@ $sql_calon="select A.*
 
 				join jemaat_terpilih1 D on D.anggota_jemaat_id = A.id  && D.tahun_pemilihan='".$tahun_pemilihan."'
 
-				where  A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25  && D.status = 1
+				where  A.sts_anggota=1 && A.status=1 &&  D.status = 1
 
-				order by  A.kwg_wil ASC, D.persen_vote DESC, D.last_vote ASC";
+				order by  A.kwg_wil ASC, D.persen_vote DESC, D.last_vote ASC";  #YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1 && DATEDIFF(CURRENT_DATE(), A.tgl_lahir)/365 >=25  &&
 
 				//A.kwg_wil ASC, A.nama_lengkap ASC //
 
@@ -394,7 +395,7 @@ function truncate($text, $chars = 120) {
 
 			<h4 style="padding: unset; margin: unset;   margin-top: 0; margin-bottom: 1mm;">Lembar Calon Penatua Tahap 2</h4>
 
-			Periode: 2022 - 2026
+			Periode: <?=$periode;?>
 
 		</td>
 
@@ -487,9 +488,7 @@ function truncate($text, $chars = 120) {
 						<img src="../<?=$rsql_calon[$calon]['foto'];?>" style="width: <?=$width_col;?>mm; border-radius: 50%; margin-bottom:.5mm; " >
 
 						<?= $title; ?><?=singkat_nama($rsql_calon[$calon]['nama_lengkap'], 30, 'addwhitespace');?>
-
 						<br>
-
 						<b class="f-8">Wil. <?=$rsql_calon[$calon]['kwg_wil'];?></b>
 
 					</td>
@@ -560,7 +559,7 @@ try
 
     $html2pdf->writeHTML($content, isset($_GET['vuehtml']));
 
-    $html2pdf->Output('Report KK'.$additionName.'.pdf');
+    $html2pdf->Output('Calon Pnt Tahap II '.$periode.'.pdf');
 
 }
 

@@ -63,7 +63,7 @@ class Beranda extends CI_Controller {
 		}
 		else{
 			//get lock pemilihan
-			$slockpemilihan=$this->m_model->selectas2('tahun_pemilihan', date('Y'), 'tipe_pemilihan', 1, 'lock_pemilihan');
+			$slockpemilihan=$this->m_model->selectas2('tahun_pemilihan', date('Y'), 'tipe_pemilihan', 2, 'lock_pemilihan');
 			$data['lockpemilihan']=$slockpemilihan;
 			$this->load->view('frontend/home/index', $data);
 		}
