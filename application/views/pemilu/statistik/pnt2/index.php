@@ -15,8 +15,26 @@ $this->load->view('layout/header');
 
 
 <div class="right_col" role="main">
-
+	<div class="row">
   	<h2>Statistik Perolehan Suara - Penatua II</h2>
+  	<div class="col-md-5 col-sm-5 col-xs-12">
+	  	<select class="form-control" id="stat_tahun_pemilihan" name="stat_tahun_pemilihan">
+	  		<?php 
+	  			foreach ($tahun_pemilihan_semua as $key => $value) {
+	  				// code...
+	  				$selected="";
+	  				if($tahunpemilihan==$value->tahun_pemilihan2){
+	  					$selected='selected';
+
+	  				}
+				?>
+					<option value="<?=$value->tahun_pemilihan2;?>" <?=$selected;?>>Periode <?=$value->periode;?></option>
+				<?php
+	  			}
+	  		?>
+	  	</select>
+	  </div>
+  </div>
 
 	<div class="row">
 
@@ -133,7 +151,12 @@ $this->load->view('layout/footer');
 <script src="../vendors/echarts/map/js/world.js"></script>
 
 <script type="text/javascript">
+	$(document).on('change', '#stat_tahun_pemilihan', function(e){
+		dataMap={};
+		tahun_pemilihan=$(this).val();
+		window.location.href = "<?=base_url();?>/pnppj/statistik_pnt2?tahunpemilihan="+tahun_pemilihan;
 
+	})
 
 
 	$(document).ready(function(){
@@ -578,6 +601,7 @@ $this->load->view('layout/footer');
 		var wil=[1,2,3,4,5,6,7]
 
 		dataMap={}
+		dataMap['tahun_pemilihan']=$('#stat_tahun_pemilihan').val();
 
 		$.post('<?=base_url();?>ajax/statistik_pnt2_wil', dataMap, function(data){
 

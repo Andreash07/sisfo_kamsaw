@@ -52,12 +52,14 @@ foreach ($calon as $key => $value) {
       <div class="card">
         <!-- Card body -->
         <div class="card-body" style="padding:0.5rem;">
-          <a href="#!">
+          <a href="#!" id="triger_calon_pn" value="calon_pn<?=$value->id;?>" style="text-decoration: none; color: #32325d;">
             <img src="<?=$foto_thumb;?>" class="rounded-circle img-center img-fluid shadow shadow-lg--hover" style="width: 117px; height: 117px;object-fit: cover;">
           </a>
           <div class="pt-2 text-center">
             <h5 class="h3 title">
-              <small class="d-block mb-0"><?=$title.ucwords($value->nama_lengkap);?></small>
+              <a id="triger_calon_pn" value="calon_pn<?=$value->id;?>" style="text-decoration: none; color: #32325d;">
+                <small class="d-block mb-0"><?=$title.ucwords($value->nama_lengkap);?></small>
+              </a>
               <small class="h5 font-weight-light text-muted"><?=getUmur(date('Y-m-d'), $value->tgl_lahir);?> tahun | Wil. <?=$value->kwg_wil;?></small>
             </h5>
             <div>

@@ -537,7 +537,8 @@ class Pnppj extends CI_Controller {
 
 			$param['wil_calon2']=$wil_calon;
 			$param['sn_surat_suara']=$token;
-			$param['admin']=$this->session->userdata('userdata')->username;
+			#$param['admin']=$this->session->userdata('userdata')->username;
+			$param['admin']='non_admin';
 
 			$param['tahun_pemilihan']=$tahun_pemilihan;
 
@@ -4986,6 +4987,21 @@ $having_count="";
     	$wil=lsWil();
 
     	$data['wil']=$wil;
+
+    	$data['tahun_pemilihan']=array();
+		$tahun_pemilihan=$this->m_model->selectcustom('SELECT * FROM `tahun_pemilihan` order by tahun ASC');
+		$data['tahun_pemilihan_semua']=$tahun_pemilihan;
+		foreach ($tahun_pemilihan as $key => $value) {
+			// code...
+			#echo $key;
+			$data['tahun_pemilihan']=$value;
+			$data['tahunpemilihan']=$value->tahun_pemilihan2;
+			if($value->tahun_pemilihan2 == $this->input->get('tahunpemilihan')){
+				break;
+			}
+			//ini bearti tahun pemiilhannya ambil yg dilooping terakhir
+		}
+		
 
 
 

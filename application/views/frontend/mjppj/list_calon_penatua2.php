@@ -51,6 +51,8 @@
 
     <input type="hidden" name="wil_pemilih" id="wil_pemilih" value="<?=$wil_pemilih;?>">
 
+    <input type="hidden" name="nama_pemilih_suratsuara" id="nama_pemilih_suratsuara" value="<?=$nama_pemilih;?>">
+
     <br>
     <button type="button" class="btn btn-primary" id="btn_kunciPilihan" onclick="event.preventDefault()">Kunci Pilihan</button>
     <div id="div_list_calon2">

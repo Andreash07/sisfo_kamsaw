@@ -146,10 +146,10 @@ $countDown=date('Y-m-d H:i:s', $timestamp);
 
                 ?>
 
-                    <a class="btn btn-info" href="<?=base_url();?>pnppj" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0; font-size: 1.2rem;">Nyok Milih Di sini! (Uji Coba)</a>
+                    <a class="btn btn-info" href="<?=base_url();?>pnppj" style="width: 100%; border-top-left-radius: 0;border-top-right-radius: 0; font-size: 1.2rem;">Nyok Milih Di sini!</a>
 
                 <?php
-
+                    #(Uji Coba)
                   }
                   else if(strtotime($open)< strtotime(date('Y-m-d H:i:s')) && strtotime($close)< strtotime(date('Y-m-d H:i:s')) ){
                     $sts_open=0;

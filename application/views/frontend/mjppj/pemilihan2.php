@@ -194,7 +194,10 @@ $this->load->view('frontend/layouts/footer');
     $('#pemberitahuanModal').modal('show');
 
 
+    setTimeout(function(){
+    $('#pemberitahuanModal').modal('hide');
 
+    }, 10000)
   })
 
   /*$(document).on('click touchstart', '[id^=calon_pn]', function(e){
@@ -222,12 +225,17 @@ $this->load->view('frontend/layouts/footer');
       return;
 
     } else {
-      $('#feedbackModal').modal('show');
+      //show formnya pindah ke bawah aja setelah sudah kelar process kunci
+      
     }
 
 
 
     $('#loading').show();
+    setTimeout(function(){
+      $('#exampleModal').modal('hide');
+      $('#loading').hide();
+    }, 20000)
 
 
 
@@ -236,6 +244,13 @@ $this->load->view('frontend/layouts/footer');
     dataMap['id_pemilih']=$('#id_pemilih').val()
 
     dataMap['wil_pemilih']=$('#wil_pemilih').val()
+
+    dataMap['nama_pemilih_suratsuara'] = $('#nama_pemilih_suratsuara').val()
+    $('#nama_pengguna_ulasan').val(dataMap['nama_pemilih_suratsuara'])
+    $('#user_idUlasan').val(dataMap['id_pemilih'])
+    $('#moduleUlasan').val('Pemilihan PPJ <?=$tahun_pemilihan;?>')
+
+
 
     $.post('<?=base_url();?>pnppj/kunciPilihan2', dataMap, function(data){
 
@@ -272,7 +287,15 @@ $this->load->view('frontend/layouts/footer');
       }
 
       $('#loading').hide();
-
+      if($('#ulasan_sts'+dataMap['id_pemilih']).val() != '1'){
+        //ulasan muncul kalau belum kasih ulasan..
+        $('#feedbackModal').modal('show');
+      }
+      else{
+        setTimeout(function(){
+          location.reload();
+        }, 2000)
+      }
     })
 
 
@@ -284,7 +307,11 @@ $this->load->view('frontend/layouts/footer');
   $(document).on('click touchstart', '[id^=calon_pn]', function(e){
 
     $('#loading').show();
+    setTimeout(function(){
+      $('#loading').hide();
+    }, 10000)
 
+    id_ini = $(this).attr('id');
     ini=$(this);
 
     dataMap={}
@@ -303,17 +330,21 @@ $this->load->view('frontend/layouts/footer');
 
     jns_kelamin=$(this).attr('jns_kelamin')
 
-    console.log(jns_kelamin)
+    //console.log(jns_kelamin)
 
 
 
-    num_voted=parseInt($('#num_voted').val());
+    num_voted=parseInt($('#num_voted').val()); 
+    //alert('num_voted'+num_voted);
 
     num_voted_wil_pemilih=parseInt($('#num_voted_wil_pemilih').val());
+    //alert('num_voted_wil_pemilih'+num_voted_wil_pemilih);
 
     num_voted_wil_l=parseInt($('#num_voted_wil_l').val());
+    //alert('num_voted_wil_l'+num_voted_wil_l);
 
     num_voted_wil_p=parseInt($('#num_voted_wil_p').val());
+    //alert('num_voted_wil_p'+num_voted_wil_p);
 
 
 
@@ -346,21 +377,21 @@ $this->load->view('frontend/layouts/footer');
     //console.log(num_voted+"alskla")
 
     hak_suara=parseInt($('#hak_suara').html());
+    //alert('hak_suara'+hak_suara);
 
-
-
+    //alert($(this).prop('checked'));
     if($(this).prop('checked') == true){
 
       //alert("checking");
 
       dataMap['vote']=1 //1 voted
-
+      //alert("num_voted"+num_voted+" & hak_suara"+hak_suara);
       if(num_voted>=hak_suara){
 
       //ini bearti sudah 5 voting
 
         alert("Peringatan: Anda tidak dapat memilih lebih dari "+hak_suara+" calon!"); 
-
+        $('#'+id_ini).prop('checked', false);
         $('#loading').hide();
 
         return false;
@@ -368,12 +399,14 @@ $this->load->view('frontend/layouts/footer');
       }
 
 
-
+      //alert("num_voted_wil_pemilih"+num_voted_wil_pemilih+" & hak_suara_wil"+hak_suara_wil);
+      //alert("wil_pemilih"+dataMap['wil_pemilih']+" & wil_calon"+dataMap['wil_calon']);
       if(num_voted_wil_pemilih>=hak_suara_wil && dataMap['wil_pemilih'] == dataMap['wil_calon']){
 
       //ini bearti sudah 2 voting
 
         alert("Peringatan: Anda tidak dapat memilih lebih dari "+hak_suara_wil+" calon Wil. "+dataMap['wil_pemilih']+"!");
+        $('#'+id_ini).prop('checked', false);
 
         $('#loading').hide(); 
 
@@ -382,12 +415,14 @@ $this->load->view('frontend/layouts/footer');
       }
 
 
-
+      //alert("num_voted_wil_l"+num_voted_wil_l+" & hak_suara_wil_l"+hak_suara_wil_l);
+      //alert("wil_pemilih"+dataMap['wil_pemilih']+" & wil_calon"+dataMap['wil_calon']);
       if(num_voted_wil_l>=hak_suara_wil_l && dataMap['wil_pemilih'] == dataMap['wil_calon'] && jns_kelamin=='l'){
 
       //ini bearti sudah 2 voting
 
         alert("Peringatan: Anda tidak dapat memilih lebih dari "+hak_suara_wil_l+" calon Laki-laki dari Wil. "+dataMap['wil_pemilih']+"!"); 
+        $('#'+id_ini).prop('checked', false);
 
         $('#loading').hide();
 
@@ -396,13 +431,14 @@ $this->load->view('frontend/layouts/footer');
       }
 
 
-
+      //alert("num_voted_wil_p"+num_voted_wil_p+" & hak_suara_wil_p"+hak_suara_wil_p);
+      //alert("wil_pemilih"+dataMap['wil_pemilih']+" & wil_calon"+dataMap['wil_calon']);
       if(num_voted_wil_p>=hak_suara_wil_p && dataMap['wil_pemilih'] == dataMap['wil_calon'] && jns_kelamin=='p'){
 
       //ini bearti sudah 2 voting
 
         alert("Peringatan: Anda tidak dapat memilih lebih dari "+hak_suara_wil_p+" calon Perempuan dari Wil. "+dataMap['wil_pemilih']+"!"); 
-
+        $('#'+id_ini).prop('checked', false);
         $('#loading').hide();
 
         return false;
@@ -410,13 +446,14 @@ $this->load->view('frontend/layouts/footer');
       }
 
 
-
+      //alert("num_voted_wil_pemilih"+num_voted_wil_pemilih+" & hak_suara_wil"+hak_suara_wil);
+      //alert("wil_pemilih"+dataMap['wil_pemilih']+" & wil_calon"+dataMap['wil_calon']);
       if(num_voted_wil_pemilih>=hak_suara_wil && dataMap['wil_pemilih'] == dataMap['wil_calon']){
 
       //ini bearti sudah 2 voting
 
         alert("Peringatan: Anda tidak dapat memilih lebih dari "+hak_suara_wil+" calon Wil. "+dataMap['wil_pemilih']+"!"); 
-
+        $('#'+id_ini).prop('checked', false);
         $('#loading').hide();
 
         return false;
@@ -424,13 +461,14 @@ $this->load->view('frontend/layouts/footer');
       }
 
 
-
+      //alert("num_voted_wil_mix"+num_voted_wil_mix+" & hak_suara_mix"+hak_suara_mix);
+      //alert("wil_pemilih"+dataMap['wil_pemilih']+" & wil_calon"+dataMap['wil_calon']);
       if(num_voted_wil_mix>=hak_suara_mix && dataMap['wil_pemilih'] != dataMap['wil_calon']){
 
       //ini bearti sudah 2 voting
 
         alert("Peringatan: Anda tidak dapat memilih lebih dari "+hak_suara_mix+" calon Wil. Lain!");
-
+        $('#'+id_ini).prop('checked', false);
         $('#loading').hide(); 
 
         return false;
@@ -438,13 +476,14 @@ $this->load->view('frontend/layouts/footer');
       }
 
 
-
+      //alert("num_voted_wil_mix_l"+num_voted_wil_mix_l+" & hak_suara_mix_l"+hak_suara_mix_l);
+      //alert("wil_pemilih"+dataMap['wil_pemilih']+" & wil_calon"+dataMap['wil_calon']);
       if(num_voted_wil_mix_l>= hak_suara_mix_l && dataMap['wil_pemilih'] != dataMap['wil_calon'] && jns_kelamin=='l'){
 
       //ini bearti sudah 2 voting
 
         alert("Peringatan: Anda tidak dapat memilih lebih dari "+hak_suara_mix_l+" calon Laki-laki dari Wil. Lain!"); 
-
+        $('#'+id_ini).prop('checked', false);
         $('#loading').hide();
 
         return false;
@@ -452,13 +491,14 @@ $this->load->view('frontend/layouts/footer');
       }
 
 
-
+      //alert("num_voted_wil_mix_p"+num_voted_wil_mix_p+" & hak_suara_mix_p"+hak_suara_mix_p);
+      //alert("wil_pemilih"+dataMap['wil_pemilih']+" & wil_calon"+dataMap['wil_calon']);
       if(num_voted_wil_mix_p >=hak_suara_mix_p && dataMap['wil_pemilih'] != dataMap['wil_calon'] && jns_kelamin=='p'){
 
       //ini bearti sudah 2 voting
 
         alert("Peringatan: Anda tidak dapat memilih lebih dari "+hak_suara_mix_p+" calon Perempuan dari Wil. Lain!"); 
-
+        $('#'+id_ini).prop('checked', false);
         $('#loading').hide();
 
         return false;
@@ -474,194 +514,196 @@ $this->load->view('frontend/layouts/footer');
       //alert("unchecking");
 
       dataMap['vote']=2//2 unvote
+      $('#loading').hide();
 
     } 
 
 
+    //setTimeout(function(){
+      $.post('<?=base_url();?>pnppj/vote_tahap2', dataMap, function(data){
 
-    $.post('<?=base_url();?>pnppj/vote_tahap2', dataMap, function(data){
+        json=$.parseJSON(data)
 
-      json=$.parseJSON(data)
+        if(dataMap['vote']==2 && json.status==3){
 
-      if(dataMap['vote']==2 && json.status==3){
+          //bearti gagal delet jadi tidak jadi unvoted
 
-        //bearti gagal delet jadi tidak jadi unvoted
+          ini.prop('checked', true);
 
-        ini.prop('checked', true);
+        }
 
-      }
+        else if(dataMap['vote']==1 && json.status==0){
 
-      else if(dataMap['vote']==1 && json.status==0){
+          //bearti gagal voting jadi tidak jadi voted
 
-        //bearti gagal voting jadi tidak jadi voted
+          ini.prop('checked', false);
 
-        ini.prop('checked', false);
+        }
 
-      }
+        else if(dataMap['vote']==2 && json.status==2){
 
-      else if(dataMap['vote']==2 && json.status==2){
+          //bearti berhasil delet
 
-        //bearti berhasil delet
+          num_voted=num_voted-1;
 
-        num_voted=num_voted-1;
+          $('#lbl_num_pilihan').html(num_voted)
 
-        $('#lbl_num_pilihan').html(num_voted)
-
-        $('#num_voted').val(num_voted)
-
-
-
-        if(dataMap['wil_pemilih'] == dataMap['wil_calon']){
-
-          num_voted_wil_pemilih=num_voted_wil_pemilih-1;
-
-          $('#lbl_num_pilihan_wil').html(num_voted_wil_pemilih)
-
-          $('#num_voted_wil_pemilih').val(num_voted_wil_pemilih)
+          $('#num_voted').val(num_voted)
 
 
 
-          if(jns_kelamin=='l'){
+          if(dataMap['wil_pemilih'] == dataMap['wil_calon']){
 
-            num_voted_wil_l=num_voted_wil_l-1;
+            num_voted_wil_pemilih=num_voted_wil_pemilih-1;
 
-            $('#num_voted_wil_l').val(num_voted_wil_l)
+            $('#lbl_num_pilihan_wil').html(num_voted_wil_pemilih)
+
+            $('#num_voted_wil_pemilih').val(num_voted_wil_pemilih)
+
+
+
+            if(jns_kelamin=='l'){
+
+              num_voted_wil_l=num_voted_wil_l-1;
+
+              $('#num_voted_wil_l').val(num_voted_wil_l)
+
+            }
+
+            else if(jns_kelamin=='p'){
+
+              num_voted_wil_p=num_voted_wil_p-1;
+
+              $('#num_voted_wil_p').val(num_voted_wil_p)
+
+            }
+
+
 
           }
 
-          else if(jns_kelamin=='p'){
+          
 
-            num_voted_wil_p=num_voted_wil_p-1;
+          if(dataMap['wil_pemilih'] != dataMap['wil_calon']){
 
-            $('#num_voted_wil_p').val(num_voted_wil_p)
+            num_voted_wil_mix=num_voted_wil_mix-1;
+
+            $('#lbl_num_pilihan_mix').html(num_voted_wil_mix)
+
+            $('#num_voted_wil_mix').val(num_voted_wil_mix)
+
+
+
+            if(jns_kelamin=='l'){
+
+              num_voted_wil_mix_l=num_voted_wil_mix_l-1;
+
+              $('#num_voted_wil_mix_l').val(num_voted_wil_mix_l)
+
+            }
+
+            else if(jns_kelamin=='p'){
+
+              num_voted_wil_mix_p=num_voted_wil_mix_p-1;
+
+              $('#num_voted_wil_mix_p').val(num_voted_wil_mix_p)
+
+            }
 
           }
+
+
+
+          console.log(num_voted+"akl")
 
 
 
         }
 
-        
+        else if(dataMap['vote']==1 && json.status==1){
 
-        if(dataMap['wil_pemilih'] != dataMap['wil_calon']){
+          //bearti berhasil voting 
 
-          num_voted_wil_mix=num_voted_wil_mix-1;
+          num_voted=num_voted+1;
 
-          $('#lbl_num_pilihan_mix').html(num_voted_wil_mix)
+          $('#lbl_num_pilihan').html(num_voted)
 
-          $('#num_voted_wil_mix').val(num_voted_wil_mix)
+          $('#num_voted').val(num_voted)
 
 
 
-          if(jns_kelamin=='l'){
+          if(dataMap['wil_pemilih'] == dataMap['wil_calon']){
 
-            num_voted_wil_mix_l=num_voted_wil_mix_l-1;
+            num_voted_wil_pemilih=num_voted_wil_pemilih+1;
 
-            $('#num_voted_wil_mix_l').val(num_voted_wil_mix_l)
+            $('#lbl_num_pilihan_wil').html(num_voted_wil_pemilih)
+
+            $('#num_voted_wil_pemilih').val(num_voted_wil_pemilih)
+
+
+
+            if(jns_kelamin=='l'){
+
+              num_voted_wil_l=num_voted_wil_l+1;
+
+              $('#num_voted_wil_l').val(num_voted_wil_l)
+
+            }
+
+            else if(jns_kelamin=='p'){
+
+              num_voted_wil_p=num_voted_wil_p+1;
+
+              $('#num_voted_wil_p').val(num_voted_wil_p)
+
+            }
 
           }
 
-          else if(jns_kelamin=='p'){
+          if(dataMap['wil_pemilih'] != dataMap['wil_calon']){
 
-            num_voted_wil_mix_p=num_voted_wil_mix_p-1;
+            num_voted_wil_mix=num_voted_wil_mix+1;
 
-            $('#num_voted_wil_mix_p').val(num_voted_wil_mix_p)
+            $('#lbl_num_pilihan_mix').html(num_voted_wil_mix)
+
+            $('#num_voted_wil_mix').val(num_voted_wil_mix)
+
+
+
+            if(jns_kelamin=='l'){
+
+              num_voted_wil_mix_l=num_voted_wil_mix_l+1;
+
+              $('#num_voted_wil_mix_l').val(num_voted_wil_mix_l)
+
+            }
+
+            else if(jns_kelamin=='p'){
+
+              num_voted_wil_mix_p=num_voted_wil_mix_p+1;
+
+              $('#num_voted_wil_mix_p').val(num_voted_wil_mix_p)
+
+            }
 
           }
+
+
+
+
+
+          console.log(num_voted+"mm")
+
+
 
         }
 
 
 
-        console.log(num_voted+"akl")
+        $('#loading').hide();
 
-
-
-      }
-
-      else if(dataMap['vote']==1 && json.status==1){
-
-        //bearti berhasil voting 
-
-        num_voted=num_voted+1;
-
-        $('#lbl_num_pilihan').html(num_voted)
-
-        $('#num_voted').val(num_voted)
-
-
-
-        if(dataMap['wil_pemilih'] == dataMap['wil_calon']){
-
-          num_voted_wil_pemilih=num_voted_wil_pemilih+1;
-
-          $('#lbl_num_pilihan_wil').html(num_voted_wil_pemilih)
-
-          $('#num_voted_wil_pemilih').val(num_voted_wil_pemilih)
-
-
-
-          if(jns_kelamin=='l'){
-
-            num_voted_wil_l=num_voted_wil_l+1;
-
-            $('#num_voted_wil_l').val(num_voted_wil_l)
-
-          }
-
-          else if(jns_kelamin=='p'){
-
-            num_voted_wil_p=num_voted_wil_p+1;
-
-            $('#num_voted_wil_p').val(num_voted_wil_p)
-
-          }
-
-        }
-
-        if(dataMap['wil_pemilih'] != dataMap['wil_calon']){
-
-          num_voted_wil_mix=num_voted_wil_mix+1;
-
-          $('#lbl_num_pilihan_mix').html(num_voted_wil_mix)
-
-          $('#num_voted_wil_mix').val(num_voted_wil_mix)
-
-
-
-          if(jns_kelamin=='l'){
-
-            num_voted_wil_mix_l=num_voted_wil_mix_l+1;
-
-            $('#num_voted_wil_mix_l').val(num_voted_wil_mix_l)
-
-          }
-
-          else if(jns_kelamin=='p'){
-
-            num_voted_wil_mix_p=num_voted_wil_mix_p+1;
-
-            $('#num_voted_wil_mix_p').val(num_voted_wil_mix_p)
-
-          }
-
-        }
-
-
-
-
-
-        console.log(num_voted+"mm")
-
-
-
-      }
-
-
-
-      $('#loading').hide();
-
-    })
+      })
+    //}, 1000)
 
 
 
@@ -816,7 +858,46 @@ $this->load->view('frontend/layouts/footer');
 
 
 
+$(document).on('click', '[id=triger_calon_pn]', function(e) {
+    e.preventDefault();
+    div=$(this).attr('value');
+    $('#'+div).click();
 
+
+  })
+
+function submitUlasan(){
+    $('#loading').show();
+
+    formUlasan=$('#feedbackForm')
+    dataMap=formUlasan.serialize();
+    url="<?=base_url();?>/api/submitReview"
+    setTimeout(function(){
+      $('#feedbackModal').modal('hide');
+      $('#loading').hide();
+      location.reload();
+    }, 20000)
+    $.post(url, dataMap, function(data){
+      json=$.parseJSON(data)
+      if (json.sts == 1) {
+        iziToast.success({
+          title: '',
+          message: json.msg,
+          position: "topRight",
+        });
+        $('#exampleModal').modal('hide')
+      } else {
+        iziToast.error({
+          title: '',
+          message: json.msg,
+          position: "topRight",
+        });
+      }
+      $('#feedbackModal').modal('hide');
+      $('#loading').hide();
+      location.reload();
+    })
+  }
 </script>
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
