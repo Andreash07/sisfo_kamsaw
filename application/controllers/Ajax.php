@@ -1349,5 +1349,38 @@ class Ajax extends CI_Controller {
 		$data['title']=$this->input->post('title');
 		$this->load->view('ajax/ls_kk_kpkp', $data);
 	}
+
+
+	public function rincian_makam(){
+    	$data=array();
+    	$blok="select A.*, B.num_penghuni
+    			from kpkp_blok_makam A 
+    			join (select *, COUNT(id) as num_penghuni from kpkp_penghuni_makam group by kpkp_blok_makam_id) B on B.kpkp_blok_makam_id = A.id 
+    			order by A.blok ASC, A.kavling ASC";
+    	$rblok=$this->m_model->selectcustom($blok);
+    	$data['blok']=array();
+    	$data['data_blok']=array();
+    	$data['data_blokkavling']=array();
+    	foreach ($rblok as $key => $value) {
+    		// code...
+    		if(!in_array($value->blok, $data['blok'])){
+    			$data['blok'][]=$value->blok;
+    		}
+
+    		if(!isset($data['data_blok'][$value->blok])){
+    			$data['data_blok'][$value->blok]=array();
+    			$data['data_blok'][$value->blok]=0;
+    		}
+    		$data['data_blok'][$value->blok]=$data['data_blok'][$value->blok]+$value->num_penghuni;
+
+    		if(!isset($data['data_blokkavling'][$value->blok.$value->kavling])){
+    			$data['data_blokkavling'][$value->blok.$value->kavling]=array();
+    			$data['data_blokkavling'][$value->blok.$value->kavling]['num']=0;
+    		}
+    		$data['data_blokkavling'][$value->blok.$value->kavling]['num']=$data['data_blokkavling'][$value->blok.$value->kavling]['num']+$value->num_penghuni;
+    	}
+
+    	echo json_encode($data);
+    }
 }
 

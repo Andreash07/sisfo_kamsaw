@@ -214,6 +214,15 @@
 
                     <li>
 
+                      <a href="<?=base_url();?>pemakaman/rincian_makam" >
+
+                        Statistik Blok Makam
+
+                      </a>
+
+                    </li>
+                    <li>
+
                       <a href="<?=base_url();?>Data_Blok_Makam/" >
 
                         Data Blok Makam
@@ -223,9 +232,9 @@
                     </li>
                     <li>
 
-                      <a href="<?=base_url();?>pemakaman/data_makam">
+                      <a href="<?=base_url();?>pemakaman/laporan_iuran_makam">
 
-                        Data Makam
+                        Laporan Iuran Makam
 
                       </a>
 

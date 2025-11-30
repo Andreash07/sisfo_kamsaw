@@ -1215,6 +1215,46 @@ class pemakaman extends CI_Controller {
     }
 
 
+    function laporan_iuran_makam(){
+    	$data=array();
+    	$kk_id=$this->input->get('id');
+
+    	//defaultnya dalam 1 minggu ini
+    	$dateInWeek=get_dateInWeek(date('N'));
+    	$datef=date('Y-').$dateInWeek['date_from'];
+    	$datet=date('Y-').$dateInWeek['date_to'];
+    	if($this->input->get('datef')){
+    		$datef=$this->input->get('datef');
+    	}
+    	if($this->input->get('datet')){
+    		$datet=$this->input->get('datet');
+    	}
+
+    	
+
+    	$sKK="select B.*, A.blok, A.lokasi, A.kavling, A.tahun_tercover, A.keanggotaan_makam, B.nominal, B.tgl_bayar, B.created_at as tgl_input_pembayaran, C.nama as penghuni_makam
+				from kpkp_blok_makam A
+				join kpkp_bayar_tahunan B on B.kpkp_blok_makam_id = A.id
+				left join (select * from kpkp_penghuni_makam where sts=1) C on A.id = C.kpkp_blok_makam_id
+    			where B.type in (1) && B.tgl_bayar >='".$datef."' && B.tgl_bayar <='".$datet."'
+    			order by B.tgl_bayar DESC, A.blok, A.kavling, B.id ASC;
+    			";
+    	#die(nl2br($sKK));
+    	$iuran_anggota=$this->m_model->selectcustom($sKK); 
+
+    	$data['iuran_anggota']=$iuran_anggota;
+    	$data['dateInWeek']=$dateInWeek;
+    	$data['datef']=$datef;
+    	$data['datet']=$datet;
+    	if($this->input->get('export')=='print'){
+    		$this->load->view('pemakaman/print_laporan_iuran_makam',$data);
+    	}else{
+    		$this->load->view('pemakaman/laporan_iuran_makam',$data);
+    	}
+
+    }
+
+
     function bukadompetkpkp(){
     	$data=array();
     	$recid=$this->input->post('recid');
@@ -1428,6 +1468,56 @@ class pemakaman extends CI_Controller {
 			$json['msg']='Tidak Berhasil update';
 		}
 
+    }
+
+
+    public function rincian_makam(){
+    	$data=array();
+    	$blok="select A.*, B.num_penghuni
+    			from kpkp_blok_makam A 
+    			join (select *, COUNT(id) as num_penghuni from kpkp_penghuni_makam group by kpkp_blok_makam_id) B on B.kpkp_blok_makam_id = A.id 
+    			where A.tahun_tercover is not NULL
+    			order by A.blok ASC, A.kavling ASC";
+
+		$blok="select A.*, B.num_penghuni, C.nama as penghuni_makam, C.asal_gereja
+    			from kpkp_blok_makam A 
+    			left join (select *, COUNT(id) as num_penghuni from kpkp_penghuni_makam group by kpkp_blok_makam_id) B on B.kpkp_blok_makam_id = A.id 
+                left join (select * from kpkp_penghuni_makam where sts=1) C on A.id = C.kpkp_blok_makam_id
+    			where A.tahun_tercover is not NULL
+    			order by A.blok ASC, A.kavling ASC";
+    	$rblok=$this->m_model->selectcustom($blok);
+    	$data['data']['>0tahun']=array();
+    	$data['data']['0tahun']=array();
+    	$data['data']['-3tahun']=array();
+    	$data['data']['-5tahun']=array();
+    	$data['data']['-10tahun']=array();
+    	$data['data']['<-10tahun']=array();
+    	$th_tercover=0;
+    	foreach ($rblok as $key => $value) {
+    		// code...
+    		$th_tercover=$value->tahun_tercover-date('Y');
+    		if($th_tercover == 0){
+    			$data['data']['0tahun'][]=$value;
+    		}
+    		else if($th_tercover > 0){
+    			$data['data']['>0tahun'][]=$value;
+    		}
+    		else if($th_tercover < 0 && $th_tercover > -4){
+    			$data['data']['-3tahun'][]=$value;
+    		}
+    		else if($th_tercover < -3 && $th_tercover > -6){
+    			$data['data']['-5tahun'][]=$value;
+    		}
+    		else if($th_tercover < -5 && $th_tercover > -11){
+    			$data['data']['-10tahun'][]=$value;
+    		}
+    		else if($th_tercover < -10 ){
+    			$data['data']['<-10tahun'][]=$value;
+    		}
+    	}
+    	
+
+    	$this->load->view('pemakaman/rincian_makam', $data);
     }
 }
 
