@@ -15,7 +15,7 @@ $this->load->view('layout/header');
 	              	<div class="clearfix"></div>
 	            </div>
 	            <div class="x_content" id="div_perolehansuara">
-	            	<?php $this->load->view('pemilu/perolehansuara', array('voted'=>$voted, 'NumAngjem'=>$num_angjem));?>
+	            	<?php $this->load->view('pemilu/perolehansuara2', array('voted'=>$voted, 'NumAngjem'=>$num_angjem));?>
 	            </div>
 	          	<div class="clearfix"></div>
 	      	</div>

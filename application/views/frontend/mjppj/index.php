@@ -464,6 +464,18 @@ foreach ($setting as $key => $value) {
 						<label class="text-success" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sedang berlangsung (<?=date('d M y', strtotime($open2));?> - <?=date('d M y', strtotime($close2));?>) .</label>
 					<?php
 					}
+					else if(strtotime($open2) < strtotime(date('Y-m-d H:i:s')) && strtotime($close2) < strtotime(date('Y-m-d H:i:s'))  ){
+					?>
+						<label class="text-danger" style="border-bottom: 1px solid #ededed;">Proses Pemungutan Suara sudah ditutup.</label>
+						<br>
+						<label class="text-warning">Hasil pemilihan akan keluar setelah proses verifikasi selesai dilakukan.</label>
+					<?php
+					}
+					else if(strtotime($open2) <= strtotime(date('Y-m-d H:i:s')) && strtotime($close2) <= strtotime(date('Y-m-d H:i:s'))  ){
+					?>
+						
+					<?php 
+					}
 
 					?>
 

@@ -812,6 +812,18 @@ class Pnppj extends CI_Controller {
                 where A.id >0 && A.status=1 && ((A.sts_anggota = 1  && (A.last_modified_dorkas < '2022-01-27 00:00:00' || A.last_modified_dorkas is null ) && A.created_at < '2022-01-28 00:00:00') || (A.sts_anggota = 0 && A.last_modified_dorkas > '2022-01-10 00:00:00' && A.last_modified_dorkas < '2022-01-27 00:00:00') ) && B.status=1  && A.status_sidi=1 && YEAR(A.tgl_lahir) < 2005
                 order by B.kwg_wil ASC";
 
+        #diatas  yg lama pemilihan tahun 2021, belum dinamis
+
+		$q="select A.kwg_wil, COUNT(A.id) as num_angjem
+
+				from anggota_jemaat A
+
+				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id 
+
+				where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_pn2=1";
+
+
+
 		$r=$this->m_model->selectcustom($q);
 
 		foreach ($r as $key => $value) {
@@ -1005,6 +1017,16 @@ class Pnppj extends CI_Controller {
 				from anggota_jemaat A 
 
 				where (A.tgl_meninggal is null || A.tgl_meninggal ='0000-00-00') && A.sts_anggota=1 && A.status=1 && A.status_sidi=1";
+		#diatas  yg lama pemilihan tahun 2021, belum dinamis
+
+
+		$q="select A.kwg_wil, COUNT(A.id) as num_angjem
+
+				from anggota_jemaat A
+
+				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id 
+
+				where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_pn2=1";
 
 		$r=$this->m_model->selectcustom($q);
 
@@ -1055,6 +1077,17 @@ class Pnppj extends CI_Controller {
 				where (A.tgl_meninggal is null || A.tgl_meninggal ='0000-00-00') && A.sts_anggota=1 && A.status=1 && A.kwg_wil='".$wilayah."' && A.status_sidi=1
 
 				group by A.kwg_wil";
+		#diatas  yg lama pemilihan tahun 2021, belum dinamis
+
+				
+		$q="select A.kwg_wil, COUNT(A.id) as num_angjem
+
+				from anggota_jemaat A
+
+				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id 
+
+				where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_pn2=1 && A.kwg_wil='".$wilayah."' ";
+
 
 		$r=$this->m_model->selectcustom($q);
 
@@ -1174,6 +1207,17 @@ class Pnppj extends CI_Controller {
 
 				where (A.tgl_meninggal is null || A.tgl_meninggal ='0000-00-00') && A.sts_anggota=1 && A.status=1 && A.status_sidi=1";
 
+		#diatas  yg lama pemilihan tahun 2021, belum dinamis
+
+				
+		$q="select A.kwg_wil, COUNT(A.id) as num_angjem
+
+				from anggota_jemaat A
+
+				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id 
+
+				where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_pn2=1  "; #&& A.kwg_wil='".$wilayah."'
+
 		$r=$this->m_model->selectcustom($q);
 
 		$data['NumAngjem']=$r[0]->num_angjem;
@@ -1205,6 +1249,18 @@ class Pnppj extends CI_Controller {
 				from anggota_jemaat A 
 
 				where (A.tgl_meninggal is null || A.tgl_meninggal ='0000-00-00') && A.sts_anggota=1 && A.status=1 && A.status_sidi=1";
+
+		#diatas  yg lama pemilihan tahun 2021, belum dinamis
+
+				
+		$q="select A.kwg_wil, COUNT(A.id) as num_angjem
+
+				from anggota_jemaat A
+
+				join anggota_jemaat_peserta_pemilihan C on C.anggota_jemaat_id = A.id 
+
+				where C.id >0 && C.tahun_pemilihan ='".$this->tahun_pemilihan."' && C.status_peserta_pn2=1  "; #&& A.kwg_wil='".$wilayah."'
+
 
 		$r=$this->m_model->selectcustom($q);
 
@@ -1272,7 +1328,7 @@ class Pnppj extends CI_Controller {
 
 				left join jemaat_terpilih2 D on D.anggota_jemaat_id = A.id && D.tahun_pemilihan='".$tahun."'
 
-				where A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1
+				where A.sts_anggota=1 && A.status=1  && A.status_sidi=1 #&& YEAR(A.tgl_lahir) < 2005 #ini waktu 2021 buat jagain yg belum sidi
 
 				&& A.id in ( select id_calon2 from votes_tahap2 where tahun_pemilihan='".$tahun."' &&  locked = 1)
 
@@ -1304,7 +1360,7 @@ class Pnppj extends CI_Controller {
 
 				left join jemaat_terpilih2 D on D.anggota_jemaat_id = A.id && D.tahun_pemilihan='".$tahun."'
 
-				where A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1
+				where A.sts_anggota=1 && A.status=1 && A.status_sidi=1 #&& YEAR(A.tgl_lahir) < 2005 #ini waktu 2021 buat jagain yg belum sidi
 
 				&& A.id in ( select id_calon2 from votes_tahap2 where tahun_pemilihan='".$tahun."' &&  locked = 1)
 
@@ -1336,7 +1392,7 @@ class Pnppj extends CI_Controller {
 
 				left join jemaat_terpilih2 D on D.anggota_jemaat_id = A.id && D.tahun_pemilihan='".$tahun."'
 
-				where A.sts_anggota=1 && A.status=1 && YEAR(A.tgl_lahir) < 2005 && A.status_sidi=1
+				where A.sts_anggota=1 && A.status=1 && A.status_sidi=1 #&& YEAR(A.tgl_lahir) < 2005 #ini waktu 2021 buat jagain yg belum sidi
 
 				&& A.id in ( select id_calon2 from votes_tahap2 where tahun_pemilihan='".$tahun."' &&  locked = 1)
 
@@ -1431,7 +1487,30 @@ class Pnppj extends CI_Controller {
 
 				group by A.id
 
-                order by voted DESC, last_vote ASC"; //die($q);
+                order by voted DESC, last_vote ASC"; #die(nl2br($q));
+
+        #yg diatas tahun 2021, belum dinamis
+
+        $q="select A.*, B.status_kawin, count(C.id) as voted, C.tahun_pemilihan, D.id as jemaat_terpilih1_id, D.status as status_terpilih, D.note, MAX(C.created_date) as last_vote, F.voted_konvensional, last_vote_konvensional, D.id as id_terpilih
+
+				from anggota_jemaat A 
+
+				left join ags_sts_kawin B on B.id = A.sts_kawin
+
+				left join votes_tahap2 C on C.id_calon2 = A.id && C.tahun_pemilihan='".$tahun."' && C.wil_calon2='".$wil."' && C.locked = 1
+				
+				left join (select id_calon2, count(F.id) as voted_konvensional, MAX(F.created_date) as last_vote_konvensional from votes_tahap2 F where F.tahun_pemilihan='".$tahun."' && F.wil_calon2='".$wil."' && F.locked = 1 && F.sn_surat_suara is not NULL && F.sn_surat_suara !='' group by F.id_calon2) F  on F.id_calon2 = A.id
+
+				left join jemaat_terpilih2 D on D.anggota_jemaat_id = A.id && D.tahun_pemilihan='".$tahun."'
+
+
+				where  A.kwg_wil='".$wil."' && A.id in ( select id_calon2 from votes_tahap2 where tahun_pemilihan='".$tahun."' && wil_calon2='".$wil."' && locked = 1 order by created_date asc)
+
+				group by A.id
+
+                order by voted DESC, last_vote ASC";  #die(nl2br($q));
+
+
 
         $r=$this->m_model->selectcustom($q);
 

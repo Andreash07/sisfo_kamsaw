@@ -606,7 +606,7 @@ class Ajax extends CI_Controller {
 		if($tahun==0){
 			$tahun=date('Y');
 		}
-		$tahun='2022s';
+		//$tahun='2022';
 
 		$sql="select A.id, A.nama_lengkap, A.tgl_meninggal, A.tmpt_meninggal, 'meninggal' as label, A.kwg_wil, B.kwg_nama, A.jns_kelamin
 				from anggota_jemaat A

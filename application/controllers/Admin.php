@@ -38,6 +38,17 @@ class Admin extends CI_Controller {
 
 	 */
 
+	public function  __construct()
+    {
+        parent::__construct();
+
+        if(count($this->session->userdata('userdata')) == 0 || !isset($this->session->userdata('userdata')->id) ){
+        	redirect(base_url());
+        }
+
+
+    }
+
 	public function DataJemaat()
 
 	{

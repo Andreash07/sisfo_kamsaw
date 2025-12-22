@@ -8,8 +8,8 @@ $Tot_masuk=0;
 
 $Tot_banyaksuara=0;
 
-$slot=10;
-#$slot=6;//tahap 2
+#$slot=10;
+$slot=6;//tahap 2
 
 
 

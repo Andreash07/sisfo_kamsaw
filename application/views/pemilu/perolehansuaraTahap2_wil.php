@@ -26,7 +26,7 @@ $this->load->view('layout/header');
               <h2>Wilayah <?=$value->id;?> (Tahap 2)</h2>
               <div class="clearfix"></div>
             </div>
-            <div class="x_content fixed_height_320" style="overflow-y: auto;" id="div_perolehansuaraWilayah<?=$value->id;?>">
+            <div class="x_content fixed_height_390" style="overflow-y: auto; height: 600px;" id="div_perolehansuaraWilayah<?=$value->id;?>">
             	<?php $this->load->view('pemilu/perolehansuaraWilayah', array('voted_wil'=>$voted_wil[$value->id], 'NumAngjem'=>$NumAngjem));?>
             </div>
           	<div class="clearfix"></div>
