@@ -43,6 +43,7 @@ $this->load->view('layout/header');
               <th class='text-center' style="width: 20%;">Iuran Wajib (IDR)</th>
               <th class='text-center' style="width: 20%;">Iuran Sukarela (IDR)</th>
               <th class='text-center' style="width: 20%;">Total Nominal (IDR)</th>
+              <th class='text-center' style="width: 20%;">Kurang/Lebih Bayar (IDR)</th>
 
             </tr>
 
@@ -54,11 +55,21 @@ $this->load->view('layout/header');
         $i=1;
         $total_wajib=0;
         $total_sukarela=0;
+        $total_kuranglebihbayar=0;
+
         foreach ($iuran_anggota as $key => $value) {
           //print_r($value);
           # code...
+          $bulan_tercover='-';
           $total_wajib=$total_wajib+$value['wajib'];
           $total_sukarela=$total_sukarela+$value['sukarela'];
+          $total_kuranglebihbayar=$total_kuranglebihbayar+$value['saldo_akhir'];
+
+          if(isset($num_anggota[$value['keluarga_jemaat_id']])){
+            $total_biayaKPKP=$num_anggota[$value['keluarga_jemaat_id']]->num_kpkp * 5000;
+            $est_tercover=countBulanTercover($total_biayaKPKP, $value['saldo_akhir'], date('Y-m')) ;
+            $bulan_tercover=$est_tercover['month'];
+          }
         ?>
 
             <tr>
@@ -70,6 +81,7 @@ $this->load->view('layout/header');
               <td class='text-center'><?=number_format($value['wajib'],0,",",".");?></td>
               <td class='text-center'><?=number_format($value['sukarela'],0,",",".");?></td>
               <td class='text-center'><?=number_format($value['wajib']+$value['sukarela'],0,",",".");?></td>
+              <td class='text-center'><?=number_format($value['saldo_akhir'],0,",",".");?> <br> (<?=$bulan_tercover;?>)</td>
 
             </tr>
 
@@ -82,6 +94,7 @@ $this->load->view('layout/header');
           <th class="text-center"><?=number_format($total_wajib,0,",",".");?></th>
           <th class="text-center"><?=number_format($total_sukarela,0,",",".");?></th>
           <th class="text-center"><?=number_format($total_wajib+$total_sukarela,0,",",".");?></th>
+          <th class="text-center"><?php //echo number_format($total_kuranglebihbayar,0,",",".");?></th>
 
           </tbody>
 

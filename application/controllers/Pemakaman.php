@@ -1170,14 +1170,17 @@ class pemakaman extends CI_Controller {
 
     	
 
-    	$sKK="select A.kwg_nama, B.*
+    	$sKK="select A.kwg_nama, C.saldo_akhir, B.*
     			from keluarga_jemaat A 
     			join kpkp_bayar_bulanan B on B.keluarga_jemaat_id = A.id
+    			join kpkp_keluarga_jemaat C on C.keluarga_jemaat_id = A.id
     			where B.type in (1,3) && B.tgl_bayar >='".$datef."' && B.tgl_bayar <='".$datet."'
-    			order by B.id ASC
+    			order by B.id DESC
     			";
     	$iuran_anggota=$this->m_model->selectcustom($sKK); //die($sKK);
     	$data_iuran=array();
+    	$ls_keluarga_id=array();
+    	$ls_keluarga_id[]=-10000;
     	foreach ($iuran_anggota as $key => $value) {
     		// code...
     		if(!isset($data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar])){
@@ -1187,7 +1190,10 @@ class pemakaman extends CI_Controller {
     			$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['total']=0;
     			$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['kwg_nama']=$value->kwg_nama;
     			$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['tgl_bayar']=$value->tgl_bayar;
+    			$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['saldo_akhir']=$value->saldo_akhir;
+    			$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['keluarga_jemaat_id']=$value->keluarga_jemaat_id;
     		}
+			$ls_keluarga_id[]=$value->keluarga_jemaat_id;
     		if($value->type==1){
     			$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['wajib']=$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['wajib']+$value->nominal;
     			$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['total']=$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['total']+$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['wajib'];
@@ -1201,7 +1207,17 @@ class pemakaman extends CI_Controller {
 
     	}
 
+    	//get anggota KPKP berdasarkan list kwg yg ada di mutasi laporan agar tidak berat
+    	$s="select kwg_no, count(id) as num_kpkp, sts_kpkp, sts_anggota, status from anggota_jemaat where sts_kpkp=1 && sts_anggota=1 && status=1 && kwg_no in (".implode(',', $ls_keluarga_id).") group by kwg_no";
+    	$qs=$this->m_model->selectcustom($s);
+    	$num_anggota=array();
+    	foreach($qs as $key => $value){
+    		$num_anggota[$value->kwg_no]=$value;
+    	}
 
+
+    	$data['num_anggota']=$num_anggota;
+    	//print_r($num_anggota);
     	$data['iuran_anggota']=$data_iuran;
     	$data['dateInWeek']=$dateInWeek;
     	$data['datef']=$datef;

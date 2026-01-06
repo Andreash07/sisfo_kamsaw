@@ -162,7 +162,7 @@ class Home extends CI_Controller {
 					from anggota_jemaat A 
 					where A.sts_anggota =1 && A.status =1 ".$where41."
 					order by DATE_FORMAT(A.tgl_lahir, '%m-%d') ASC, A.nama_lengkap ASC";
-					//die($query41);
+					#die(nl2br($query41));
 
 			$dataUlangTahun1=$this->m_model->selectcustom($query41);
 			$data['date_name_from1']=$get_dateInWeek['date_name_from'];
@@ -182,6 +182,10 @@ class Home extends CI_Controller {
 					$year=date('y');
 				}
 				$value->year=$year;
+				if(date('Y').'-'.$value->tgl_ulang_tahun == date('Y').'-'.$value->tgl_ulang_tahun){
+
+				}
+
 				$data['ls_date1'][$value->tgl_ulang_tahun." '".$year]=$value;
 				$data['ls_hbd1'][$value->tgl_ulang_tahun." '".$year][]=$value;
 
