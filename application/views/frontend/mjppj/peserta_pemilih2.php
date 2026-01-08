@@ -24,6 +24,49 @@
           $title="Sdr. ";
         }
       }
+
+      $sisa_suara=8;
+      $belum_kunci=0;
+      $i_lock=0;
+      if(isset($pemilih_voting[$value->id])){
+        foreach ($pemilih_voting[$value->id] as $keyVoted => $valueVoted) {
+          // code...
+          #print_r($valueVoted);
+          if($valueVoted->locked != 1){
+            $voted_sts='<label class="text-warning text-sm"> Pengingat: Suara untuk Calon PNT (II) belum di <b>Kunci Pilihan</b> </label>';
+            $belum_kunci++;
+          }
+          else{
+            $i_lock++;
+          }
+
+        }
+
+        $sisa_suara=$sisa_suara-$i_lock-$belum_kunci;
+        if(count($pemilih_voting[$value->id]) <8){
+          $voted_sts='<label class="text-danger text-sm" >';
+          $voted_sts.='Pengingat: Belum menggunakan <b>'.$sisa_suara.' Hak Suara</b>';
+          if($belum_kunci>0){
+            $voted_sts.=' & <b>'.$belum_kunci.' Suara Belum dikunci</b>';
+          }
+          $voted_sts.='!</label>';
+        }
+        else{
+          if($i_lock == 8){
+            $voted_sts='<label class="text-success text-sm"> Hatur Nuhun, Calon PNT (II) pilihan sudah di <b>Kunci Pilihan</b>! </label>';
+          }
+          else{
+            $voted_sts='<label class="text-warning text-sm"> Pengingat: Suara untuk '.$sisa_suara.' Calon Penatua belum di <b>Kunci Pilihan</b> </label>';
+          }
+        }
+      }else{
+        $voted_sts='<label class="text-danger text-sm" >Pengingat: Belum menggunakan <b>'.$sisa_suara.' Hak Suara</b>! </label>';
+      }
+
+      $ulasan_sts=0;
+      if(isset($ulasan[$value->id])){
+        $ulasan_sts=1;
+      }
   ?>
       <div class="col-xl-6 col-md-6 col-sm-12">
         <div class="card card-stats">
@@ -60,6 +103,9 @@
               <h5 class="text-muted mb-0">Pemilihan</h5>
               <div class="divider" style="width: 100%; border-bottom: 1px #8898aa solid; clear: both; margin-bottom: 5px; margin-top:1px;"></div>
               <a id="btn_ajax_modal" href="<?=base_url();?>ajax/list_calon_penatua2/?kwg_wil=<?=$value->kwg_wil;?>&id=<?=$value->id;?>&nama=<?=rawurlencode($title.ucwords($value->nama_lengkap));?>" class="col-12 btn btn-info btn-sm text-nowrap float-left" data-toggle="modal" data-target="#exampleModal" onclick="event.preventDefault();"><i class="ni ni-bullet-list-67"></i><b>Surat Suara Penatua Tahap II</b></a>
+
+
+              <?=$voted_sts;?>
             </p>
           </div>
         </div>
