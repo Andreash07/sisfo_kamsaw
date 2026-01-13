@@ -27,6 +27,13 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
 </div>
 <?php 
   }
+
+  $penghuni_makam1='[belum diaktifkan]';
+  foreach ($penghuni_makam as $key => $value) {
+    if($value->sts==1){
+      $penghuni_makam1=$value->nama;
+    }
+  }
 ?>
 <div class="right_col" role="main">
   <div class="row">
@@ -50,6 +57,14 @@ if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null && $_SERV
               <input
                 class="form-control"
                 value="<?= $makam->blok; ?><?= $makam->kavling; ?>"
+                type="text"
+                disabled>
+            </div>
+            <div style="display:flex; align-items:center;">
+              <label style="margin-bottom: 0; min-width: 10rem;">Penghuni Makam</label>
+              <input
+                class="form-control"
+                value="<?=$penghuni_makam1;?>"
                 type="text"
                 disabled>
             </div>

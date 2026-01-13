@@ -557,16 +557,27 @@ class Data_Blok_Makam extends CI_Controller
       $this->load->view('kpkp/form_perbaikan', $data);
     }
 
-    function submit_perbaikan(){
-      $data=array();
-      $param=array();
-      $recid=$this->input->get('id');
-      foreach ($this->input->post() as $key => $value) {
-        // code...
-        $param[$key]=$value;
-      }
-      $u=$this->m_model->updateas('id', $recid, $param, 'kpkp_bayar_tahunan');
+  function submit_perbaikan(){
+    $data=array();
+    $param=array();
+    $recid=$this->input->get('id');
+    foreach ($this->input->post() as $key => $value) {
+      // code...
+      $param[$key]=$value;
     }
+    $u=$this->m_model->updateas('id', $recid, $param, 'kpkp_bayar_tahunan');
+  }
+
+  function pembayaran_iuran(){
+    $data=array();
+    $param=array();
+
+    $s="select * from kpkp_pokok_iuran_makam where status=1 order by tahun_iuran desc limit 1";
+    $q=$this->m_model->selectcustom($s);
+    foreach ($variable as $key => $value) {
+      // code...
+    }
+  }
 
 
 }
