@@ -574,9 +574,64 @@ class Data_Blok_Makam extends CI_Controller
 
     $s="select * from kpkp_pokok_iuran_makam where status=1 order by tahun_iuran desc limit 1";
     $q=$this->m_model->selectcustom($s);
-    foreach ($variable as $key => $value) {
+    $pokok_iuran=0;
+    $pokok_iuran_non=0;
+    foreach ($q as $key => $value) {
       // code...
+      $pokok_iuran=$value->nilai_iuran_angjem;
+      $pokok_iuran_non=$value->nilai_iuran_non;
     }
+
+    $sblokmakam="SELECT A.id, A.lokasi, A.blok, A.kavling, A.status, A.saldo, A.sts_keanggotaan_makam,  B.sts_keanggotaan, A.deleted, A.jumlah_makam
+                  FROM kpkp_blok_makam A 
+                  left join (select * from kpkp_penghuni_makam where sts=1 && deleted_at is null group by kpkp_blok_makam_id) B on B.kpkp_blok_makam_id = A.id 
+                  where A.deleted=0 && A.jumlah_makam>0 
+                  ORDER BY `B`.`sts_keanggotaan` ASC;";
+    $qblokmakam=$this->m_model->selectcustom($sblokmakam);
+
+    $log_note="\n";
+    $iSuccess=0;
+    $iFailed=0;
+    foreach ($qblokmakam as $key => $value) {
+      // code...
+      //tentukan keanggotaannya dulu untuk pokok iuran
+      $pokok_iuran_makam=0;
+      if($value->sts_keanggotaan_makam ==1){
+        $pokok_iuran_makam=$pokok_iuran*-1;
+      }
+      else if($value->sts_keanggotaan_makam ==2){
+        $pokok_iuran_makam=$pokok_iuran_non*-1;
+      }
+
+      //buat mutasi transaksi
+      $param=array();
+      $param['type']=2;//ini untuk tipe terbit tagihan iuran tahunannya
+      $param['note']='Perawatan Makam ('.date('Y').')';
+      $param['nominal']=$pokok_iuran_makam;
+      $param['created_by']=1;
+      $param['created_at']=date('Y-m-d H:i:s');
+      $param['tgl_bayar']=date('Y-m-d');
+
+      #$i=true;
+      $i=$this->m_model->insertgetid($param, 'kpkp_bayar_tahunan');
+
+      if($i){
+        //update saldo terakhir blok makam
+        $u="update kpkp_blok_makam set saldo=saldo + ".$pokok_iuran_makam." where  id='".$value->id."'";
+        #$log_note.="Berhasil update blok makam ".$value->blok.$value->kavling." sebesar ".$pokok_iuran_makam." Rupiah \n";
+        #echo $u."<br>"; 
+        $qu=$this->m_model->querycustom($u);
+        $iSuccess++;
+      }
+      else{
+        $iFailed++;
+        $log_note.="Gagal update blok makam ".$value->blok.$value->kavling." sebesar ".$pokok_iuran_makam." Rupiah \n";
+      }
+    }
+    $log_note.="\nTotal Success: ".$iSuccess." & Gagal: ".$iFailed." per ".date('l, d M Y H:i:s')."\n<!---------------------------------------------------------------->";
+
+    file_put_contents(FCPATH."log_iuran_makam_tahunan.txt", $log_note, FILE_APPEND);
+    echo nl2br($log_note);
   }
 
 
