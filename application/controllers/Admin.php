@@ -42,7 +42,7 @@ class Admin extends CI_Controller {
     {
         parent::__construct();
 
-        if(count($this->session->userdata('userdata')) == 0 || !isset($this->session->userdata('userdata')->id) ){
+        if(!isset($this->session->userdata('userdata')->id) ){
         	redirect(base_url());
         }
 

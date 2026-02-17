@@ -5,7 +5,10 @@ class Data_Blok_Makam extends CI_Controller
   public function  __construct(){
     parent::__construct();
     if(!isset($this->session->userdata('userdata')->id) || $this->session->userdata('userdata')->id ==false ){
-      redirect(base_url());
+      if($this->uri->segment(3) != 'JKy8912bjka890ask96asjklLAnalsnl'){
+        //itu key ketika curl
+        redirect(base_url());
+      }
     }
   }
 
@@ -569,6 +572,8 @@ class Data_Blok_Makam extends CI_Controller
   }
 
   function pembayaran_iuran(){
+    #echo "asdjkjkalsd";
+   # die('asdasdas');
     $data=array();
     $param=array();
 
@@ -606,6 +611,7 @@ class Data_Blok_Makam extends CI_Controller
       //buat mutasi transaksi
       $param=array();
       $param['type']=2;//ini untuk tipe terbit tagihan iuran tahunannya
+      $param['kpkp_blok_makam_id']=$value->id;
       $param['note']='Perawatan Makam ('.date('Y').')';
       $param['nominal']=$pokok_iuran_makam;
       $param['created_by']=1;
@@ -628,10 +634,10 @@ class Data_Blok_Makam extends CI_Controller
         $log_note.="Gagal update blok makam ".$value->blok.$value->kavling." sebesar ".$pokok_iuran_makam." Rupiah \n";
       }
     }
-    $log_note.="\nTotal Success: ".$iSuccess." & Gagal: ".$iFailed." per ".date('l, d M Y H:i:s')."\n<!---------------------------------------------------------------->";
+    $log_note.="\nTotal Success: ".$iSuccess." & Gagal: ".$iFailed." per ".date('l, d M Y H:i:s')." [Perbaikan]\n<!---------------------------------------------------------------->";
 
     file_put_contents(FCPATH."log_iuran_makam_tahunan.txt", $log_note, FILE_APPEND);
-    echo nl2br($log_note);
+    echo $log_note;
   }
 
 
