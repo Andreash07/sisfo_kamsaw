@@ -1011,6 +1011,58 @@ class pemakaman extends CI_Controller {
 		//print_r($param); die();
 	}
 
+	public function simpan_iuran()
+	{
+		// code...
+		$data=array();
+		$param=array();
+		$keluarga_jemaat_id=$this->input->post('keluarga_jemaat_id');
+		$num_anggota_kpkp=$this->input->post('num_anggota_kpkp');
+		$nominal=str_replace(' ', '',str_replace('.', '', $this->input->post('nominalIuran')));
+		$tgl_bayar=$this->input->post('tgl_bayar');
+		$note=$this->input->post('note');
+		#print_r($this->input->post());die();
+
+		//untuk insert ke kpkp_bayar_bulanan
+		$param['keluarga_jemaat_id']=$keluarga_jemaat_id;;
+		$param['tgl_bayar']=$tgl_bayar;
+		$param['note']=$note;
+		$param['created_at']=date('Y-m-d H:i:s');
+		$param['created_by']=$this->session->userdata('userdata')->id;
+		$param['type']='2'; //ini sebagai tanda tambah tunggakan iuran
+
+		//get id keluarga KPKP dari keluarga jemaat id
+		$qid_kpkp=$this->m_model->selectas('keluarga_jemaat_id', $keluarga_jemaat_id, 'kpkp_keluarga_jemaat');
+		foreach ($qid_kpkp as $key => $value) {
+			// code...
+			$id_kpkp=$value->id;
+			$saldo_akhir=$value->saldo_akhir;
+		}
+
+		$param['nominal']=$nominal;
+		//insert pembayaran
+		$i=$this->m_model->insertgetid($param, 'kpkp_bayar_bulanan');
+
+		if($i){
+		#die($i."asdasd");
+			//ini jika berhasil update saldo pada akun kpkp anggota jemaat
+			//pakai $param['nominal'] karena ada kemungkinan nominal yg dibayakan berubah karena ada potongan sukarela, jadi gunakan yg netto
+			$param2=array();
+			$param2['saldo_akhir']=$saldo_akhir+$param['nominal'];
+			#$param2['last_pembayaran']=$param['tgl_bayar'];
+			$param2['last_update']=date('Y-m-d H:i:s');
+			$u=$this->m_model->updateas('id', $id_kpkp, $param2, 'kpkp_keluarga_jemaat');
+
+		}else{
+			$u=false;
+		}
+
+
+		redirect(base_url().'pemakaman/DataJemaat?edit=true&id='.$keluarga_jemaat_id);
+
+		//print_r($param); die();
+	}
+
 	public function data_blok_makam(){
 
 		$this->load->view('pemakaman/anggota_mantan');

@@ -338,7 +338,7 @@ $this->load->view('layout/header');
 
 			//get_dompet kpkp
 			$dompet_kpkp=$this->m_model->selectas('keluarga_jemaat_id', $dataKK[0]->id, 'kpkp_keluarga_jemaat');
-			$sq="select * from kpkp_bayar_bulanan where keluarga_jemaat_id='".$dataKK[0]->id."' order by tgl_bayar ASC, type ASC,  created_at ASC";
+			$sq="select * from kpkp_bayar_bulanan where keluarga_jemaat_id='".$dataKK[0]->id."' order by tgl_bayar DESC, type ASC,  created_at ASC";
 			$mutasiiuran_kpkp=$this->m_model->selectcustom($sq);
 
 
@@ -631,6 +631,8 @@ $this->load->view('layout/header');
 
                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".modal-pembayaranKPKP">Tambah Pembayaran </button>
 
+                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".modal-tunggakanKPKP">Tambah Iuran </button>
+
                    <a class="btn btn-warning" href="<?=base_url();?>pemakaman/transaksi_mutasi/print?id=<?=$dataKK[0]->id;?>" target="_BLANK">
                    	<i class="fa fa-print"></i> Cetak Rekap
                    </a>
@@ -711,6 +713,52 @@ $this->load->view('layout/header');
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
             <button type="button" class="btn btn-primary" id="btn_simpan_bayar">Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-tunggakanKPKP modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">Tambah Iuran KPKP</h4>
+            <label class="text-danger text-sm">*Boleh dilakukan jika ada kewajiban Iuran yang terlewatkan!</label>
+          </div>
+          <div class="modal-body">
+          	<div class="row">
+            	<form id="form_tambahiuran" action="<?=base_url();?>/pemakaman/simpan_iuran" method="POST">
+                <div class="item form-group col-xs-12">
+                  <label class="text-right control-label col-md-3 col-sm-6 col-xs-6" for="tgl_bayar">Tanggal Iuran<span class="required text-right"></span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <input type="hidden" id="keluarga_jemaat_id_pembayaran" name="keluarga_jemaat_id" value="<?=$id;?>">
+                    <input type="hidden" id="num_anggota_kpkp" name="num_anggota_kpkp" value="<?=$num_anggotaKPKP;?>">
+                    <input type="date" id="tgl_bayar" name="tgl_bayar" required="required" class="form-control col-md-6 col-xs-6">
+                  </div>
+                </div>
+                <div class="item form-group col-xs-12">
+                  <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="nominalIuran">Nominal <span class="required text-right">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <input type="text" id="nominalIuran" name="nominalIuran" required="required" class="form-control" placeholder="Contoh: -<?=number_format($total_biayaKPKP,0,",",".");?>">
+                  </div>
+              	</div>
+              	<div class="item form-group col-xs-12">
+                  <label class="control-label text-right col-md-3 col-sm-6 col-xs-6" for="note">Catatan Iuran <span class="required text-right">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-6">
+                    <input type="text" id="note" name="note" class="form-control" placeholder="ex:Ada Kewajiban iuran yg belum tercatat">
+                  </div>
+              	</div>
+            	</form>
+            </div>
+        	</div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-primary" id="btn_simpan_iuran">Simpan</button>
           </div>
         </div>
       </div>
@@ -807,6 +855,17 @@ $this->load->view('layout/header');
 
 			$(document).on('click touchstart', '[id=btn_simpan_bayar]', function(e){
 				$('#form_pembayaran').submit();
+				//dataMap={}
+				//dataMap=$('#form_bayar').serialize()
+				//url=$('#form_bayar').attr('action') 
+				//console.log(url)
+				//$.post(url, dataMap, function(data){
+
+				//})
+			})
+
+			$(document).on('click touchstart', '[id=btn_simpan_iuran]', function(e){
+				$('#form_tambahiuran').submit();
 				//dataMap={}
 				//dataMap=$('#form_bayar').serialize()
 				//url=$('#form_bayar').attr('action') 
@@ -1553,6 +1612,13 @@ $this->load->view('layout/footer');
     rupiah.value = formatRupiah(this.value, "");
   });
 
+  var rupiah2 = document.getElementById("nominalIuran");
+  rupiah2.addEventListener("keyup", function(e) {
+    // tambahkan 'Rp.' pada saat form di ketik
+    // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
+    rupiah2.value = formatRupiahIuran(this.value, "");
+  });
+
   var rupiah1 = document.getElementById("nominal_sukarela");
   rupiah1.addEventListener("keyup", function(e) {
     // tambahkan 'Rp.' pada saat form di ketik
@@ -1577,6 +1643,36 @@ $this->load->view('layout/footer');
 
     rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
     return prefix == undefined ? rupiah : rupiah ? prefix + " " + rupiah : "";
+  }
+
+
+  function formatRupiahIuran(angka, prefix) {
+    // cek apakah negatif
+	  //const isNegative = angka.toString().includes("-");
+
+	  // hapus semua kecuali digit & koma
+	  var number_string = angka.replace(/[^,\d]/g, ""),
+	      split = number_string.split(","),
+	      sisa = split[0].length % 3,
+	      rupiah = split[0].substr(0, sisa),
+	      ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+	  if (ribuan) {
+	    separator = sisa ? "." : "";
+	    rupiah += separator + ribuan.join(".");
+	  }
+
+	  rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+
+	  let hasil = prefix == undefined
+	    ? rupiah
+	    : rupiah
+	      ? prefix + " " + rupiah
+	      : "";
+
+	  // tambahkan minus di depan jika negatif
+	      //isNegative && 
+	  return hasil ? "-" +prefix+ hasil : hasil;
   }
 
   function formatRupiah1(angka1, prefix1) {
