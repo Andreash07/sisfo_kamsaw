@@ -1934,5 +1934,16 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
         echo "</ol>";
 
     }
+
+    public function sync_datasinode(){
+        $data=array();
+        $data_sinode=array();
+        $data_internal=array();
+
+        $sinternal="SELECT A.*
+                    FROM `anggota_jemaat` A 
+                    where A.sts_anggota=1";
+        $qinternal;
+    }
 }
 
