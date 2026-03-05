@@ -1940,10 +1940,30 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
         $data_sinode=array();
         $data_internal=array();
 
-        $sinternal="SELECT A.*
-                    FROM `anggota_jemaat` A 
+        $sinternal="SELECT B.kwg_no, A.* 
+                    FROM anggota_jemaat A
+                    join keluarga_jemaat B on B.id = A.kwg_no
                     where A.sts_anggota=1";
-        $qinternal;
+        $qinternal=$this->m_model->selectcustom($sinternal);
+
+        #foreach ($qinternal as $key => $value) {
+            // code...
+            #$data[$value->no_anggota]=$value;
+        #}
+
+
+        $ssinode="select * from anggota_jemaat_sinode";
+        $qsinode=$this->m_model->selectcustom($ssinode);
+        foreach ($qinternal as $key => $value) {
+            $data_sinode[$value->No_Anggota]=$value;
+        }
+
+        $data['data_internal']=$qinternal;
+        $data['data_sinode']=$data_sinode;
+        #return $data;
+        $this->load->view('tools/sync_datasinode', $data);
+
+
     }
 }
 
