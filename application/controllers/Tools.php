@@ -1940,10 +1940,11 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
         $data_sinode=array();
         $data_internal=array();
 
-        $sinternal="SELECT B.kwg_no, A.* 
+        $sinternal="SELECT B.kwg_no, C.hub_keluarga, A.*
                     FROM anggota_jemaat A
                     join keluarga_jemaat B on B.id = A.kwg_no
-                    where A.sts_anggota=1";
+                    join ags_hub_kwg C on C.idhubkel = A.hub_kwg
+                    where A.sts_anggota=1 && A.status=1";
         $qinternal=$this->m_model->selectcustom($sinternal);
 
         #foreach ($qinternal as $key => $value) {

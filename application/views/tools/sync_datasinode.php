@@ -111,6 +111,22 @@
           if(isset($data_sinode[$value->no_anggota])){
             $datasinode=$data_sinode[$value->no_anggota];
           }
+
+          $baptis_sidi='Tidak Diketahui'; #ini defaultnya
+          if($value->status_baptis==1){
+            $baptis_sidi='Baptis';
+          }
+          if($value->status_sidi==1){
+            $value->status_sidi='SIDI';
+          }
+
+          $jns_kelamin='Tidak Diketahui';
+          if($value->jns_kelamin=='L'){
+            $jns_kelamin='Pria';
+          }
+          if($value->jns_kelamin=='P'){
+            $jns_kelamin='Wanita';
+          }
       ?>
           <tr>
             <td><?=$datasinode->Kode_Data;?></td>
@@ -118,7 +134,37 @@
             <td>Teritorial <?=$value->kwg_wil;?></td>
             <td><?=$value->no_anggota;?></td>
             <td><?=$value->kwg_no;?></td>
+            <td><?=$value->hub_keluarga;?></td>
             <td><?=$value->nama_lengkap;?></td>
+            <td><?=check_tgl_00($value->tgl_attestasi_masuk);?></td>
+            <td><?=$value->pindah_dari;?></td>
+            <td><!--No Surat Masuk--></td>
+            <td><?=check_tgl_00($value->tgl_attestasi_keluar);?></td>
+            <td><!--No Keluar Tujuan--></td>
+            <td><!--No Surat Keluar--></td>
+            <td><?=$baptis_sidi;?></td>
+            <td><?=$value->tmpt_baptis;?></td>
+            <td><?=$value->tgl_baptis;?></td>
+            <td><!--Baptis Pendeta--></td>
+            <td><?=$value->tmpt_sidi;?></td>
+            <td><?=$value->tgl_sidi;?></td>
+            <td><!--SIDI Pendeta--></td>
+            <td><?=$jns_kelamin;?></td>
+            <td><?=$value->golongandarah;?></td>
+            <td><!--Rhesus Darah-->Tidak Diketahui</td>
+            <td><?=$value->tmpt_lahir;?></td>
+            <td><?=$datasinode['Kota_Mati'];?></td>
+            <td><?=$datasinode['Tanggal_Mati'];?></td>
+            <td><?=$datasinode['Sebab_Mati'];?></td>
+            <td><?=$datasinode['Alamat'];?></td>
+            <td><?=$datasinode['Kode_Pos'];?></td>
+            <td><?=$datasinode['RT'];?></td>
+            <td><?=$datasinode['RW'];?></td>
+            <td><?=$datasinode['Propinsi'];?></td>
+            <td><?=$datasinode['Kota_Kabupaten'];?></td>
+            <td><?=$datasinode['Kecamatan'];?></td>
+            <td><?=$datasinode['Kelurahan_Desa'];?></td>
+            <td><?=$datasinode['Status_Nikah'];?></td>
           </tr>
       <?php 
         }

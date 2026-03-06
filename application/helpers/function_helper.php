@@ -1408,3 +1408,15 @@ function countBulanTercover($total_biayaKPKP, $saldo_akhir, $current_Month){
     }
     return $data;
 }
+
+function check_tgl_00($value='')
+{
+    // code...
+    if($value=='0000-00-00'){
+        $value='';
+    }
+    else if($value=='-'){
+        $value='';
+    }
+    return $value;
+}
