@@ -1940,10 +1940,11 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
         $data_sinode=array();
         $data_internal=array();
 
-        $sinternal="SELECT B.kwg_no, C.hub_keluarga, A.*
+        $sinternal="SELECT B.kwg_no as no_keluarga, C.hub_keluarga, A.*, '0000-00-00' as tgl_attestasi_keluar, D.status_kawin
                     FROM anggota_jemaat A
                     join keluarga_jemaat B on B.id = A.kwg_no
                     join ags_hub_kwg C on C.idhubkel = A.hub_kwg
+                    join ags_sts_kawin D on D.id = A.sts_kawin
                     where A.sts_anggota=1 && A.status=1";
         $qinternal=$this->m_model->selectcustom($sinternal);
 
@@ -1955,7 +1956,7 @@ order by B.kwg_wil, B.kwg_nama, A.no_urut, A.hub_kwg ASC";
 
         $ssinode="select * from anggota_jemaat_sinode";
         $qsinode=$this->m_model->selectcustom($ssinode);
-        foreach ($qinternal as $key => $value) {
+        foreach ($qsinode as $key => $value) {
             $data_sinode[$value->No_Anggota]=$value;
         }
 
