@@ -1672,7 +1672,7 @@ class Pnppj extends CI_Controller {
 
 
 
-		$check=$this->m_model->selectas('anggota_jemaat_id', $param['anggota_jemaat_id'], 'jemaat_terpilih2');
+		$check=$this->m_model->selectas2('tahun_pemilihan', $param['tahun_pemilihan'],'anggota_jemaat_id', $param['anggota_jemaat_id'], 'jemaat_terpilih2');
 
 		if(count($check)>0){
 
@@ -1732,7 +1732,7 @@ class Pnppj extends CI_Controller {
 
 		$param['created_by']=$this->session->userdata('userdata')->username;
 
-		$check=$this->m_model->selectas('anggota_jemaat_id', $param['anggota_jemaat_id'], 'jemaat_terpilih2');
+		$check=$this->m_model->selectas2('tahun_pemilihan', $param['tahun_pemilihan'],'anggota_jemaat_id', $param['anggota_jemaat_id'], 'jemaat_terpilih2');
 
 		if(count($check)>0){
 

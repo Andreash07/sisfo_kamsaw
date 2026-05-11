@@ -3,7 +3,7 @@ $percent=0;
 $Tot_percent=0;
 $Tot_masuk=0;
 $Tot_banyaksuara=0;
-$slot=43;
+$slot=44;
 
 ?>
 <table class="table table-striped">
