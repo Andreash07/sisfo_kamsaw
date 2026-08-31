@@ -97,6 +97,14 @@ class Report extends CI_Controller {
 
 		}
 
+		if($this->input->get('sts_kawin')){
+
+			$param_active.="sts_kawin=".$this->input->get('sts_kawin')."&";
+
+			$where.=" && lower(A.sts_kawin) like '".$this->input->get('sts_kawin')."'";
+
+		}
+
 
 
 		if($this->input->get('alamat')){

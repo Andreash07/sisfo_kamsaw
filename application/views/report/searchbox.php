@@ -16,13 +16,25 @@
     <div class="form-group col-md-6 col-xs-12">
         <label class="control-label col-md-3 col-sm-3 col-xs-12">Jenis Kelamin<span class="required">*</span>
         </label>
-	  	<div class="col-md-9 col-sm-9 col-xs-12">
+	  	<div class="col-md-3 col-sm-3 col-xs-12">
 	      	<select class="form-control" id="jns_kelamin" name="jns_kelamin">
 	          	<option value='' disabled selected>Semua</option>
 	        	<option value='L' <?php if(strtolower($this->input->get('jns_kelamin'))=='l'){echo "selected";};?>>Laki-laki</option>
 	         	<option value='P' <?php if(strtolower($this->input->get('jns_kelamin'))=='p'){echo "selected";};?>>Perempuan</option>
 	        </select>
 	    </div>
+
+      <label class="control-label col-md-3 col-sm-3 col-xs-12">Status Nikah<span class="required">*</span>
+        </label>
+      <div class="col-md-3 col-sm-3 col-xs-12">
+          <select class="form-control" id="sts_kawin" name="sts_kawin">
+              <option value='' disabled selected>Semua</option>
+            <option value='1' <?php if(strtolower($this->input->get('sts_kawin'))=='1'){echo "selected";};?>>Belum</option>
+            <option value='2' <?php if(strtolower($this->input->get('sts_kawin'))=='2'){echo "selected";};?>>Sudah</option>
+            <option value='3' <?php if(strtolower($this->input->get('sts_kawin'))=='3'){echo "selected";};?>>Janda</option>
+            <option value='4' <?php if(strtolower($this->input->get('sts_kawin'))=='4'){echo "selected";};?>>Duda</option>
+          </select>
+      </div>
     </div>
     <div class="form-group col-md-6 col-xs-12">
     	<label class="control-label col-md-3 col-sm-3 col-xs-12">Wilayah<span class="required">*</span></label>

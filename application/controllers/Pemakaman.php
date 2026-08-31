@@ -1250,6 +1250,9 @@ class pemakaman extends CI_Controller {
     			$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['wajib']=$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['wajib']+$value->nominal;
     			$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['total']=$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['total']+$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['wajib'];
     		}else if($value->type==3){
+    			if(!is_numeric($value->nominal)){
+    				$value->nominal=0;
+    			}
     			$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['sukarela']=$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['sukarela']+$value->nominal;
     			$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['total']=$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['total']+$data_iuran[$value->keluarga_jemaat_id.'_'.$value->tgl_bayar]['sukarela'];
     		}
