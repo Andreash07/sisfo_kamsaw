@@ -204,11 +204,16 @@ $this->load->view('layout/footer');
 
 <script type="text/javascript">
 
-	$(document).on('click', '[id=btn_exec_print]', function(e){
+	$(document).on('click', '[id=btn_exec_generate]', function(e){
 		$('#form_field').submit();
 	})
 
 	$(document).on('click', '[id=btn_checkFieldPrint]', function(e){
+		e.preventDefault()
+		$('#modal_checkField').modal('show');
+	})
+
+	$(document).on('click', '[id=btn_checkFieldXlsx]', function(e){
 		e.preventDefault()
 		$('#modal_checkField').modal('show');
 	})

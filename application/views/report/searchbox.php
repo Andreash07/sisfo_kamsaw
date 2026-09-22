@@ -97,6 +97,7 @@
     <div class="form-group col-xs-12">
       <!--<a class="btn btn-warning pull-left" href="#modal_checkField" id="btn_checkFieldPrint"><i class="fa fa-print"></i> Print</a>-->
       <a class="btn btn-warning pull-left" href="<?=base_url();?>report/anggota_jemaat/?<?=$_SERVER['QUERY_STRING'];?>&export=print" target="_BLANK"><i class="fa fa-print"></i> Print</a>
+      <button class="btn btn-success pull-left" id="btn_checkFieldXlsx" data-toggle="modal" data-target="#modal_checkField"><i class="fa fa-file-excel-o" ></i> Excel</button>
     	<input type="submit" class="btn btn-primary pull-right" value="Cari" name="search">
     </div>
 </form>
@@ -110,8 +111,33 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-xs-12">
-            <form id="form_field" action="<?=base_url();?>report/anggota_jemaat/?<?=$_SERVER['QUERY_STRING'];?>&export=print" method="POST" target="_BLANK">
+            <form id="form_field" action="<?=base_url();?>report/anggota_jemaat/?<?=$_SERVER['QUERY_STRING'];?>&export=excel" method="POST" target="_BLANK">
               <input name="param" type="hidden">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="field[]" value="kwg_no#Nomor Induk Keluarga" checked readonly>Nomor Induk Keluarga
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="field[]" value="kwg_nama#Keluarga" checked readonly>Keluarga
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="field[]" value="no_anggota#Nomor Induk Jemaat" checked readonly>Nomor Induk Jemaat
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="field[]" value="nama_lengkap#Nama Lengkap" checked readonly>Nama Lengkap
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="field[]" value="kwg_wil#Teritorial" checked readonly>Teritorial
+                </label>
+              </div>
               <div class="checkbox">
                 <label>
                   <input type="checkbox" name="field[]" value="tgl_lahir#Tanggal Lahir">Tanggal Lahir
@@ -162,7 +188,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <div class="btn btn-warning pull-left" id="btn_exec_print" target="_BLANK"><i class="fa fa-print"></i> Print</div>
+        <div class="btn btn-warning pull-left" id="btn_exec_generate" target="_BLANK"><i class="fa fa-print"></i> Export</div>
       </div>
     </div>
   </div>

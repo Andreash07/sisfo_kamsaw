@@ -431,6 +431,26 @@ class Report extends CI_Controller {
 
 						break;
 
+					case 'excel':
+
+					//die("asdasd");	
+
+						// code...
+						$data['field']=array();
+						$data['title_field']=array();
+						if($this->input->post('field')){
+							foreach ($this->input->post('field') as $key => $value) {
+								// code...
+								$rawField=explode('#', $value);
+								$data['field'][]=$rawField[0];
+								$data['title_field'][]=$rawField[1];
+							}
+						}
+						//$data=null;
+						$this->export_excel($data);
+
+						break;
+
 					default:
 
 						// code...
@@ -485,6 +505,39 @@ class Report extends CI_Controller {
 
 		}
 
+	}
+
+
+	private function export_excel($data=null){
+		require_once FCPATH . 'vendor/autoload.php';
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+
+		if($data==null){
+			$sheet = $spreadsheet->getActiveSheet();
+
+	        $sheet->setCellValue('A1', 'TEST EXCEL');
+	        $sheet->setCellValue('A2', 'PHP Version');
+	        $sheet->setCellValue('B2', PHP_VERSION);
+
+	        $sheet->setCellValue('A3', 'Library');
+	        $sheet->setCellValue('B3', 'PhpSpreadsheet 1.30.7');
+
+	        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+		}else{
+
+		}
+
+		$filename = 'test_excel.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+
+        exit;
 	}
 
 }
