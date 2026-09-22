@@ -295,13 +295,15 @@ class Report extends CI_Controller {
 
 
 
-		$sql="select A.*, B.kwg_nama, B.kwg_alamat, C.hub_keluarga, B.id as kwg_id, B.kwg_telepon
+		$sql="select A.*, B.kwg_nama, B.kwg_alamat, C.hub_keluarga, B.id as kwg_id, B.kwg_telepon, B.kwg_no as NIJ, TIMESTAMPDIFF(YEAR, tgl_lahir, CURDATE()) AS umur_db, D.kd_group as group_pelayanan
 
 				from anggota_jemaat A
 
 				join keluarga_jemaat B on B.id = A.kwg_no
 
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
+
+				left join ags_group_data D on D.id = A.kd_group_id
 
 				where A.id >0 && A.status=1 ".$where.""; //A.status=1 bearti tidak pernah di delete //&& A.sts_anggota='".$sts_anggota."' 
 
@@ -446,7 +448,7 @@ class Report extends CI_Controller {
 								$data['title_field'][]=$rawField[1];
 							}
 						}
-						//$data=null;
+						#$data=null;
 						$this->export_excel($data);
 
 						break;
@@ -507,6 +509,21 @@ class Report extends CI_Controller {
 
 	}
 
+	private function colomn_excel($index=0){
+		$result = [];
+		foreach (range('A', 'Z') as $key => $letter) {
+		    $result[$key+1] = $letter;
+		}
+
+		for ($i = 0; $i <= 26; $i++) {
+		    for ($j = 0; $j < 1; $j++) {
+		        $result[$i+27] = chr(65 + $i) . chr(65 + $j);
+		    }
+		}
+		#print_r($result); die();
+
+		return $result;
+	}
 
 	private function export_excel($data=null){
 		require_once FCPATH . 'vendor/autoload.php';
@@ -526,16 +543,48 @@ class Report extends CI_Controller {
 	        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
 		}else{
+			$sheet = $spreadsheet->getActiveSheet();
+			$kolom_xls=$this->colomn_excel();
+			foreach ($data['title_field'] as $key => $value) {
+				# code...
+				$kolom_index=$key+1;
+	        	$sheet->setCellValue($kolom_xls[$kolom_index].'1', $value);
+			}
+			foreach ($data['data_jemaat'] as $key => $value) {
+				$row_index=$key+2;
+				foreach ($data['field'] as $keycell => $cell) {
+					# code...
+					$kolom_index=$keycell+1;
+		        	$sheet->setCellValueExplicit($kolom_xls[$kolom_index].$row_index,
+		        		(string)$value->$cell,
+		        		\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+				}
+			}
 
+
+			#print_r($data);
+			#print_r();
+			#die();
+	        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 		}
 
-		$filename = 'test_excel.xlsx';
+		$filename = 'Report Jemaat GKP Kampung Sawah-'.date('dMY-His').'.xlsx';
+		$tempFile = tempnam(sys_get_temp_dir(), 'excel_');
+		$writer->save($tempFile);
+
+		$fileSize = filesize($tempFile);
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+        header('Content-Length: ' . $fileSize);
         header('Cache-Control: max-age=0');
+        header('Pragma: public');
+        readfile($tempFile);
 
-        $writer->save('php://output');
+		// Hapus temporary file
+		unlink($tempFile);
+
+        //$writer->save('php://output');
 
         exit;
 	}

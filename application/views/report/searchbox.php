@@ -115,7 +115,7 @@
               <input name="param" type="hidden">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" name="field[]" value="kwg_no#Nomor Induk Keluarga" checked readonly>Nomor Induk Keluarga
+                  <input type="checkbox" name="field[]" value="NIJ#Nomor Induk Keluarga" checked readonly>Nomor Induk Keluarga
                 </label>
               </div>
               <div class="checkbox">
@@ -140,12 +140,17 @@
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" name="field[]" value="tgl_lahir#Tanggal Lahir">Tanggal Lahir
+                  <input type="checkbox" name="field[]" value="tgl_lahir#Tanggal Lahir" checked >Tanggal Lahir
                 </label>
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" name="field[]" value="tmpt_sidi#Tempat Baptis">Tempat Sidi
+                  <input type="checkbox" name="field[]" value="umur_db#Umur" checked >Umur
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="field[]" value="tmpt_sidi#Tempat Sidi">Tempat Sidi
                 </label>
               </div>
               <div class="checkbox">
@@ -180,7 +185,17 @@
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" name="field[]" value="kd_group_id#Kategory Pelayanan">Kategory Pelayanan
+                  <input type="checkbox" name="field[]" value="golongandarah#Gol. Darah">Golongan Darah
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="field[]" value="pndk_akhir#Gol. Darah">Pendidikan Terakhir
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="field[]" value="group_pelayanan#Kategory Pelayanan">Kategory Pelayanan
                 </label>
               </div>
             </form>
