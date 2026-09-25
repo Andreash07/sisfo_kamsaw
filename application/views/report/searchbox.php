@@ -97,8 +97,8 @@
     <div class="form-group col-xs-12">
       <!--<a class="btn btn-warning pull-left" href="#modal_checkField" id="btn_checkFieldPrint"><i class="fa fa-print"></i> Print</a>-->
       <a class="btn btn-warning pull-left" href="<?=base_url();?>report/anggota_jemaat/?<?=$_SERVER['QUERY_STRING'];?>&export=print" target="_BLANK"><i class="fa fa-print"></i> Print</a>
+    	<button type="submit" class="btn btn-primary pull-right" value="Cari" name="search">Search</button>
       <button class="btn btn-success pull-left" id="btn_checkFieldXlsx" data-toggle="modal" data-target="#modal_checkField"><i class="fa fa-file-excel-o" ></i> Excel</button>
-    	<input type="submit" class="btn btn-primary pull-right" value="Cari" name="search">
     </div>
 </form>
 
@@ -203,7 +203,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <div class="btn btn-warning pull-left" id="btn_exec_generate" target="_BLANK"><i class="fa fa-print"></i> Export</div>
+        <div class="btn btn-warning pull-left" id="btn_exec_generate"><i class="fa fa-print"></i> Export</div>
       </div>
     </div>
   </div>

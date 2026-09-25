@@ -206,6 +206,7 @@ $this->load->view('layout/footer');
 
 	$(document).on('click', '[id=btn_exec_generate]', function(e){
 		$('#form_field').submit();
+		$('#modal_checkField').modal('hide');
 	})
 
 	$(document).on('click', '[id=btn_checkFieldPrint]', function(e){

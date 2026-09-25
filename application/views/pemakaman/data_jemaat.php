@@ -293,6 +293,7 @@ $this->load->view('layout/header');
 
 					<a class="btn btn-warning pull-left" href="<?=base_url();?>Pemakaman/anggota_jemaat">Keluar</a>
 
+					<a class="btn btn-info pull-right" href="<?=base_url();?>Pdf/SuratPemberitahuanIuranWajibKPKP/<?=md5('*(2791bjaksdk'.$this->input->get('id'));?>" intarget="_BLANK"><i class="fa fa-users"></i>&nbsp;&nbsp;Surat Pembertahuan</a>
 					<a class="btn btn-info pull-right" href="<?=base_url();?>admin/DataJemaat?edit=true&id=<?=$this->input->get('id');?>" intarget="_BLANK"><i class="fa fa-users"></i>&nbsp;&nbsp;Kartu Keluarga</a>
 
 					<!--<input type="submit" class="btn btn-default pull-right" id="SaveEditKeluarga" name="SaveEditKeluarga" value="Update">
