@@ -1590,5 +1590,28 @@ class pemakaman extends CI_Controller {
 
     	$this->load->view('pemakaman/rincian_makam', $data);
     }
+
+
+    function laporan_saldo_anggota_kpkp(){
+    	$data=array();
+    	$where="";
+    	$s="select A.id, A.keluarga_jemaat_id, B.kwg_nama, B.kwg_wil, COUNT(C.id) + COUNT(D.id) as num_anggota_kpkp, A.saldo_akhir, A.saldo_akhir_sukarela, A.last_pembayaran
+    			from kpkp_keluarga_jemaat A 
+    			join keluarga_jemaat B on B.id = A.keluarga_jemaat_id 
+    			left join (select * from anggota_jemaat where sts_kpkp=1 && status=1 && sts_anggota=1 && kwg_no_kpkp = 0) C on C.kwg_no = A.keluarga_jemaat_id 
+    			left join (select * from anggota_jemaat where sts_kpkp=1 && status=1 && sts_anggota=1 && kwg_no_kpkp > 0) D on D.kwg_no_kpkp = A.keluarga_jemaat_id #ini khusus nempel sama keluarga lain
+    			where A.keluarga_jemaat_id > 0 ".$where."
+    			group by A.keluarga_jemaat_id
+    			order by B.kwg_wil, B.kwg_nama ASC";
+		//die(nl2br($s));
+    	$q=$this->m_model->selectcustom($s);
+
+    	$data['TotalOfData']=COUNT($q);
+    	$data['data_jemaat']=$q;
+    	$data['pokok_iuran']=5000;
+    	$data['row']=1;
+
+    	$this->load->view('pemakaman/laporan_saldo_anggota_kpkp', $data);
+    }
 }
 
