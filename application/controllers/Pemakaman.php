@@ -1595,23 +1595,177 @@ class pemakaman extends CI_Controller {
     function laporan_saldo_anggota_kpkp(){
     	$data=array();
     	$where="";
+    	$field_order="";
+    	$param_active="?";
+    	$order_by=" ASC ";
+        $numLimit=50;
+        $numStart=0;
+        $title_file="Laporan Saldo Anggota KPKP - ";
+    	$data['kwg_wil']="";
+		
+		if($this->input->get('nama_anggota')){
+
+			$param_active.="nama_anggota=".rawurldecode($this->input->get('nama_anggota'))."&";
+
+			$where.=" && lower(B.kwg_nama) like '%".rawurldecode($this->input->get('nama_anggota'))."%'";
+
+        	$title_file.=" Kel. ".$this->input->get('nama_anggota')." - ";
+		}
+
+        if($this->input->get('kwg_wil')){
+
+			$param_active.="kwg_wil=".$this->input->get('kwg_wil')."&";
+
+			$where.=" && B.kwg_wil ='".$this->input->get('kwg_wil')."'";
+        	
+        	$title_file.="Ter".$this->input->get('kwg_wil')." - ";
+
+        	$data['kwg_wil']=$this->input->get('kwg_wil');
+
+		}
+
+
+		if($this->input->get('saldo') == '-1'){
+
+			$param_active.="saldo=".rawurldecode($this->input->get('saldo'))."&";
+
+			$where.=" && A.saldo_akhir <= ".$this->input->get('saldo');
+
+        	$title_file.="Tunggakan - ";
+
+		}
+		else if($this->input->get('saldo') == '0'){
+
+			$param_active.="saldo=".rawurldecode($this->input->get('saldo'))."&";
+
+			$where.=" && A.saldo_akhir >= ".$this->input->get('saldo');
+        	$title_file.="Lunas - ";
+
+		}
+    	$title_file.='periode '.date('M Y').' - '.date('dmY His');
+    	$data['title_file']=$title_file;
+
     	$s="select A.id, A.keluarga_jemaat_id, B.kwg_nama, B.kwg_wil, COUNT(C.id) + COUNT(D.id) as num_anggota_kpkp, A.saldo_akhir, A.saldo_akhir_sukarela, A.last_pembayaran
     			from kpkp_keluarga_jemaat A 
-    			join keluarga_jemaat B on B.id = A.keluarga_jemaat_id 
+    			join (select A.* from keluarga_jemaat A join anggota_jemaat B on B.kwg_no = A.id where B.status=1 && B.sts_anggota=1 && B.sts_kpkp=1 group by A.id) B on B.id = A.keluarga_jemaat_id 
     			left join (select * from anggota_jemaat where sts_kpkp=1 && status=1 && sts_anggota=1 && kwg_no_kpkp = 0) C on C.kwg_no = A.keluarga_jemaat_id 
     			left join (select * from anggota_jemaat where sts_kpkp=1 && status=1 && sts_anggota=1 && kwg_no_kpkp > 0) D on D.kwg_no_kpkp = A.keluarga_jemaat_id #ini khusus nempel sama keluarga lain
     			where A.keluarga_jemaat_id > 0 ".$where."
-    			group by A.keluarga_jemaat_id
-    			order by B.kwg_wil, B.kwg_nama ASC";
-		//die(nl2br($s));
-    	$q=$this->m_model->selectcustom($s);
+    			";
+    	$group_by=" group by A.keluarga_jemaat_id ";
+    	$field_order="  order by B.kwg_wil, B.kwg_nama";
 
+        if($this->input->get('export')){
+        	$field_order=" order by B.kwg_wil, B.kwg_nama";
+        	if($this->input->get('sort') == '-1'){
+        		$param_active.="sort=".rawurldecode($this->input->get('sort'))."&";
+				$field_order="order by A.saldo_akhir ";
+				$order_by=" ASC ";
+			}
+			else if($this->input->get('sort') == '0'){
+				$param_active.="sort=".rawurldecode($this->input->get('sort'))."&";
+				$field_order="order by A.saldo_akhir ";
+				$order_by=" DESC ";
+			}
+        }
+        else {
+        	//view biasa bukan export
+        	if($this->input->get('sort') == '-1'){
+        		$param_active.="sort=".rawurldecode($this->input->get('sort'))."&";
+				$field_order="order by A.saldo_akhir ";
+				$order_by=" ASC ";
+			}
+			else if($this->input->get('sort') == '0'){
+				$param_active.="sort=".rawurldecode($this->input->get('sort'))."&";
+				$field_order="order by A.saldo_akhir ";
+				$order_by=" DESC ";
+			}
+        }
+
+
+        if(!$this->input->get('page')){
+            $page=1;
+            $numStart=($numLimit*$page)-$numLimit;
+        }
+        else{
+            $page=$this->input->get('page');
+            $numStart=($numLimit*$page)-$numLimit;
+        }
+
+		
+
+
+        $data['page']=$page;
+
+        $data['numStart']=$numStart;
+
+        $limit='LIMIT '.$numStart.', '.$numLimit;
+
+		#die(nl2br($s.$group_by.$field_order.$order_by));
+    	$q=$this->m_model->selectcustom($s.$group_by.$field_order.$order_by);
     	$data['TotalOfData']=COUNT($q);
-    	$data['data_jemaat']=$q;
+
+    	if(!$this->input->get('page')){
+
+            $page_active=1;
+
+        }else{
+
+            $page_active=$this->input->get('page');
+
+        }
+
+
     	$data['pokok_iuran']=5000;
     	$data['row']=1;
+		$data['data_jemaat']=$q;
+    	if(!$this->input->get('export')){
+        	//kalau export tidak perlu di slice untuk pagination
+	        if($page>1){
+	            array_splice($q, 0, $numStart);
+	            array_splice($q,$numLimit );
+	        }
+	        else{
+	            array_splice($q, $numStart+$numLimit);
+	        }
 
-    	$this->load->view('pemakaman/laporan_saldo_anggota_kpkp', $data);
+
+    		$data['data_jemaat']=$q; //after slicing
+	    	$data['pagingnation']=pagingnation($data['TotalOfData'], $numLimit, $page_active, $param_active, $links=2);
+
+	    	$this->load->view('pemakaman/laporan_saldo_anggota_kpkp', $data);
+        }else{
+        	switch ($this->input->get('export')) {
+        		case 'pdf':
+        			// code...
+        			$this->laporan_saldo_anggota_kpkp_PDF($data);
+        			break;
+        		
+        		default:
+        			// code...
+        			break;
+        	}
+        }
     }
+
+    private function laporan_saldo_anggota_kpkp_PDF($data){
+    	$this->load->library('Pdf');
+    	#print_r($data);die();
+	    try {
+	        $html2pdf = $this->pdf->create('P', 'A4', 'en');
+
+	        $html = $this->load->view('pdf/laporan_saldo_anggota_kpkp',$data,true);
+
+	        $html2pdf->writeHTML($html);
+
+	        $html2pdf->output($data['title_file'].'.pdf');
+
+	        // generate PDF
+
+	    } catch (\Spipu\Html2Pdf\Exception\Html2PdfException $e) {
+	        echo $this->pdf7->exceptionMessage($e);
+	    }
+    }
+
 }
 
