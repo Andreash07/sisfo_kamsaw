@@ -267,7 +267,10 @@ class pemakaman extends CI_Controller {
 
 
 
-		$sql="select A.*, B.kwg_nama, B.kwg_alamat, C.hub_keluarga, B.id as kwg_id, B.kwg_telepon, D.id as kpkp_keluarga_jemaat_id
+		$sql="select A.*, B.kwg_nama, B.kwg_alamat, C.hub_keluarga, B.id as kwg_id, B.kwg_telepon, D.id as kpkp_keluarga_jemaat_id, E.kwg_nama as keluarga_kpkp,
+				CASE 
+        			WHEN A.kwg_no_kpkp > 0 THEN E.id
+        			ELSE A.kwg_no END as kwg_no_kpkp_valid
 
 				from anggota_jemaat A
 
@@ -275,6 +278,8 @@ class pemakaman extends CI_Controller {
 
 				join ags_hub_kwg C on C.idhubkel = A.hub_kwg
 				left join kpkp_keluarga_jemaat D on D.keluarga_jemaat_id = B.id
+
+				left join keluarga_jemaat E on E.id = A.kwg_no_kpkp
 
 				where A.id >0 && A.status=1 && A.sts_anggota=1 ".$where.""; //A.status=1 bearti tidak pernah di delete
 
@@ -1645,26 +1650,42 @@ class pemakaman extends CI_Controller {
     	$title_file.='periode '.date('M Y').' - '.date('dmY His');
     	$data['title_file']=$title_file;
 
-    	$s="select A.id, A.keluarga_jemaat_id, B.kwg_nama, B.kwg_wil, COUNT(C.id) + COUNT(D.id) as num_anggota_kpkp, A.saldo_akhir, A.saldo_akhir_sukarela, A.last_pembayaran
+    	/*$s="select A.id, A.keluarga_jemaat_id, B.kwg_nama, B.kwg_wil, COUNT(C.id) + COUNT(D.id) as num_anggota_kpkp, A.saldo_akhir, A.saldo_akhir_sukarela, A.last_pembayaran
     			from kpkp_keluarga_jemaat A 
-    			join (select A.* from keluarga_jemaat A join anggota_jemaat B on B.kwg_no = A.id where B.status=1 && B.sts_anggota=1 && B.sts_kpkp=1 group by A.id) B on B.id = A.keluarga_jemaat_id 
+    			join (select A.* from keluarga_jemaat A join anggota_jemaat B on B.kwg_no = A.id where B.status=1 && B.sts_anggota=1 && B.sts_kpkp=1 && B.kwg_no_kpkp = 0 group by A.id) B on B.id = A.keluarga_jemaat_id 
     			left join (select * from anggota_jemaat where sts_kpkp=1 && status=1 && sts_anggota=1 && kwg_no_kpkp = 0) C on C.kwg_no = A.keluarga_jemaat_id 
     			left join (select * from anggota_jemaat where sts_kpkp=1 && status=1 && sts_anggota=1 && kwg_no_kpkp > 0) D on D.kwg_no_kpkp = A.keluarga_jemaat_id #ini khusus nempel sama keluarga lain
     			where A.keluarga_jemaat_id > 0 ".$where."
-    			";
-    	$group_by=" group by A.keluarga_jemaat_id ";
-    	$field_order="  order by B.kwg_wil, B.kwg_nama";
+    			";*/
+    	#$field_order="  order by B.kwg_wil, B.kwg_nama";
+    	#$group_by=" group by Z.keluarga_jemaat_id ";
+
+    	$s="select Z.*, COUNT(Z.id) as num_anggota_kpkp from (select A.id, A.keluarga_jemaat_id, B.kwg_nama, B.kwg_wil, C.nama_lengkap, A.saldo_akhir, A.saldo_akhir_sukarela, A.last_pembayaran, '1' as kel_inti #ini keluarga inti
+				from kpkp_keluarga_jemaat A
+				join (select A.* from keluarga_jemaat A join anggota_jemaat B on B.kwg_no = A.id where B.status=1 && B.sts_anggota=1 && B.sts_kpkp=1 && B.kwg_no_kpkp = 0 group by A.id) B on B.id = A.keluarga_jemaat_id
+				join (select * from anggota_jemaat where sts_kpkp=1 && status=1 && sts_anggota=1 && kwg_no_kpkp = 0) C on C.kwg_no = A.keluarga_jemaat_id
+				where A.keluarga_jemaat_id > 0 ".$where."
+				UNION ALL
+				select A.id, A.keluarga_jemaat_id, B.kwg_nama, B.kwg_wil, C.nama_lengkap, A.saldo_akhir, A.saldo_akhir_sukarela, A.last_pembayaran, '0' as kel_inti #ini keluarga tambahan
+				from kpkp_keluarga_jemaat A
+				join (select A.* from keluarga_jemaat A join anggota_jemaat B on B.kwg_no = A.id where B.status=1 && B.sts_anggota=1 && B.sts_kpkp=1 && B.kwg_no_kpkp = 0 group by A.id) B on B.id = A.keluarga_jemaat_id
+				join (select * from anggota_jemaat where sts_kpkp=1 && status=1 && sts_anggota=1 && kwg_no_kpkp > 0) C on C.kwg_no_kpkp = A.keluarga_jemaat_id
+				where A.keluarga_jemaat_id > 0 ".$where."
+				) Z ";
+    	$field_order="  order by Z.kwg_wil, Z.kwg_nama";
+    	
+    	$group_by=" group by Z.keluarga_jemaat_id ";
 
         if($this->input->get('export')){
-        	$field_order=" order by B.kwg_wil, B.kwg_nama";
+        	$field_order=" order by Z.kwg_wil, Z.kwg_nama";
         	if($this->input->get('sort') == '-1'){
         		$param_active.="sort=".rawurldecode($this->input->get('sort'))."&";
-				$field_order="order by A.saldo_akhir ";
+				$field_order="order by Z.saldo_akhir ";
 				$order_by=" ASC ";
 			}
 			else if($this->input->get('sort') == '0'){
 				$param_active.="sort=".rawurldecode($this->input->get('sort'))."&";
-				$field_order="order by A.saldo_akhir ";
+				$field_order="order by Z.saldo_akhir ";
 				$order_by=" DESC ";
 			}
         }
@@ -1672,12 +1693,12 @@ class pemakaman extends CI_Controller {
         	//view biasa bukan export
         	if($this->input->get('sort') == '-1'){
         		$param_active.="sort=".rawurldecode($this->input->get('sort'))."&";
-				$field_order="order by A.saldo_akhir ";
+				$field_order="order by Z.saldo_akhir ";
 				$order_by=" ASC ";
 			}
 			else if($this->input->get('sort') == '0'){
 				$param_active.="sort=".rawurldecode($this->input->get('sort'))."&";
-				$field_order="order by A.saldo_akhir ";
+				$field_order="order by Z.saldo_akhir ";
 				$order_by=" DESC ";
 			}
         }

@@ -131,7 +131,10 @@ $this->load->view('layout/header');
 
 							<td style="width: 30%;">
 
-								<b>Keluarga:</b> <a href="<?=base_url();?>pemakaman/DataJemaat?edit=true&id=<?=$value->kwg_no;?>"><?= $value->kwg_nama;?></a>
+								<b>Keluarga:</b> <!--<a href="<?=base_url();?>pemakaman/DataJemaat?edit=true&id=<?=$value->kwg_no;?>">--><?= $value->kwg_nama;?><!--</a>-->
+
+								<br>
+								<b>KPKP Keluarga:</b> <a href="<?=base_url();?>pemakaman/DataJemaat?edit=true&id=<?=$value->kwg_no_kpkp_valid;?>" target="_BLANK"><?= $value->keluarga_kpkp;?></a>
 
 								<br>
 
@@ -165,7 +168,7 @@ $this->load->view('layout/header');
 
 
 
-								<a href="<?=base_url();?>pemakaman/DataJemaat?edit=true&id=<?=$value->kwg_no;?>" class="btn btn-success" style="padding:unset; padding: 3px 7px 3px 7px;" title="Lihat Keluarga">
+								<a href="<?=base_url();?>pemakaman/DataJemaat?edit=true&id=<?=$value->kwg_no_kpkp_valid;?>" class="btn btn-success" style="padding:unset; padding: 3px 7px 3px 7px;" title="Lihat Keluarga">
 
 									<span class="fa fa-users" style="width:20%; display: unset;"></span>
 

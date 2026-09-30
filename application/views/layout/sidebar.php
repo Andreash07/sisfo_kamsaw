@@ -204,6 +204,16 @@
 
                     <li>
 
+                      <a href="<?=base_url();?>pemakaman/laporan_saldo_anggota_kpkp">
+
+                        Laporan Saldo Anggota
+
+                      </a>
+
+                    </li> 
+
+                    <li>
+
                       <a href="<?=base_url();?>pemakaman/laporan_iuran_anggota">
 
                         Laporan Iuran Anggota
