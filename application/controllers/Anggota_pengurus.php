@@ -209,6 +209,10 @@ class Anggota_pengurus extends CI_Controller {
     		$where.=" && A.anggota_jemaat_id in (select anggota_jemaat_id from anggota_pengurus_pelayanan where periode_pelayanan='".$cur_periode."' group by anggota_jemaat_id having COUNT(anggota_jemaat_id)>1)";
     	}
 
+        if($this->input->get('kwg_nama')){
+            $where.=" && lower(C.nama_lengkap) like '%".clearText($this->input->get('kwg_nama'))."%'";
+        }
+
     	$s="select A.*, C.nama_lengkap,  B.name as periode
     			from anggota_pengurus_pelayanan A 
     			join periode_pelayanan B on B.id = A.periode_pelayanan
@@ -220,6 +224,8 @@ class Anggota_pengurus extends CI_Controller {
 
     	$data['data']=array();
     	$data['offer_perorang']=array();
+        $data['approve_pdkt']=array();
+        $data['bersedia']=array();
     	foreach ($q as $key => $value) {
     		// code...
     		if(!isset($data['data'][$value->pelayanan])){
@@ -229,10 +235,56 @@ class Anggota_pengurus extends CI_Controller {
     		if(!isset($data['offer_perorang'][$value->anggota_jemaat_id])){
     			$data['offer_perorang'][$value->anggota_jemaat_id]=array();
     		}
+
+            if(!isset($data['approve_pdkt'][$value->anggota_jemaat_id])){
+                $data['approve_pdkt'][$value->anggota_jemaat_id]=array();
+            }
+
+            if(!isset($data['bersedia'][$value->anggota_jemaat_id])){
+                $data['bersedia'][$value->anggota_jemaat_id]=array();
+            }
     			$data['data'][$value->pelayanan][]=$value;
     			$data['offer_perorang'][$value->anggota_jemaat_id][]=$value;
+
+            switch ($value->status) {
+                case '-1':
+                    // code...
+                    break;
+                case '0':
+                    // code...
+                    $data['approve_pdkt'][$value->anggota_jemaat_id][]=$value;
+                    break;
+                case '1':
+                    // code...
+                    $data['bersedia'][$value->anggota_jemaat_id][]=$value;
+                    break;
+                case '2':
+                    // code...
+                    break;
+                default:
+                    // code...
+                    break;
+            }
     	}
     	$this->load->view('anggota_pengurus/perpelayanan', $data);
+    }
+
+    public function save_status(){
+        $data=array();
+        $param=array();
+        $param['status']=$this->input->post('value');
+        $recid=$this->input->post('recid');
+
+        $u=$this->m_model->updateas('id', $recid, $param, 'anggota_pengurus_pelayanan');
+        $data['sts']='0';
+        $data['msg']='Error';
+        if($u){
+            $data['sts']='1';
+            $data['msg']='Ok';
+        }
+
+        echo json_encode($data);
+        return;
     }
 
 }

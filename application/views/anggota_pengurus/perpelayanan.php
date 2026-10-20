@@ -15,6 +15,13 @@ $this->load->view('layout/header');
 				    </div>
 					<div class="x_content">
 						<div class="form-group">
+							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="kwg_nama">Nama Anggota
+							</label>
+							<div class="col-md-6 col-sm-6 col-xs-12">
+							  <input type="text" id="kwg_nama" name="kwg_nama" class="form-control col-md-7 col-xs-12" placeholder="Search Nama Anggota Pengurus" value="<?=$this->input->get('kwg_nama');?>">
+							</div>
+						</div>
+						<div class="form-group">
 							<label class="control-label col-md-3 col-sm-3 col-xs-12">
 								Periode Pelayanan
 							</label>
@@ -83,14 +90,14 @@ $this->load->view('layout/header');
 			<?php 
 			foreach ($pelayanan as $key => $value) {
 				// code...
-				if($this->input->get('filter')!=''){
+				if($this->input->get('filter')!='' || $this->input->get('kwg_nama')!=''){
 					//kalau ada filter gini, komisi yg tidak belum ada samasekali, di lewati saja
 					if(!isset($data[$value]) || count($data[$value]) ==0 ){
 						continue;
 					}
 				}
 			?>
-				<div class="col-md-4 col-sm-4 col-xs-12">
+				<div class="col-md-6 col-sm-6 col-xs-12">
 		            <div class="x_panel">
 		              <div class="x_title">
 		                <h2><?=$value;?></h2>
@@ -102,7 +109,7 @@ $this->load->view('layout/header');
 	              					<tr>
 	              						<th class="text-center">#</th>
 	              						<th class="text-center">Nama</th>
-	              						<th class="text-center">Tanggal Diusulkan</th>
+	              						<th class="text-center">Tgl<br>Diusulkan</th>
 	              						<th class="text-center">Status</th>
 	              					</tr>
 	              				</thead>
@@ -163,7 +170,7 @@ $this->load->view('layout/header');
 																break;
 														}
 
-														if(($key2+1)%5 == 0){
+														if(($key2+1)%2 == 0){
 															$lbl_offer_perorang.="<br>";
 														}
 
@@ -174,7 +181,25 @@ $this->load->view('layout/header');
 	              									<td class="text-center"><?=$key1+1;?></td>
 	              									<td><?=$value1->nama_lengkap;?><br><?=$lbl_offer_perorang;?></td>
 	              									<td class="text-center"><?php if($value1->diusulkan_tgl !='' && $value1->diusulkan_tgl !='0000-00-00'){ echo date('d M Y', strtotime($value1->diusulkan_tgl)); } ?></td>
-	              									<td class="text-center"><?=$sts;?></td>
+	              									<td class="text-center">
+	              										<?php 
+	              										if(((count($approve_pdkt[$value1->anggota_jemaat_id]) >0 || count($bersedia[$value1->anggota_jemaat_id])>0) && in_array($value1->status, array('-1','2')) ) #|| in_array($value1->status, array('2')) 
+			              									){
+	              										?>
+	              											<?=$sts;?>
+	              										<?php 
+	              										}else{
+	              										?>
+	              											<select class="form-control" id="status_perorang<?=$value1->id;?>" name="status_perorang" recid="<?=$value1->id;?>">
+	              												<option value="-1" <?php if($value1->status == '-1'){ echo "selected";} ?> >Usulan</option>
+	              												<option value="0" <?php if($value1->status == '0'){ echo "selected";} ?>>Proses Pendekatan</option>
+	              												<option value="1" <?php if($value1->status == '1'){ echo "selected";} ?>>Bersedia</option>
+	              												<option value="2" <?php if($value1->status == '2'){ echo "selected";} ?>>Tidak Bersedia</option>
+	              											</select>
+              											<?php
+	              										}
+	              										?>
+              										</td>
 	              								</tr>
 	              					<?php 
 	              							}
@@ -196,3 +221,24 @@ $this->load->view('layout/header');
 $this->load->view('layout/footer');
 
 ?>
+
+<script type="text/javascript">
+	$(document).on('change', '[id^=status_perorang]', function(e){
+		dataMap={}
+		dataMap['recid']=$(this).attr('recid')
+		dataMap['value']=$(this).val()
+
+		console.log($(this).attr('recid'))
+		console.log($(this).val())
+
+		$.post('<?=base_url();?>Anggota_pengurus/save_status', dataMap, function(data){
+			json=$.parseJSON(data)
+			if(json.sts==1){
+				//window.location.reload();
+				url = new URL(window.location.href);
+			  	window.location.href = url;
+			}
+		})
+
+	})
+</script>
