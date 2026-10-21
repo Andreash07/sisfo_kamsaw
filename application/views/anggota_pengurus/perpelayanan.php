@@ -26,7 +26,7 @@ $this->load->view('layout/header');
 								Periode Pelayanan
 							</label>
 							<div class="col-md-6 col-sm-6 col-xs-12">
-							  <select class="form-control" name="wilayah" id="wilayah">
+							  <select class="form-control" name="periode" id="periode">
 			  					<option value="">Pilih</option>
 							  	<?php
 							  		foreach ($periode_pelayanan as $keyWil => $Wil) {
@@ -54,7 +54,7 @@ $this->load->view('layout/header');
 			  					<option value="2" <?php if($this->input->get('filter') == '2'){ echo "selected";} ?>>1 orang diusulkan >1 Komisi</option>
 			  					<option value="3" <?php if($this->input->get('filter') == '3'){ echo "selected";} ?>>yang sudah menyatakan bersedia</option>
 			  					<!--<option value="4" <?php if($this->input->get('filter') == '4'){ echo "selected";} ?>>Komisi belum mengusulkan nama</option>-->
-			  					<option value="5" <?php if($this->input->get('filter') == '5'){ echo "selected";} ?>>yang belum bersedia sama sekali</option>
+			  					<option value="5" <?php if($this->input->get('filter') == '5'){ echo "selected";} ?>>yang belum bersedia sama sekali dan diusulkan >1 komisi</option>
 			  					<option value="6" <?php if($this->input->get('filter') == '6'){ echo "selected";} ?>>Komisi belum ada yang bersedia</option>
 			  					<option value="7" <?php if($this->input->get('filter') == '7'){ echo "selected";} ?>>Komisi sudah ada yang bersedia</option>
 							  </select>
@@ -75,7 +75,7 @@ $this->load->view('layout/header');
 							</div>
 						</div>
 						<div class="form-group">
-							<a href="<?=base_url().'Anggota_pengurus/form_add';?>" class="btn btn-success pull-left">Add</a>
+							<!--<a href="<?=base_url().'Anggota_pengurus/form_add';?>" class="btn btn-success pull-left">Add</a>-->
 							<button type="submit" class="btn btn-default pull-right" name="search">Search</button>
 						</div>
 					</div>
@@ -88,6 +88,7 @@ $this->load->view('layout/header');
 
 		<div class="col-xs-12">
 			<?php 
+			$ipel=0;
 			foreach ($pelayanan as $key => $value) {
 				// code...
 				if($this->input->get('filter')!='' || $this->input->get('kwg_nama')!=''){
@@ -110,7 +111,7 @@ $this->load->view('layout/header');
 	              						<th class="text-center">#</th>
 	              						<th class="text-center">Nama</th>
 	              						<th class="text-center">Tgl<br>Diusulkan</th>
-	              						<th class="text-center">Status</th>
+	              						<th class="text-center"></th>
 	              					</tr>
 	              				</thead>
 	              				<tbody>
@@ -179,7 +180,7 @@ $this->load->view('layout/header');
 	              					?>
 	              								<tr>
 	              									<td class="text-center"><?=$key1+1;?></td>
-	              									<td><?=$value1->nama_lengkap;?><br><?=$lbl_offer_perorang;?></td>
+	              									<td><?=$value1->nama_lengkap;?> (Ter. <?=$value1->wilayah;?>)<br><?=$lbl_offer_perorang;?></td>
 	              									<td class="text-center"><?php if($value1->diusulkan_tgl !='' && $value1->diusulkan_tgl !='0000-00-00'){ echo date('d M Y', strtotime($value1->diusulkan_tgl)); } ?></td>
 	              									<td class="text-center">
 	              										<?php 
@@ -199,10 +200,19 @@ $this->load->view('layout/header');
               											<?php
 	              										}
 	              										?>
+	              										<br>
+	              										<div class="btn btn-info btn-xs" title="Catatan Anggota Pengurus" id="btn_note_anggota<?=$value1->id;?>" form="<?=base_url().'Anggota_pengurus/form_note_anggota?auth='.md5('jasdhk289!*&'.$value1->id);?>" nama="<?=$value1->nama_lengkap;?> (Ter. <?=$value1->wilayah;?>) - <?=$value1->pelayanan;?>"><i class="fa fa-commenting"></i></div>
               										</td>
 	              								</tr>
 	              					<?php 
 	              							}
+	              						}
+	              						else{
+          							?>
+          								<tr>
+          									<td colspan="4" class="text-danger">Belum ada nama yang diusulkan/bersedia!</td>
+          								</tr>
+          							<?php
 	              						}
 	              					?>
 	              				</tbody>
@@ -211,11 +221,35 @@ $this->load->view('layout/header');
 		            </div>
 		      	</div>
 			<?php
+				$ipel++;			
 			}
+			?>
+
+			<?php 
+				if($ipel==0){
+			?>
+				<div class="x_panel">
+	              	<div class="x_title">
+						<h4 class="text-danger">Oooops Maaf, Tidak ada yang ditemukan!</h4>		
+					</div>
+				</div>
+			<?php 
+				}
 			?>
 		</div>
 	</div>
 </div>
+
+<!--modal nekat -->
+<div class="modal-note_anggota modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" id="div_content_note_anggota">
+      
+    </div>
+  </div>
+</div>
+
+
 <?php
 
 $this->load->view('layout/footer');
@@ -240,5 +274,46 @@ $this->load->view('layout/footer');
 			}
 		})
 
+	})
+
+	$(document).on('click touchstart', '[id^=btn_note_anggota]', function(e){
+		e.preventDefault()
+		$('.modal-note_anggota').modal('show');
+		dataMap={}
+		dataMap['nama']=$(this).attr('nama')
+		url=$(this).attr('form')
+		$.post(url, dataMap, function(data){
+			$('#div_content_note_anggota').html(data)
+		})
+	})
+
+	$(document).on('click touchstart', '[id=btn_simpan_note_anggota]', function(e){
+		e.preventDefault()
+		dataMap={}
+		dataMap=$('#form_note_anggota').serialize()
+		url=$('#form_note_anggota').attr('action')
+		$.post(url, dataMap, function(data){
+			json=$.parseJSON(data)
+			if(json.sts==1){
+				iziToast.success({
+		            title: json.msg,
+		            message: '',
+		            position: "topRight",
+		            class: "iziToast-success",
+		        });
+			}
+			else if(json.sts==0){
+				iziToast.error({
+		            title: json.msg,
+		            message: 'Hubungi Sekretaris MJ / Administrator!',
+		            position: "topRight",
+		            class: "iziToast-danger",
+
+		        });
+			}
+
+			$('.modal-note_anggota').modal('hide');
+			$('#div_content_note_anggota').html('')
+		})
 	})
 </script>

@@ -150,6 +150,7 @@ class Anggota_pengurus extends CI_Controller {
     public function perpelayanan(){
     	$data=array();
     	$data['pelayanan']=array('KPA',
+								'KTR',
 								'KOREM',
 								'KOPEM',
 								'KKM',
@@ -176,6 +177,9 @@ class Anggota_pengurus extends CI_Controller {
 								'Pengurus Teritorial 7');
     	$data['periode_pelayanan']=$this->m_model->selectas('status', '1', 'periode_pelayanan', 'id', 'DESC');
     	$cur_periode=0;
+    	if($this->input->get('periode')!='0'){
+    		$cur_periode=$this->input->get('periode');
+    	}
     	foreach ($data['periode_pelayanan'] as $key => $value) {
     		// code...
     		if($cur_periode==0){
@@ -200,37 +204,51 @@ class Anggota_pengurus extends CI_Controller {
     	}else if($this->input->get('filter')=='4' ){
     		$where.=" ";
     	}else if($this->input->get('filter')=='5' ){
-    		$where.=" && A.pelayanan in (select pelayanan from anggota_pengurus_pelayanan where periode_pelayanan='".$cur_periode."' && A.status= in (0,2) && pelayanan not in (select pelayanan from anggota_pengurus_pelayanan where periode_pelayanan='".$cur_periode."' && A.status=1)  group by pelayanan having COUNT(anggota_jemaat_id)=0)";
+    		$where.=" && A.anggota_jemaat_id in (select anggota_jemaat_id from anggota_pengurus_pelayanan where periode_pelayanan='".$cur_periode."' && A.status in (-1,0,2) && anggota_jemaat_id not in (select anggota_jemaat_id from anggota_pengurus_pelayanan where periode_pelayanan='".$cur_periode."' && A.status=1)  ) && A.anggota_jemaat_id in (select anggota_jemaat_id from anggota_pengurus_pelayanan where periode_pelayanan='".$cur_periode."' group by anggota_jemaat_id having COUNT(anggota_jemaat_id)>1)";
     	}
 		else if($this->input->get('filter')=='6' ){
     		$where.=" && A.pelayanan in (select pelayanan from anggota_pengurus_pelayanan where periode_pelayanan='".$cur_periode."' && status in (-1,0,2) && pelayanan not in (select pelayanan from anggota_pengurus_pelayanan where periode_pelayanan='".$cur_periode."' && status=1)) ";
     		//$where.=" && A.anggota_jemaat_id in (select anggota_jemaat_id from anggota_pengurus_pelayanan where periode_pelayanan='".$cur_periode."' group by anggota_jemaat_id having COUNT(anggota_jemaat_id)>1)";
     	}else if($this->input->get('filter')=='7' ){
-    		$where.=" && A.anggota_jemaat_id in (select anggota_jemaat_id from anggota_pengurus_pelayanan where periode_pelayanan='".$cur_periode."' group by anggota_jemaat_id having COUNT(anggota_jemaat_id)>1)";
+    		$where.=" && A.pelayanan in (select pelayanan from anggota_pengurus_pelayanan where periode_pelayanan='".$cur_periode."' && status=1 && pelayanan not in (select pelayanan from anggota_pengurus_pelayanan where periode_pelayanan='".$cur_periode."' && status in (-1,0,2) )) ";
     	}
 
         if($this->input->get('kwg_nama')){
             $where.=" && lower(C.nama_lengkap) like '%".clearText($this->input->get('kwg_nama'))."%'";
         }
 
-    	$s="select A.*, C.nama_lengkap,  B.name as periode
+    	$s="select A.*, C.nama_lengkap,  B.name as periode, D.wilayah
     			from anggota_pengurus_pelayanan A 
     			join periode_pelayanan B on B.id = A.periode_pelayanan
     			join anggota_jemaat C on C.id = A.anggota_jemaat_id
+    			join wilayah D on D.id = C.kwg_wil
     		where A.id>0 ".$where."
     		order by A.id, A.prioritas, B.id, A.pelayanan, A.jabatan, A.id ";
     	#die(nl2br($s));
-    	$q=$this->m_model->selectcustom($s);
-
     	$data['data']=array();
-    	$data['offer_perorang']=array();
-        $data['approve_pdkt']=array();
-        $data['bersedia']=array();
-    	foreach ($q as $key => $value) {
-    		// code...
+    	$qall=$this->m_model->selectcustom($s);
+    	foreach ($qall as $key => $value) {
     		if(!isset($data['data'][$value->pelayanan])){
     			$data['data'][$value->pelayanan]=array();
     		}
+
+			$data['data'][$value->pelayanan][]=$value;
+    	}
+
+    	$sall="select A.*, C.nama_lengkap,  B.name as periode
+    			from anggota_pengurus_pelayanan A 
+    			join periode_pelayanan B on B.id = A.periode_pelayanan
+    			join anggota_jemaat C on C.id = A.anggota_jemaat_id
+    		where A.id>0
+    		order by A.id, A.prioritas, B.id, A.pelayanan, A.jabatan, A.id ";
+    	#die(nl2br($s));
+    	$qall=$this->m_model->selectcustom($sall);
+
+    	$data['offer_perorang']=array();
+        $data['approve_pdkt']=array();
+        $data['bersedia']=array();
+    	foreach ($qall as $key => $value) {
+    		// code...
 
     		if(!isset($data['offer_perorang'][$value->anggota_jemaat_id])){
     			$data['offer_perorang'][$value->anggota_jemaat_id]=array();
@@ -243,7 +261,6 @@ class Anggota_pengurus extends CI_Controller {
             if(!isset($data['bersedia'][$value->anggota_jemaat_id])){
                 $data['bersedia'][$value->anggota_jemaat_id]=array();
             }
-    			$data['data'][$value->pelayanan][]=$value;
     			$data['offer_perorang'][$value->anggota_jemaat_id][]=$value;
 
             switch ($value->status) {
@@ -269,6 +286,22 @@ class Anggota_pengurus extends CI_Controller {
     	$this->load->view('anggota_pengurus/perpelayanan', $data);
     }
 
+    public function save_note(){
+    	$data=array();
+    	$param=array();
+    	$param['notes']=$this->input->post('notes');
+    	$auth=$this->input->post('auth');
+    	$u=$this->m_model->updateas("MD5(CONCAT('JKAhk127(*1&',id))='".$auth."'", NULL, $param, 'anggota_pengurus_pelayanan');
+    	$data['sts']=0;
+    	$data['msg']="Gagal menyimpan catatan Anggota!";
+    	if($u){
+    		$data['sts']=1;
+    		$data['msg']="Berhasil menyimpan catatan Anggota!";
+    	}
+    	echo json_encode($data);
+    	return;
+    }
+
     public function save_status(){
         $data=array();
         $param=array();
@@ -287,5 +320,18 @@ class Anggota_pengurus extends CI_Controller {
         return;
     }
 
+    public function form_note_anggota(){
+    	$data=array();
+    	$auth=$this->input->get('auth');
+    	$nama=$this->input->post('nama');
+    	$s="select * 
+				from anggota_pengurus_pelayanan
+    			where MD5(CONCAT('jasdhk289!*&', id)) = '".$auth."';";
+    	#die($s);
+    	$q=$this->m_model->selectcustom($s);
+    	$data['data']=$q;
+    	$data['nama']=$nama;
+    	$this->load->view('anggota_pengurus/modal_note_anggota', $data);
+    }
 }
 

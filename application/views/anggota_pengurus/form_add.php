@@ -27,6 +27,7 @@ $this->load->view('layout/header');
 									<select class="js-example-basic-single form-control col-md-7 col-xs-12" id="pelayanan" name="pelayanan" required>
 										<option value="" selected disabled>Pilih</option>
 										<option value="KPA">KPA</option>
+										<option value="KTR">KTR</option>
 										<option value="KOREM">KOREM</option>
 										<option value="KOPEM">KOPEM</option>
 										<option value="KKM">KKM</option>

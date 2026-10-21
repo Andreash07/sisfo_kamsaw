@@ -479,6 +479,43 @@
               <?php
               }
               ?>
+              <li>
+                <a>
+                  <i class="fa fa-file-text"></i> Pengurus Pelayanan
+                  <span class="fa fa-chevron-down"></span>
+                </a>
+                  <ul class="nav child_menu">
+                    <li>
+                      <a href="<?=base_url();?>Anggota_pengurus/">Daftar Anggota</span></a>
+                    </li>
+                    <li>
+                      <a href="<?=base_url();?>Anggota_pengurus/perpelayanan">Daftar Anggota Perpelayanan</span></a>
+                    </li>
+                    <!--<li>
+                      <a>Tahap 1<span class="fa fa-chevron-down"></span></a>
+                      <ul class="nav child_menu">
+                        <li class="sub_menu">
+                          <a href="<?=base_url();?>pnppj/list_calon_penatua">
+                            Bakal Calon PN
+                          </a>
+                        </li>
+                        <li class="sub_menu">
+                          <a href="<?=base_url();?>pnppj/statistik_pnt1">
+                            Statistik
+                          </a>
+                        </li>
+                        <li class="sub_menu">
+                          <a href="<?=base_url();?>pnppj/pemilu1">
+                            Perolehan Suara PN
+                          </a>
+                        </li>
+                        <li class="sub_menu">
+                          <a href="<?=base_url();?>pnppj/polling_surat_suara_pnt1">Pemungutan Surat Suara</span></a>
+                        </li>
+                      </ul>
+                    </li>-->
+                  </ul>
+                </li>
 
 			  <!--<li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
 
