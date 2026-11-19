@@ -491,6 +491,9 @@
                     <li>
                       <a href="<?=base_url();?>Anggota_pengurus/perpelayanan">Daftar Anggota Perpelayanan</span></a>
                     </li>
+                    <li>
+                      <a href="<?=base_url();?>Anggota_pengurus/summary_perpelayanan">Rekap Perpelayanan</span></a>
+                    </li>
                     <!--<li>
                       <a>Tahap 1<span class="fa fa-chevron-down"></span></a>
                       <ul class="nav child_menu">
