@@ -24,9 +24,38 @@ class Anggota_pengurus extends CI_Controller {
     {
         parent::__construct();
 
-        #if(!isset($this->session->userdata('userdata')->id) ){
-        #	redirect(base_url());
-        #}
+    	#echo ($this->uri->segment(2)); die();
+        if(!isset($this->session->userdata('userdata')->id) ){
+        	if(!in_array($this->uri->segment(2), array('perpelayanan')) ){
+        		redirect(base_url());
+        	}
+        }
+
+        $this->pelayanan=array('KPA',
+								'KOREM',
+								'KOPEM',
+								'KKM',
+								'KOMPRI',
+								'KPP',
+								'KOMLAN',
+								'KLMG',
+								'KHRG',
+								'KOMBINA',
+								'KOMDIKSOS',
+								'KOMSAK',
+								'KOMPELKES',
+								'KPKP',
+								'LITBANG',
+								'MIK',
+								'KPPJ',
+								'KRT',
+								'Pengurus Teritorial 1',
+								'Pengurus Teritorial 2',
+								'Pengurus Teritorial 3',
+								'Pengurus Teritorial 4',
+								'Pengurus Teritorial 5',
+								'Pengurus Teritorial 6',
+								'Pengurus Teritorial 7');
 
 
     }
@@ -62,31 +91,7 @@ class Anggota_pengurus extends CI_Controller {
 
     	$data['periode_pelayanan']=$this->m_model->selectas('status', '1', 'periode_pelayanan', 'id', 'DESC');
 
-    	$data['pelayanan']=array('KPA',
-								'KOREM',
-								'KOPEM',
-								'KKM',
-								'KOMPRI',
-								'KPP',
-								'KOMLAN',
-								'KLMG',
-								'KHRG',
-								'KOMBINA',
-								'KOMDIKSOS',
-								'KOMSAK',
-								'KOMPELKES',
-								'KPKP',
-								'LITBANG',
-								'MIK',
-								'KPPJ',
-								'KRT',
-								'Pengurus Teritorial 1',
-								'Pengurus Teritorial 2',
-								'Pengurus Teritorial 3',
-								'Pengurus Teritorial 4',
-								'Pengurus Teritorial 5',
-								'Pengurus Teritorial 6',
-								'Pengurus Teritorial 7');
+    	$data['pelayanan']=$this->pelayanan;
 
     	$this->load->view('anggota_pengurus/index', $data);
     }
@@ -149,32 +154,7 @@ class Anggota_pengurus extends CI_Controller {
 
     public function perpelayanan(){
     	$data=array();
-    	$data['pelayanan']=array('KPA',
-								'KTR',
-								'KOREM',
-								'KOPEM',
-								'KKM',
-								'KOMPRI',
-								'KPP',
-								'KOMLAN',
-								'KLMG',
-								'KHRG',
-								'KOMBINA',
-								'KOMDIKSOS',
-								'KOMSAK',
-								'KOMPELKES',
-								'KPKP',
-								'LITBANG',
-								'MIK',
-								'KPPJ',
-								'KRT',
-								'Pengurus Teritorial 1',
-								'Pengurus Teritorial 2',
-								'Pengurus Teritorial 3',
-								'Pengurus Teritorial 4',
-								'Pengurus Teritorial 5',
-								'Pengurus Teritorial 6',
-								'Pengurus Teritorial 7');
+    	$data['pelayanan']=$this->pelayanan;
     	$data['periode_pelayanan']=$this->m_model->selectas('status', '1', 'periode_pelayanan', 'id', 'DESC');
     	$cur_periode=0;
     	if($this->input->get('periode')!='0'){
@@ -283,7 +263,12 @@ class Anggota_pengurus extends CI_Controller {
                     break;
             }
     	}
-    	$this->load->view('anggota_pengurus/perpelayanan', $data);
+    	if(isset($this->session->userdata('userdata')->id) ){
+	    	$this->load->view('anggota_pengurus/perpelayanan', $data);
+        }
+        else{
+	    	$this->load->view('anggota_pengurus/perpelayanan_preview', $data);
+        }
     }
 
     public function save_note(){
@@ -332,6 +317,31 @@ class Anggota_pengurus extends CI_Controller {
     	$data['data']=$q;
     	$data['nama']=$nama;
     	$this->load->view('anggota_pengurus/modal_note_anggota', $data);
+    }
+
+    public function summary_perpelayanan(){
+    	$data=array();
+    	$data['pelayanan']=$this->pelayanan;
+    	$speriode="select * from periode_pelayanan where status=1 ";
+    	$qperiode=$this->m_model->selectcustom($speriode);
+    	$data['periode']=$qperiode;
+
+    	$sanggota_perpelayanan="select Z.*, CASE WHEN A.tot_pdkt is NULL THEN 0 ELSE A.tot_pdkt END AS tot_pdkt , CASE WHEN B.tot_bersedia is NULL THEN 0 ELSE B.tot_bersedia END AS tot_bersedia, CASE WHEN C.tot_tidak_bersedia is NULL THEN 0 ELSE C.tot_tidak_bersedia END AS tot_tidak_bersedia , CASE WHEN D.tot_usulan is NULL THEN 0 ELSE D.tot_usulan END AS tot_usulan from (select *, COUNT(id) as tot_nama from anggota_pengurus_pelayanan group by pelayanan, periode_pelayanan) Z
+    							left join (select *, COUNT(id) as tot_pdkt from anggota_pengurus_pelayanan where status=0 group by pelayanan, periode_pelayanan) A on A.pelayanan = Z.pelayanan && A.periode_pelayanan = Z.periode_pelayanan
+    							left join (select *, COUNT(id) as tot_bersedia from anggota_pengurus_pelayanan where status=1 group by pelayanan, periode_pelayanan) B on B.pelayanan = Z.pelayanan && B.periode_pelayanan = Z.periode_pelayanan
+    							left  join (select *, COUNT(id) as tot_tidak_bersedia from anggota_pengurus_pelayanan where status=2 group by pelayanan, periode_pelayanan) C on C.pelayanan = Z.pelayanan && C.periode_pelayanan = Z.periode_pelayanan
+    							left join (select *, COUNT(id) as tot_usulan from anggota_pengurus_pelayanan where status=-1 group by pelayanan, periode_pelayanan) D on D.pelayanan = Z.pelayanan && D.periode_pelayanan = Z.periode_pelayanan";
+    	$qanggota_perpelayanan=$this->m_model->selectcustom($sanggota_perpelayanan);
+    	$data['anggota_perpelayanan']=array();
+    	foreach ($qanggota_perpelayanan as $key => $value) {
+    		// code...
+    		if(isset($data['anggota_perpelayanan'][$value->periode_pelayanan][$value->pelayanan])){
+    			$data['anggota_perpelayanan'][$value->periode_pelayanan][$value->pelayanan]=array();
+    		}
+    		$data['anggota_perpelayanan'][$value->periode_pelayanan][$value->pelayanan]=$value;
+    	}
+    	$this->load->view('anggota_pengurus/summary_perpelayanan', $data);
+
     }
 }
 

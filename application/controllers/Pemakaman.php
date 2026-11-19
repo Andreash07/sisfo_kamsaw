@@ -915,6 +915,10 @@ class pemakaman extends CI_Controller {
 
 		//get id keluarga KPKP dari keluarga jemaat id
 		$qid_kpkp=$this->m_model->selectas('keluarga_jemaat_id', $keluarga_jemaat_id, 'kpkp_keluarga_jemaat');
+		$id_kpkp=0;
+		$saldo_akhir=0;
+		$saldo_akhir_sukarela=0;
+		$nominal_sukarela=0;
 		foreach ($qid_kpkp as $key => $value) {
 			// code...
 			$id_kpkp=$value->id;
