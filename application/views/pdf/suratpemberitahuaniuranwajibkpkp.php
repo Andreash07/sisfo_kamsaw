@@ -843,13 +843,13 @@ $s="";
 		</table>
 	</div>
 </page>
-<page backtop="10mm" backbottom="0mm" backleft="-3mm" backright="0mm">
-	<page_footer>
+<!--<page backtop="10mm" backbottom="0mm" backleft="-3mm" backright="0mm">-->
+	<!--<page_footer>
         <table style="width: 100%; inborder: solid 1px black;">
             <tr>
-                <td style="text-align: right;    width: 100%">Halaman [[page_cu]] <!--[[page_cu]]/[[page_nb]]--></td>
-            </tr>
-        </table>
+                <td style="text-align: right;    width: 100%">Halaman [[page_cu]] <!--[[page_cu]]/[[page_nb]]--><!--</td>-->
+            <!--</tr>-->
+        <!--</table>
     </page_footer>
 	<img src="<?= FCPATH ;?>pdf7/content/Contoh Surat Pemberitahuan-1_001-150.jpg" style="width:205mm">
-</page>
+</page>-->
